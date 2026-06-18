@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clientes - Farmácia CV</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-primary px-4 shadow">
+    <span class="navbar-brand fw-bold">💊 Farmácia CV</span>
+    <div class="d-flex gap-2">
+        <a href="dashboard.html" class="btn btn-outline-light btn-sm">📊 Dashboard</a>
+        <a href="medicamentos.html" class="btn btn-outline-light btn-sm">💊 Medicamentos</a>
+        <a href="vendas.html" class="btn btn-outline-light btn-sm">🛒 Vendas</a>
+        <a href="usuarios.html" class="btn btn-outline-light btn-sm">👥 Utilizadores</a>
+        <button class="btn btn-light btn-sm" onclick="logout()">Sair</button>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold text-secondary mb-0">🧑‍🤝‍🧑 Gestão de Clientes</h4>
+        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">
+            ➕ Novo Cliente
+        </button>
+    </div>
+
+    <!-- FORMULÁRIO ADICIONAR -->
+    <div class="collapse mb-3" id="formAdicionar">
+        <div class="card-box">
+            <h6 class="fw-bold mb-3">Novo Cliente</h6>
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <input id="nome" class="form-control" placeholder="Nome completo">
+                </div>
+                <div class="col-md-3">
+                    <input id="telefone" class="form-control" placeholder="Telefone">
+                </div>
+                <div class="col-md-3">
+                    <input id="email" type="email" class="form-control" placeholder="Email">
+                </div>
+                <div class="col-md-3">
+                    <input id="endereco" class="form-control" placeholder="Endereço">
+                </div>
+            </div>
+            <div class="mt-2 d-flex gap-2">
+                <button class="btn btn-success" onclick="adicionar()">Guardar</button>
+                <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUSCA -->
+    <div class="card-box mb-3">
+        <input id="busca" class="form-control" placeholder="🔍 Pesquisar cliente por nome, telefone ou email..." onkeyup="filtrar()">
+    </div>
+
+    <!-- MENSAGEM -->
+    <div id="mensagem" class="alert d-none mb-3"></div>
+
+    <!-- TABELA -->
+    <div class="card-box">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Email</th>
+                        <th>Endereço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                    <tr><td colspan="6" class="text-center py-4">A carregar...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏️ Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId">
+                <div class="mb-2">
+                    <label class="form-label">Nome</label>
+                    <input id="editNome" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Telefone</label>
+                    <input id="editTelefone" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Email</label>
+                    <input id="editEmail" type="email" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Endereço</label>
+                    <input id="editEndereco" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="guardarEdicao()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HISTÓRICO -->
+<div class="modal fade" id="modalHistorico" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🧾 Histórico de Compras</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalHistoricoBody">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const token = localStorage.getItem("token");
+if (!token) { window.location.href = "login.html"; }
+
+let clientesTodos = [];
+
+function mostrarMensagem(texto, tipo = "success") {
+    const el = document.getElementById("mensagem");
+    el.className = `alert alert-${tipo}`;
+    el.innerText = texto;
+    el.classList.remove("d-none");
+    setTimeout(() => el.classList.add("d-none"), 4000);
+}
+
+// 🔄 LISTAR
+async function carregar() {
+    try {
+        const res = await fetch("http://127.0.0.1:8000/clientes", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+        if (res.status === 401) { window.location.href = "login.html"; return; }
+
+        clientesTodos = await res.json();
+        window._clientes = {};
+        clientesTodos.forEach(c => window._clientes[c.id] = c);
+        renderTabela(clientesTodos);
+
+    } catch (err) {
+        console.error(err);
+        mostrarMensagem("Erro de ligação com o servidor.", "danger");
+    }
+}
+
+function renderTabela(lista) {
+    if (!lista.length) {
+        document.getElementById("tabela").innerHTML =
+            "<tr><td colspan='6' class='text-center text-muted py-4'>Nenhum cliente encontrado.</td></tr>";
+        return;
+    }
+
+    document.getElementById("tabela").innerHTML = lista.map(c => `
+        <tr>
+            <td class="text-muted small">#${c.id}</td>
+            <td class="fw-semibold">${c.nome}</td>
+            <td>${c.telefone || "—"}</td>
+            <td>${c.email || "—"}</td>
+            <td>${c.endereco || "—"}</td>
+            <td>
+                <button class="btn btn-info btn-sm me-1 text-white" onclick="verHistorico(${c.id})" title="Histórico">🧾</button>
+                <button class="btn btn-warning btn-sm me-1" onclick="abrirEditar(${c.id})" title="Editar">✏️</button>
+                <button class="btn btn-danger btn-sm" onclick="apagar(${c.id})" title="Apagar">🗑️</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+// 🔍 FILTRAR
+function filtrar() {
+    const termo = document.getElementById("busca").value.toLowerCase();
+    const filtrados = clientesTodos.filter(c =>
+        c.nome.toLowerCase().includes(termo) ||
+        (c.telefone || "").toLowerCase().includes(termo) ||
+        (c.email || "").toLowerCase().includes(termo)
+    );
+    renderTabela(filtrados);
+}
+
+// ➕ ADICIONAR
+async function adicionar() {
+    const nome     = document.getElementById("nome").value.trim();
+    const telefone = document.getElementById("telefone").value.trim();
+    const email    = document.getElementById("email").value.trim();
+    const endereco = document.getElementById("endereco").value.trim();
+
+    if (!nome) {
+        mostrarMensagem("O nome é obrigatório.", "warning");
+        return;
+    }
+
+    const res = await fetch("http://127.0.0.1:8000/clientes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+        body: JSON.stringify({ nome, telefone, email, endereco })
+    });
+
+    if (res.ok) {
+        mostrarMensagem("Cliente criado com sucesso!");
+        ["nome","telefone","email","endereco"].forEach(id => document.getElementById(id).value = "");
+        document.getElementById("formAdicionar").classList.remove("show");
+        carregar();
+    } else {
+        const data = await res.json();
+        mostrarMensagem(data.detail || "Erro ao criar cliente.", "danger");
+    }
+}
+
+// ✏️ EDITAR
+function abrirEditar(id) {
+    const c = window._clientes[id];
+    document.getElementById("editId").value       = c.id;
+    document.getElementById("editNome").value     = c.nome;
+    document.getElementById("editTelefone").value = c.telefone || "";
+    document.getElementById("editEmail").value    = c.email || "";
+    document.getElementById("editEndereco").value = c.endereco || "";
+    new bootstrap.Modal(document.getElementById("modalEditar")).show();
+}
+
+async function guardarEdicao() {
+    const id       = document.getElementById("editId").value;
+    const nome     = document.getElementById("editNome").value.trim();
+    const telefone = document.getElementById("editTelefone").value.trim();
+    const email    = document.getElementById("editEmail").value.trim();
+    const endereco = document.getElementById("editEndereco").value.trim();
+
+    const res = await fetch(`http://127.0.0.1:8000/clientes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+        body: JSON.stringify({ nome, telefone, email, endereco })
+    });
+
+    bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+
+    if (res.ok) {
+        mostrarMensagem("Cliente atualizado com sucesso!");
+        carregar();
+    } else {
+        mostrarMensagem("Erro ao atualizar cliente.", "danger");
+    }
+}
+
+// 🧾 HISTÓRICO
+async function verHistorico(id) {
+    const c = window._clientes[id];
+    const res = await fetch(`http://127.0.0.1:8000/clientes/${id}/historico`, {
+        headers: { "Authorization": "Bearer " + token }
+    });
+    const vendas = await res.json();
+
+    let html = `<p><strong>Cliente:</strong> ${c.nome}</p>`;
+
+    if (!vendas.length) {
+        html += `<p class="text-muted">Este cliente ainda não tem compras registadas.</p>`;
+    } else {
+        const total = vendas.reduce((s, v) => s + v.total, 0);
+        html += `
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr><th>ID</th><th>Total</th><th>Data</th></tr>
+                </thead>
+                <tbody>
+                    ${vendas.map(v => `
+                        <tr>
+                            <td>#${v.id}</td>
+                            <td class="fw-bold text-success">${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
+                            <td>${v.criado_em ? v.criado_em.substring(0,16).replace("T"," ") : "—"}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+                <tfoot>
+                    <tr class="table-primary fw-bold">
+                        <td colspan="1" class="text-end">Total Gasto:</td>
+                        <td colspan="2">${total.toLocaleString("pt-CV")} CVE</td>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+    }
+
+    document.getElementById("modalHistoricoBody").innerHTML = html;
+    new bootstrap.Modal(document.getElementById("modalHistorico")).show();
+}
+
+// 🗑️ APAGAR
+async function apagar(id) {
+    const c = window._clientes[id];
+    if (!confirm(`Tens a certeza que queres apagar o cliente "${c.nome}"?`)) return;
+
+    const res = await fetch(`http://127.0.0.1:8000/clientes/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (res.ok) {
+        mostrarMensagem("Cliente removido.");
+        carregar();
+    } else {
+        mostrarMensagem("Erro ao remover cliente.", "danger");
+    }
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+carregar();
+</script>
+</body>
+</html>

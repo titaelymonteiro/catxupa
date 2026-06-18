@@ -1,0 +1,60 @@
+/* ── Farmácia CV – Global Styles ── */
+
+body {
+    background: #f4f6f9;
+    font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+/* LOGIN */
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a73e8 0%, #0a429b 100%);
+}
+
+.login-logo {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* CARDS */
+.card-box {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+/* STAT CARDS */
+.stat-card {
+    border-radius: 14px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.blue   { background: linear-gradient(135deg, #0d6efd, #084298); }
+.green  { background: linear-gradient(135deg, #198754, #0a3622); }
+.orange { background: linear-gradient(135deg, #fd7e14, #984202); }
+.red    { background: linear-gradient(135deg, #dc3545, #842029); }
+
+/* NAVBAR */
+.navbar { padding: 12px 20px; }
+
+/* TABLE */
+.table td, .table th { vertical-align: middle; }
+
+/* ALERTS */
+.alert { border-radius: 10px; }
