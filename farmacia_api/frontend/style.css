@@ -58,3 +58,209 @@ body {
 
 /* ALERTS */
 .alert { border-radius: 10px; }
+
+/* ── MODERN SIDEBAR & LAYOUT ── */
+:root {
+    --sidebar-width: 280px;
+    --sidebar-bg: #156340; /* Matches Navbar Green */
+    --sidebar-active-bg: rgba(255, 255, 255, 0.15);
+    --sidebar-text: #cbd5e1;
+    --sidebar-text-active: #ffffff;
+    --accent-color: #4ade80; /* Brighter Green for highlight */
+    --navbar-height: 70px;
+}
+
+body {
+    background: #f8fafc;
+    transition: background 0.3s;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--navbar-height));
+    background: rgba(2, 53, 30, 0.92); /* Semi-transparent version of #156340 */
+    backdrop-filter: blur(12px);
+    z-index: 1030;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-brand {
+    color: #ffffff;
+    padding: 0 1.25rem 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0.875rem 1.25rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-nav li a:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--sidebar-text-active);
+    transform: translateX(4px);
+}
+
+.sidebar-nav li a.active {
+    background: var(--accent-color);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+}
+
+.sidebar-nav li a .nav-icon {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.sidebar-nav li a:hover .nav-icon {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+/* NAVBAR */
+.main-navbar {
+    height: var(--navbar-height);
+    background: #066138 !important; /* Deep Green from dashboard */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white !important;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1040;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+}
+
+.main-navbar .navbar-brand {
+    color: white !important;
+    font-size: 1.35rem;
+    letter-spacing: -0.025em;
+}
+
+.menu-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-toggle:hover {
+    background: #f1f5f9;
+}
+
+/* CONTENT AREA */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: calc(100vh - var(--navbar-height));
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebar.collapsed ~ .main-navbar {
+    margin-left: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content, .main-navbar {
+        margin-left: 0 !important;
+    }
+    
+    /* Overlay when sidebar is open on mobile */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1020;
+        backdrop-filter: blur(4px);
+        display: none;
+    }
+    
+    .sidebar.open ~ .sidebar-overlay {
+        display: block;
+    }
+}
+
+/* UI COMPONENTS REFINEMENT */
+.card-box {
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-card {
+    border: none;
+    overflow: hidden;
+    position: relative;
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
