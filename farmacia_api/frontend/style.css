@@ -1,8 +1,9 @@
 /* ── Farmácia CV – Global Styles ── */
 
-body {
+html, body {
     background: #f4f6f9;
     font-family: "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
 }
 
 /* LOGIN */
@@ -165,8 +166,10 @@ body {
     justify-content: space-between;
     z-index: 1040;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
 }
 
 .main-navbar .navbar-brand {
@@ -196,14 +199,20 @@ body {
 /* CONTENT AREA */
 .main-content {
     margin-left: var(--sidebar-width);
+    margin-top: var(--navbar-height);
     padding: 2rem;
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: calc(100vh - var(--navbar-height));
+    width: calc(100% - var(--sidebar-width));
+    max-width: 100%;
+    box-sizing: border-box;
+    /* Override Bootstrap container max-width restrictions */
+    max-width: none !important;
 }
 
 .sidebar.collapsed ~ .main-content {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    width: 100%;
 }
 
 .sidebar.collapsed ~ .main-navbar {
@@ -220,7 +229,12 @@ body {
         transform: translateX(0);
     }
     
-    .main-content, .main-navbar {
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .main-navbar {
         margin-left: 0 !important;
     }
     
@@ -239,6 +253,13 @@ body {
     
     .sidebar.open ~ .sidebar-overlay {
         display: block;
+    }
+}
+
+/* Laptop range: sidebar open pushes content, no overflow */
+@media (min-width: 993px) and (max-width: 1400px) {
+    .main-content {
+        padding: 1.25rem;
     }
 }
 

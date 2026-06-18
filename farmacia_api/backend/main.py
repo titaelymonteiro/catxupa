@@ -229,7 +229,7 @@ def criar_v(dados: VendaIn, user=Depends(verificar_token)):
         if med["estoque"] < item.quantidade:
             raise HTTPException(status_code=400, detail=f"Stock insuficiente para '{item.medicamento_nome}' (disponível: {med['estoque']})")
     itens = [i.dict() for i in dados.itens]
-    venda_id = criar_venda(dados.cliente, itens, user["email"], dados.cliente_id)
+    venda_id = criar_venda(dados.cliente, itens, user["email"])
     return {"mensagem": "Venda registada com sucesso", "venda_id": venda_id}
 
 # ─── CLIENTES ─────────────────────────────────────────────────────────────────
