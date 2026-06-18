@@ -40,9 +40,9 @@ cd farmacia_api
 uvicorn backend.main:app --reload
 ```
 
-### 3. Abrir o frontend
+### 3. Abrir o frontend 
 Abrir `frontend/login.html` no browser.
-
+ 
 **Credenciais padrão:**
 - Email: `admin@farmacia.cv`
 - Senha: `admin123`

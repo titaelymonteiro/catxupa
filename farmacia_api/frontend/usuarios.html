@@ -1,188 +1,210 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Utilizadores - Farmácia CV</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilizadores - Farmácia CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<nav class="navbar navbar-dark bg-primary px-4 shadow">
-    <span class="navbar-brand fw-bold">💊 Farmácia CV</span>
-    <div class="d-flex gap-2">
-        <a href="dashboard.html" class="btn btn-outline-light btn-sm">📊 Dashboard</a>
-        <a href="medicamentos.html" class="btn btn-outline-light btn-sm">💊 Medicamentos</a>
-        <button class="btn btn-light btn-sm" onclick="logout()">Sair</button>
+    <!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-brand mb-4">
+        <span class="fs-4">💊 Farmácia CV</span>
+    </div>
+    <ul class="sidebar-nav">
+        <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+        <li><a href="medicamentos.html"><span class="nav-icon">💊</span> Medicamentos</a></li>
+        <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
+        <li><a href="usuarios.html" class="active"><span class="nav-icon">👥</span> Utilizadores</a></li>
+        <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+    </ul>
+</aside>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
+    <div class="d-flex align-items-center gap-3">
+        <button class="menu-toggle" title="Menu">☰</button>
+        <span class="navbar-brand fw-bold m-0 p-0">👥 Utilizadores</span>
+    </div>
+    <div>
+        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
     </div>
 </nav>
 
-<div class="container py-4">
+    <div class="container py-4 main-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold text-secondary mb-0">👥 Gestão de Utilizadores</h4>
-        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">
-            ➕ Novo Utilizador
-        </button>
-    </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold text-secondary mb-0">👥 Gestão de Utilizadores</h4>
+            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">
+                ➕ Novo Utilizador
+            </button>
+        </div>
 
-    <!-- FORMULÁRIO ADICIONAR -->
-    <div class="collapse mb-3" id="formAdicionar">
+        <!-- FORMULÁRIO ADICIONAR -->
+        <div class="collapse mb-3" id="formAdicionar">
+            <div class="card-box">
+                <h6 class="fw-bold mb-3">Novo Utilizador</h6>
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input id="nome" class="form-control" placeholder="Nome completo">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="email" type="email" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="password" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="col-md-3">
+                        <select id="perfil" class="form-select">
+                            <option value="funcionario">Funcionário</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-success" onclick="adicionar()">Guardar</button>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                        data-bs-target="#formAdicionar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENSAGEM -->
+        <div id="mensagem" class="alert d-none mb-3"></div>
+
+        <!-- TABELA -->
         <div class="card-box">
-            <h6 class="fw-bold mb-3">Novo Utilizador</h6>
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <input id="nome" class="form-control" placeholder="Nome completo">
-                </div>
-                <div class="col-md-3">
-                    <input id="email" type="email" class="form-control" placeholder="Email">
-                </div>
-                <div class="col-md-3">
-                    <input id="password" type="password" class="form-control" placeholder="Password">
-                </div>
-                <div class="col-md-3">
-                    <select id="perfil" class="form-select">
-                        <option value="funcionario">Funcionário</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mt-2 d-flex gap-2">
-                <button class="btn btn-success" onclick="adicionar()">Guardar</button>
-                <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">Cancelar</button>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela">
+                        <tr>
+                            <td colspan="6" class="text-center py-4">A carregar...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- MENSAGEM -->
-    <div id="mensagem" class="alert d-none mb-3"></div>
-
-    <!-- TABELA -->
-    <div class="card-box">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Perfil</th>
-                        <th>Criado em</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela">
-                    <tr><td colspan="6" class="text-center py-4">A carregar...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL EDITAR -->
-<div class="modal fade" id="modalEditar" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">✏️ Editar Utilizador</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="editId">
-                <div class="mb-2">
-                    <label class="form-label">Nome</label>
-                    <input id="editNome" class="form-control">
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✏️ Editar Utilizador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">Email</label>
-                    <input id="editEmail" type="email" class="form-control">
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="mb-2">
+                        <label class="form-label">Nome</label>
+                        <input id="editNome" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Email</label>
+                        <input id="editEmail" type="email" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Perfil</label>
+                        <select id="editPerfil" class="form-select">
+                            <option value="funcionario">Funcionário</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">Perfil</label>
-                    <select id="editPerfil" class="form-select">
-                        <option value="funcionario">Funcionário</option>
-                        <option value="admin">Administrador</option>
-                    </select>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardarEdicao()">Guardar</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarEdicao()">Guardar</button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- MODAL ALTERAR PASSWORD -->
-<div class="modal fade" id="modalPassword" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">🔒 Alterar Password</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="pwdId">
-                <div class="mb-3">
-                    <label class="form-label">Password Atual</label>
-                    <input id="pwdAtual" type="password" class="form-control" placeholder="••••••••">
+    <!-- MODAL ALTERAR PASSWORD -->
+    <div class="modal fade" id="modalPassword" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🔒 Alterar Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Nova Password</label>
-                    <input id="pwdNova" type="password" class="form-control" placeholder="••••••••">
+                <div class="modal-body">
+                    <input type="hidden" id="pwdId">
+                    <div class="mb-3">
+                        <label class="form-label">Password Atual</label>
+                        <input id="pwdAtual" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nova Password</label>
+                        <input id="pwdNova" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirmar Nova Password</label>
+                        <input id="pwdConfirm" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div id="pwdErro" class="alert alert-danger d-none"></div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Confirmar Nova Password</label>
-                    <input id="pwdConfirm" type="password" class="form-control" placeholder="••••••••">
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-warning" onclick="guardarPassword()">🔒 Alterar</button>
                 </div>
-                <div id="pwdErro" class="alert alert-danger d-none"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-warning" onclick="guardarPassword()">🔒 Alterar</button>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const token = localStorage.getItem("token");
-if (!token) { alert("Faça login primeiro!"); window.location.href = "login.html"; }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) { alert("Faça login primeiro!"); window.location.href = "login.html"; }
 
-function mostrarMensagem(texto, tipo = "success") {
-    const el = document.getElementById("mensagem");
-    el.className = `alert alert-${tipo}`;
-    el.innerText = texto;
-    el.classList.remove("d-none");
-    setTimeout(() => el.classList.add("d-none"), 4000);
-}
-
-// 🔄 LISTAR
-async function carregar() {
-    try {
-        const res = await fetch("http://127.0.0.1:8000/usuarios", {
-            headers: { "Authorization": "Bearer " + token }
-        });
-
-        if (res.status === 401) { window.location.href = "login.html"; return; }
-        if (res.status === 403) {
-            document.getElementById("tabela").innerHTML =
-                "<tr><td colspan='6' class='text-center text-danger py-4'>⛔ Acesso restrito a administradores.</td></tr>";
-            return;
+        function mostrarMensagem(texto, tipo = "success") {
+            const el = document.getElementById("mensagem");
+            el.className = `alert alert-${tipo}`;
+            el.innerText = texto;
+            el.classList.remove("d-none");
+            setTimeout(() => el.classList.add("d-none"), 4000);
         }
 
-        const data = await res.json();
-        window._users = {};
-        data.forEach(u => window._users[u.id] = u);
+        // 🔄 LISTAR
+        async function carregar() {
+            try {
+                const res = await fetch("http://127.0.0.1:8000/usuarios", {
+                    headers: { "Authorization": "Bearer " + token }
+                });
 
-        document.getElementById("tabela").innerHTML = data.map(u => {
-            const badge = u.perfil === "admin"
-                ? `<span class="badge bg-danger">Admin</span>`
-                : `<span class="badge bg-secondary">Funcionário</span>`;
-            const data_fmt = u.criado_em ? u.criado_em.substring(0, 10) : "—";
-            return `<tr>
+                if (res.status === 401) { window.location.href = "login.html"; return; }
+                if (res.status === 403) {
+                    document.getElementById("tabela").innerHTML =
+                        "<tr><td colspan='6' class='text-center text-danger py-4'>⛔ Acesso restrito a administradores.</td></tr>";
+                    return;
+                }
+
+                const data = await res.json();
+                window._users = {};
+                data.forEach(u => window._users[u.id] = u);
+
+                document.getElementById("tabela").innerHTML = data.map(u => {
+                    const badge = u.perfil === "admin"
+                        ? `<span class="badge bg-danger">Admin</span>`
+                        : `<span class="badge bg-secondary">Funcionário</span>`;
+                    const data_fmt = u.criado_em ? u.criado_em.substring(0, 10) : "—";
+                    return `<tr>
                 <td class="text-muted small">#${u.id}</td>
                 <td class="fw-semibold">${u.nome}</td>
                 <td>${u.email}</td>
@@ -194,158 +216,159 @@ async function carregar() {
                     <button class="btn btn-danger btn-sm" onclick="apagar(${u.id})" title="Apagar">🗑️</button>
                 </td>
             </tr>`;
-        }).join("");
+                }).join("");
 
-    } catch (err) {
-        console.error(err);
-        mostrarMensagem("Erro de ligação com o servidor.", "danger");
-    }
-}
+            } catch (err) {
+                console.error(err);
+                mostrarMensagem("Erro de ligação com o servidor.", "danger");
+            }
+        }
 
-// ➕ ADICIONAR
-async function adicionar() {
-    const nome     = document.getElementById("nome").value.trim();
-    const email    = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const perfil   = document.getElementById("perfil").value;
+        // ➕ ADICIONAR
+        async function adicionar() {
+            const nome = document.getElementById("nome").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const perfil = document.getElementById("perfil").value;
 
-    if (!nome || !email || !password) {
-        mostrarMensagem("Preencha todos os campos.", "warning");
-        return;
-    }
+            if (!nome || !email || !password) {
+                mostrarMensagem("Preencha todos os campos.", "warning");
+                return;
+            }
 
-    const res = await fetch("http://127.0.0.1:8000/usuarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-        body: JSON.stringify({ nome, email, password, perfil })
-    });
+            const res = await fetch("http://127.0.0.1:8000/usuarios", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ nome, email, password, perfil })
+            });
 
-    const data = await res.json();
+            const data = await res.json();
 
-    if (res.ok) {
-        mostrarMensagem("Utilizador criado com sucesso!");
-        ["nome","email","password"].forEach(id => document.getElementById(id).value = "");
-        document.getElementById("formAdicionar").classList.remove("show");
+            if (res.ok) {
+                mostrarMensagem("Utilizador criado com sucesso!");
+                ["nome", "email", "password"].forEach(id => document.getElementById(id).value = "");
+                document.getElementById("formAdicionar").classList.remove("show");
+                carregar();
+            } else {
+                mostrarMensagem(data.detail || "Erro ao criar utilizador.", "danger");
+            }
+        }
+
+        // ✏️ ABRIR MODAL EDITAR
+        function abrirEditar(id) {
+            const u = window._users[id];
+            document.getElementById("editId").value = u.id;
+            document.getElementById("editNome").value = u.nome;
+            document.getElementById("editEmail").value = u.email;
+            document.getElementById("editPerfil").value = u.perfil;
+            new bootstrap.Modal(document.getElementById("modalEditar")).show();
+        }
+
+        // 💾 GUARDAR EDIÇÃO
+        async function guardarEdicao() {
+            const id = document.getElementById("editId").value;
+            const nome = document.getElementById("editNome").value.trim();
+            const email = document.getElementById("editEmail").value.trim();
+            const perfil = document.getElementById("editPerfil").value;
+
+            const res = await fetch(`http://127.0.0.1:8000/usuarios/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ nome, email, perfil })
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+            const data = await res.json();
+
+            if (res.ok) {
+                mostrarMensagem("Utilizador atualizado com sucesso!");
+                carregar();
+            } else {
+                mostrarMensagem(data.detail || "Erro ao atualizar.", "danger");
+            }
+        }
+
+        // 🔒 ABRIR MODAL PASSWORD
+        function abrirPassword(id) {
+            document.getElementById("pwdId").value = id;
+            document.getElementById("pwdAtual").value = "";
+            document.getElementById("pwdNova").value = "";
+            document.getElementById("pwdConfirm").value = "";
+            document.getElementById("pwdErro").classList.add("d-none");
+            new bootstrap.Modal(document.getElementById("modalPassword")).show();
+        }
+
+        // 🔒 GUARDAR NOVA PASSWORD
+        async function guardarPassword() {
+            const id = document.getElementById("pwdId").value;
+            const atual = document.getElementById("pwdAtual").value;
+            const nova = document.getElementById("pwdNova").value;
+            const confirmar = document.getElementById("pwdConfirm").value;
+            const erroEl = document.getElementById("pwdErro");
+
+            erroEl.classList.add("d-none");
+
+            if (!atual || !nova || !confirmar) {
+                erroEl.innerText = "Preencha todos os campos.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            if (nova !== confirmar) {
+                erroEl.innerText = "A nova password e a confirmação não coincidem.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            if (nova.length < 4) {
+                erroEl.innerText = "A nova password deve ter pelo menos 4 caracteres.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            const res = await fetch(`http://127.0.0.1:8000/usuarios/${id}/password`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ password_atual: atual, password_nova: nova })
+            });
+
+            const data = await res.json();
+            bootstrap.Modal.getInstance(document.getElementById("modalPassword")).hide();
+
+            if (res.ok) {
+                mostrarMensagem("Password alterada com sucesso!");
+            } else {
+                mostrarMensagem(data.detail || "Erro ao alterar password.", "danger");
+            }
+        }
+
+        // 🗑️ APAGAR
+        async function apagar(id) {
+            const u = window._users[id];
+            if (!confirm(`Tens a certeza que queres apagar o utilizador "${u.nome}"?`)) return;
+
+            const res = await fetch(`http://127.0.0.1:8000/usuarios/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                mostrarMensagem("Utilizador removido.");
+                carregar();
+            } else {
+                mostrarMensagem(data.detail || "Erro ao remover.", "danger");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+
         carregar();
-    } else {
-        mostrarMensagem(data.detail || "Erro ao criar utilizador.", "danger");
-    }
-}
-
-// ✏️ ABRIR MODAL EDITAR
-function abrirEditar(id) {
-    const u = window._users[id];
-    document.getElementById("editId").value    = u.id;
-    document.getElementById("editNome").value  = u.nome;
-    document.getElementById("editEmail").value = u.email;
-    document.getElementById("editPerfil").value = u.perfil;
-    new bootstrap.Modal(document.getElementById("modalEditar")).show();
-}
-
-// 💾 GUARDAR EDIÇÃO
-async function guardarEdicao() {
-    const id     = document.getElementById("editId").value;
-    const nome   = document.getElementById("editNome").value.trim();
-    const email  = document.getElementById("editEmail").value.trim();
-    const perfil = document.getElementById("editPerfil").value;
-
-    const res = await fetch(`http://127.0.0.1:8000/usuarios/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-        body: JSON.stringify({ nome, email, perfil })
-    });
-
-    bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
-    const data = await res.json();
-
-    if (res.ok) {
-        mostrarMensagem("Utilizador atualizado com sucesso!");
-        carregar();
-    } else {
-        mostrarMensagem(data.detail || "Erro ao atualizar.", "danger");
-    }
-}
-
-// 🔒 ABRIR MODAL PASSWORD
-function abrirPassword(id) {
-    document.getElementById("pwdId").value = id;
-    document.getElementById("pwdAtual").value = "";
-    document.getElementById("pwdNova").value = "";
-    document.getElementById("pwdConfirm").value = "";
-    document.getElementById("pwdErro").classList.add("d-none");
-    new bootstrap.Modal(document.getElementById("modalPassword")).show();
-}
-
-// 🔒 GUARDAR NOVA PASSWORD
-async function guardarPassword() {
-    const id         = document.getElementById("pwdId").value;
-    const atual      = document.getElementById("pwdAtual").value;
-    const nova       = document.getElementById("pwdNova").value;
-    const confirmar  = document.getElementById("pwdConfirm").value;
-    const erroEl     = document.getElementById("pwdErro");
-
-    erroEl.classList.add("d-none");
-
-    if (!atual || !nova || !confirmar) {
-        erroEl.innerText = "Preencha todos os campos.";
-        erroEl.classList.remove("d-none");
-        return;
-    }
-
-    if (nova !== confirmar) {
-        erroEl.innerText = "A nova password e a confirmação não coincidem.";
-        erroEl.classList.remove("d-none");
-        return;
-    }
-
-    if (nova.length < 4) {
-        erroEl.innerText = "A nova password deve ter pelo menos 4 caracteres.";
-        erroEl.classList.remove("d-none");
-        return;
-    }
-
-    const res = await fetch(`http://127.0.0.1:8000/usuarios/${id}/password`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-        body: JSON.stringify({ password_atual: atual, password_nova: nova })
-    });
-
-    const data = await res.json();
-    bootstrap.Modal.getInstance(document.getElementById("modalPassword")).hide();
-
-    if (res.ok) {
-        mostrarMensagem("Password alterada com sucesso!");
-    } else {
-        mostrarMensagem(data.detail || "Erro ao alterar password.", "danger");
-    }
-}
-
-// 🗑️ APAGAR
-async function apagar(id) {
-    const u = window._users[id];
-    if (!confirm(`Tens a certeza que queres apagar o utilizador "${u.nome}"?`)) return;
-
-    const res = await fetch(`http://127.0.0.1:8000/usuarios/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": "Bearer " + token }
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-        mostrarMensagem("Utilizador removido.");
-        carregar();
-    } else {
-        mostrarMensagem(data.detail || "Erro ao remover.", "danger");
-    }
-}
-
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-}
-
-carregar();
-</script>
+    </script>
 </body>
+
 </html>
