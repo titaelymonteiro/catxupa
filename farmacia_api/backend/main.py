@@ -8,7 +8,8 @@ from .models.db import init_db, get_connection, hash_password
 from .models.medicamento_model import (
     listar_medicamentos, inserir_medicamento, obter_medicamento_por_id,
     atualizar_medicamento, deletar_medicamento,
-    contar_stock_baixo, ultimos_medicamentos
+    contar_stock_baixo, ultimos_medicamentos,
+    contar_vencimento_proximo, listar_vencimento_proximo
 )
 from .models.usuario_model import (
     listar_usuarios, obter_usuario_por_id, criar_usuario,
@@ -23,6 +24,12 @@ from .models.cliente_model import (
     atualizar_cliente, deletar_cliente, contar_clientes,
     historico_compras_cliente
 )
+from .models.relatorio_model import (
+    relatorio_vendas_periodo, relatorio_top_produtos, relatorio_vendas_por_utilizador
+)
+import csv
+from io import StringIO
+from fastapi.responses import StreamingResponse
 
 init_db()
 
@@ -103,6 +110,7 @@ def dashboard(user=Depends(verificar_token)):
         "total_vendas": rv["total_geral"],
         "total_medicamentos": len(meds),
         "stock_baixo": contar_stock_baixo(limite=10),
+        "vencimento_proximo": contar_vencimento_proximo(dias=30),
         "total_clientes": contar_clientes(),
         "vendas_mensais": [v["total"] for v in rv["mensais"]] or [0],
         "ultimos_medicamentos": ultimos_medicamentos(5),
@@ -269,3 +277,35 @@ def apagar_c(id: int, user=Depends(verificar_token)):
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     deletar_cliente(id)
     return {"mensagem": "Cliente removido com sucesso"}
+
+# ─── RELATÓRIOS ──────────────────────────────────────────────────────────────
+
+@app.get("/relatorios/vendas")
+def rel_vendas(inicio: str, fim: str, user=Depends(verificar_token)):
+    return relatorio_vendas_periodo(inicio, fim)
+
+@app.get("/relatorios/top-produtos")
+def rel_top(user=Depends(verificar_token)):
+    return relatorio_top_produtos()
+
+@app.get("/relatorios/utilizadores")
+def rel_users(user=Depends(verificar_token)):
+    return relatorio_vendas_por_utilizador()
+
+@app.get("/relatorios/exportar-vendas")
+def exportar_vendas(inicio: str, fim: str, user=Depends(verificar_token)):
+    vendas = relatorio_vendas_periodo(inicio, fim)
+    
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["ID", "Cliente", "Total (CVE)", "Data", "Vendedor"])
+    
+    for v in vendas:
+        writer.writerow([v["id"], v["cliente"], v["total"], v["criado_em"], v["criado_por"]])
+    
+    output.seek(0)
+    return StreamingResponse(
+        output, 
+        media_type="text/csv", 
+        headers={"Content-Disposition": f"attachment; filename=relatorio_vendas_{inicio}_{fim}.csv"}
+    )

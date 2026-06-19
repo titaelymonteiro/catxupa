@@ -44,6 +44,25 @@ def contar_stock_baixo(limite=10):
     conn.close()
     return count
 
+def contar_vencimento_proximo(dias=30):
+    conn = get_connection()
+    # SQLite DATE format 'YYYY-MM-DD'
+    count = conn.execute(
+        "SELECT COUNT(*) FROM medicamentos WHERE validade != '' AND validade <= date('now', '+' || ? || ' days') AND validade >= date('now')",
+        (dias,)
+    ).fetchone()[0]
+    conn.close()
+    return count
+
+def listar_vencimento_proximo(dias=30):
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT * FROM medicamentos WHERE validade != '' AND validade <= date('now', '+' || ? || ' days') AND validade >= date('now') ORDER BY validade ASC",
+        (dias,)
+    ).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
 def ultimos_medicamentos(n=5):
     conn = get_connection()
     rows = conn.execute(

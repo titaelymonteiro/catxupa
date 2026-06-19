@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    
+
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand mb-4">
@@ -28,6 +28,7 @@
             <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
             <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
             <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
         </ul>
     </aside>
 
@@ -43,38 +44,55 @@
     </nav>
 
     <div class="main-content">
-    <h3 class="p-4">💊 Gestão de Medicamentos</h3>
+        <h3 class="p-4">💊 Gestão de Medicamentos</h3>
 
-    <!-- FORM -->
-    <div class="card-box mb-3">
+        <!-- FORM -->
+        <div class="card-box mb-3">
 
-        <input id="nome" class="form-control mb-2" placeholder="Nome">
-        <input id="preco" type="number" class="form-control mb-2" placeholder="Preço">
-        <input id="estoque" type="number" class="form-control mb-2" placeholder="Estoque">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <input id="nome" class="form-control" placeholder="Nome">
+                </div>
+                <div class="col-md-3">
+                    <input id="categoria" class="form-control" placeholder="Categoria">
+                </div>
+                <div class="col-md-2">
+                    <input id="preco" type="number" class="form-control" placeholder="Preço">
+                </div>
+                <div class="col-md-1">
+                    <input id="estoque" type="number" class="form-control" placeholder="Stock">
+                </div>
+                <div class="col-md-2">
+                    <input id="validade" type="date" class="form-control" title="Data de Validade">
+                </div>
+            </div>
 
-        <button class="btn btn-success" onclick="adicionar()">Adicionar</button>
+            <button class="btn btn-success mt-3" onclick="adicionar()">➕ Adicionar Medicamento</button>
 
-    </div>
+        </div>
 
-    <!-- TABELA -->
-    <table class="table table-bordered bg-white">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Preço</th>
-                <th>Estoque</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
+        <!-- TABELA -->
+        <table class="table table-bordered bg-white">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Validade</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
 
-        <tbody id="tabela"></tbody>
-    </table>
+            <tbody id="tabela"></tbody>
+        </table>
     </div>
 
     <script>
 
         const token = localStorage.getItem("token");
+        let medicamentosGlobal = [];
 
         // proteção login
         if (!token) {
@@ -93,6 +111,7 @@
                 });
 
                 const data = await res.json();
+                medicamentosGlobal = data;
 
                 if (!res.ok) {
                     alert(data.detail || "Erro ao carregar medicamentos");
@@ -102,12 +121,22 @@
                 let tabela = "";
 
                 data.forEach(m => {
+                    const hoje = new Date();
+                    const dataValidade = m.validade ? new Date(m.validade) : null;
+                    const diffDias = dataValidade ? Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24)) : 999;
+
+                    let classeLinha = "";
+                    if (m.estoque < 10) classeLinha = "table-warning";
+                    if (diffDias >= 0 && diffDias <= 30) classeLinha = "table-danger";
+
                     tabela += `
-                <tr>
+                <tr class="${classeLinha}">
                     <td>${m.id}</td>
-                    <td>${m.nome}</td>
-                    <td>${m.preco}</td>
+                    <td><strong>${m.nome}</strong></td>
+                    <td><span class="badge bg-secondary">${m.categoria || "—"}</span></td>
+                    <td>${parseFloat(m.preco).toLocaleString('pt-CV')} CVE</td>
                     <td>${m.estoque}</td>
+                    <td>${m.validade || "—"}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="editar(${m.id})">Editar</button>
                         <button class="btn btn-danger btn-sm" onclick="apagar(${m.id})">Apagar</button>
@@ -128,11 +157,13 @@
         async function adicionar() {
 
             const nome = document.getElementById("nome").value.trim();
+            const categoria = document.getElementById("categoria").value.trim();
             const preco = document.getElementById("preco").value;
             const estoque = document.getElementById("estoque").value;
+            const validade = document.getElementById("validade").value;
 
             if (!nome || !preco || !estoque) {
-                alert("Preencha todos os campos!");
+                alert("Nome, Preço e Stock são obrigatórios!");
                 return;
             }
 
@@ -142,12 +173,14 @@
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + token
                 },
-                body: JSON.stringify({ nome, preco, estoque })
+                body: JSON.stringify({ nome, preco, estoque, validade, categoria })
             });
 
             document.getElementById("nome").value = "";
+            document.getElementById("categoria").value = "";
             document.getElementById("preco").value = "";
             document.getElementById("estoque").value = "";
+            document.getElementById("validade").value = "";
 
             carregar();
         }
@@ -155,9 +188,12 @@
         // ✏️ EDITAR
         async function editar(id) {
 
-            const nome = prompt("Novo nome:");
-            const preco = prompt("Novo preço:");
-            const estoque = prompt("Novo estoque:");
+            const u = medicamentosGlobal.find(m => m.id === id);
+            const nome = prompt("Novo nome:", u.nome);
+            const categoria = prompt("Nova categoria:", u.categoria);
+            const preco = prompt("Novo preço:", u.preco);
+            const estoque = prompt("Novo estoque:", u.estoque);
+            const validade = prompt("Nova validade (YYYY-MM-DD):", u.validade);
 
             if (!nome || !preco || !estoque) return;
 
@@ -167,7 +203,7 @@
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + token
                 },
-                body: JSON.stringify({ nome, preco, estoque })
+                body: JSON.stringify({ nome, preco, estoque, validade, categoria })
             });
 
             carregar();

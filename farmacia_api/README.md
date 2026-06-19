@@ -46,7 +46,7 @@ Abrir `frontend/login.html` no browser.
 **Credenciais padrão:**
 - Email: `admin@farmacia.cv`
 - Senha: `admin123`
-
+ 
 ## Endpoints da API
 
 | Método | Rota | Descrição |
