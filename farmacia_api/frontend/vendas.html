@@ -9,11 +9,32 @@
     <link rel="stylesheet" href="style.css">
     <style>
         @media print {
-            body * { visibility: hidden; }
-            #modalDetalhes, #modalDetalhes * { visibility: visible; }
-            #modalDetalhes { position: absolute; left: 0; top: 0; width: 100%; border: none; }
-            .modal-header .btn-close, .modal-footer { display: none !important; }
-            .modal-content { border: none !important; box-shadow: none !important; }
+            body * {
+                visibility: hidden;
+            }
+
+            #modalDetalhes,
+            #modalDetalhes * {
+                visibility: visible;
+            }
+
+            #modalDetalhes {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                border: none;
+            }
+
+            .modal-header .btn-close,
+            .modal-footer {
+                display: none !important;
+            }
+
+            .modal-content {
+                border: none !important;
+                box-shadow: none !important;
+            }
         }
     </style>
 </head>

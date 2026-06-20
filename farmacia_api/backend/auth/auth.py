@@ -3,8 +3,8 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 import datetime
 
-SECRET_KEY = "********"
-ALGORITHM = "********"
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = "HS256"
 
 security = HTTPBearer()
 
