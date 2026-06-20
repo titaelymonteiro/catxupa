@@ -1,9 +1,13 @@
+import os
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from dotenv import load_dotenv
 import jwt
 import datetime
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY", "chave_padrao_caso_env_falhe_2026")
 ALGORITHM = "HS256"
 
 security = HTTPBearer()
@@ -29,4 +33,3 @@ def verificar_token(
         raise HTTPException(status_code=401, detail="Token expirado")
     except Exception:
         raise HTTPException(status_code=401, detail="Token inválido")
-
