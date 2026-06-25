@@ -43,7 +43,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand mb-4">
-            <span class="fs-4">💊 Farmácia CV</span>
+            <span class="fs-4">📊 Dashboard</span>
         </div>
         <ul class="sidebar-nav">
             <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
@@ -52,6 +52,7 @@
             <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
             <li><a href="vendas.html" class="active"><span class="nav-icon">🛒</span> Vendas</a></li>
             <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="auditoria.html"><span class="nav-icon">📜</span> Auditoria</a></li>
         </ul>
     </aside>
 
@@ -59,7 +60,10 @@
     <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle" title="Menu">☰</button>
-            <span class="navbar-brand fw-bold m-0 p-0">🛒 Vendas</span>
+            <div class="d-flex align-items-center gap-2">
+                <img src="assets/logo.jpg" alt="Logo" style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
+                <span class="navbar-brand fw-bold m-0 p-0">Farmácia CV</span>
+            </div>
         </div>
         <div>
             <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
@@ -99,6 +103,13 @@
                     <label class="form-label">Cliente</label>
                     <select id="clienteSelect" class="form-select" onchange="onClienteChange()">
                         <option value="">Cliente Geral (sem registo)</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Método de Pagamento</label>
+                    <select id="metodoPagamento" class="form-select">
+                        <option value="Dinheiro">💵 Dinheiro / Vinti4 Presencial</option>
+                        <option value="Pagali">📲 Pagali (Cartão/Online)</option>
                     </select>
                 </div>
             </div>
@@ -167,7 +178,8 @@
                             <th>Cliente</th>
                             <th>Total (CVE)</th>
                             <th>Data</th>
-                            <th>Registado por</th>
+                            <th>Método</th>
+                            <th>Estado</th>
                             <th>Detalhes</th>
                         </tr>
                     </thead>
@@ -213,6 +225,12 @@
 
         // ── INICIAR ──────────────────────────────────────────────────────────────────
         async function init() {
+            // Verificar se voltamos do Pagali
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'sucesso') {
+                mostrarMsgVenda("✅ Pagamento confirmado com sucesso!", "success");
+            }
+
             await carregarMedicamentos();
             await carregarClientes();
             await carregarResumo();
@@ -368,15 +386,28 @@
                 return;
             }
 
-            const res = await fetch("http://127.0.0.1:8000/vendas", {
+            const metodo = document.getElementById("metodoPagamento").value;
+
+            const res = await fetch(`${API_URL}/vendas`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-                body: JSON.stringify({ cliente: clienteSelecionadoNome, cliente_id: clienteSelecionadoId, itens: itensVenda })
+                headers: authHeaders(),
+                body: JSON.stringify({ 
+                    cliente: clienteSelecionadoNome, 
+                    cliente_id: clienteSelecionadoId, 
+                    metodo_pagamento: metodo,
+                    itens: itensVenda 
+                })
             });
 
             const data = await res.json();
 
             if (res.ok) {
+                if (data.checkout_url) {
+                    mostrarMsgVenda("A redirecionar para o Pagali...", "info");
+                    setTimeout(() => window.location.href = data.checkout_url, 1500);
+                    return;
+                }
+
                 mostrarMsgVenda(`✅ Venda #${data.venda_id} registada com sucesso!`, "success");
                 limparVenda();
                 await carregarMedicamentos();
@@ -411,16 +442,22 @@
                 return;
             }
 
-            document.getElementById("historicoVendas").innerHTML = data.map(v => `
-        <tr>
-            <td class="text-muted small">#${v.id}</td>
-            <td class="fw-semibold">${v.cliente}</td>
-            <td class="text-success fw-bold">${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
-            <td>${v.criado_em ? v.criado_em.substring(0, 16).replace("T", " ") : "—"}</td>
-            <td>${v.criado_por || "—"}</td>
-            <td><button class="btn btn-outline-primary btn-sm" onclick="verDetalhes(${v.id})">🧾 Ver</button></td>
-        </tr>
-    `).join("");
+            document.getElementById("historicoVendas").innerHTML = data.map(v => {
+                const badgeStatus = v.status_pagamento === "Efetuado" 
+                    ? '<span class="badge bg-success">Efetuado</span>' 
+                    : '<span class="badge bg-warning text-dark">Pendente</span>';
+                
+                return `
+                <tr>
+                    <td class="text-muted small">#${v.id}</td>
+                    <td class="fw-semibold">${v.cliente}</td>
+                    <td class="text-info fw-bold">${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
+                    <td class="small">${v.criado_em ? v.criado_em.substring(0, 16).replace("T", " ") : "—"}</td>
+                    <td class="small">${v.metodo_pagamento || "Dinheiro"}</td>
+                    <td>${badgeStatus}</td>
+                    <td><button class="btn btn-outline-primary btn-sm" onclick="verDetalhes(${v.id})">🧾 Ver</button></td>
+                </tr>`;
+            }).join("");
         }
 
         // ── DETALHES ──────────────────────────────────────────────────────────────────

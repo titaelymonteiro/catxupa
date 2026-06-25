@@ -1,10 +1,10 @@
 from .db import get_connection
 
-def inserir_medicamento(nome, preco, estoque, validade, categoria):
+def inserir_medicamento(nome, preco, estoque, validade, categoria, criado_por=None):
     conn = get_connection()
     conn.execute(
-        "INSERT INTO medicamentos (nome, preco, estoque, validade, categoria) VALUES (?,?,?,?,?)",
-        (nome, preco, estoque, validade, categoria)
+        "INSERT INTO medicamentos (nome, preco, estoque, validade, categoria, criado_por) VALUES (?,?,?,?,?,?)",
+        (nome, preco, estoque, validade, categoria, criado_por)
     )
     conn.commit()
     conn.close()

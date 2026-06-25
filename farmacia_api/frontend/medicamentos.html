@@ -20,7 +20,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand mb-4">
-            <span class="fs-4">💊 Farmácia CV</span>
+            <span class="fs-4">📊 Dashboard</span>
         </div>
         <ul class="sidebar-nav">
             <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
@@ -29,6 +29,7 @@
             <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
             <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
             <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="auditoria.html"><span class="nav-icon">📜</span> Auditoria</a></li>
         </ul>
     </aside>
 
@@ -36,7 +37,10 @@
     <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle" title="Menu">☰</button>
-            <span class="navbar-brand fw-bold m-0 p-0">💊 Medicamentos</span>
+            <div class="d-flex align-items-center gap-2">
+                <img src="assets/logo.jpg" alt="Logo" style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
+                <span class="navbar-brand fw-bold m-0 p-0">Farmácia CV</span>
+            </div>
         </div>
         <div>
             <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
@@ -90,24 +94,15 @@
     </div>
 
     <script>
-
-        const token = localStorage.getItem("token");
+        protegerPagina();
+        const token = getToken();
         let medicamentosGlobal = [];
-
-        // proteção login
-        if (!token) {
-            alert("Faça login primeiro!");
-            window.location.href = "login.html";
-        }
 
         // 🔄 LISTAR
         async function carregar() {
-
             try {
-                const res = await fetch("http://127.0.0.1:8000/medicamentos", {
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
+                const res = await fetch(`${API_URL}/medicamentos`, {
+                    headers: authHeaders()
                 });
 
                 const data = await res.json();
@@ -167,22 +162,23 @@
                 return;
             }
 
-            await fetch("http://127.0.0.1:8000/medicamentos", {
+            const res = await fetch(`${API_URL}/medicamentos`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({ nome, preco, estoque, validade, categoria })
+                headers: authHeaders(),
+                body: JSON.stringify({ nome, preco: parseFloat(preco), estoque: parseInt(estoque), validade, categoria })
             });
 
-            document.getElementById("nome").value = "";
-            document.getElementById("categoria").value = "";
-            document.getElementById("preco").value = "";
-            document.getElementById("estoque").value = "";
-            document.getElementById("validade").value = "";
-
-            carregar();
+            if (res.ok) {
+                document.getElementById("nome").value = "";
+                document.getElementById("categoria").value = "";
+                document.getElementById("preco").value = "";
+                document.getElementById("estoque").value = "";
+                document.getElementById("validade").value = "";
+                carregar();
+            } else {
+                const data = await res.json();
+                alert("Erro ao adicionar: " + (data.detail || "Erro inesperado"));
+            }
         }
 
         // ✏️ EDITAR
@@ -197,16 +193,25 @@
 
             if (!nome || !preco || !estoque) return;
 
-            await fetch(`http://127.0.0.1:8000/medicamentos/${id}`, {
+            const res = await fetch(`${API_URL}/medicamentos/${id}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({ nome, preco, estoque, validade, categoria })
+                headers: authHeaders(),
+                body: JSON.stringify({ 
+                    nome, 
+                    preco: parseFloat(preco), 
+                    estoque: parseInt(estoque), 
+                    validade, 
+                    categoria 
+                })
             });
 
-            carregar();
+            if (res.ok) {
+                alert("Medicamento atualizado com sucesso!");
+                carregar();
+            } else {
+                const data = await res.json();
+                alert("Erro ao atualizar: " + (data.detail || "Acesso negado"));
+            }
         }
 
         // 🗑️ APAGAR
@@ -214,14 +219,16 @@
 
             if (!confirm("Tens certeza que quer apagar?")) return;
 
-            await fetch(`http://127.0.0.1:8000/medicamentos/${id}`, {
+            const res = await fetch(`${API_URL}/medicamentos/${id}`, {
                 method: "DELETE",
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
+                headers: authHeaders()
             });
 
-            carregar();
+            if (res.ok) {
+                carregar();
+            } else {
+                alert("Erro ao apagar. Verifique se tem permissões de administrador.");
+            }
         }
 
         // logout
