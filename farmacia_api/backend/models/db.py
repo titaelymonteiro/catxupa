@@ -23,7 +23,9 @@ def init_db():
             preco     REAL    NOT NULL,
             estoque   INTEGER NOT NULL,
             validade  TEXT,
-            categoria TEXT
+            categoria TEXT,
+            criado_em TEXT    DEFAULT (datetime('now')),
+            criado_por TEXT
         )
     """)
 
@@ -62,6 +64,16 @@ def init_db():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS auditoria (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario    TEXT    NOT NULL,
+            acao       TEXT    NOT NULL,
+            detalhes   TEXT,
+            data_hora  TEXT    DEFAULT (datetime('now'))
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS venda_itens (
             id               INTEGER PRIMARY KEY AUTOINCREMENT,
             venda_id         INTEGER NOT NULL,
@@ -74,12 +86,16 @@ def init_db():
         )
     """)
 
-    # Migrar colunas antigas
     for tabela, col, definition in [
         ("usuarios", "nome",       "TEXT NOT NULL DEFAULT 'Sem nome'"),
         ("usuarios", "perfil",     "TEXT NOT NULL DEFAULT 'funcionario'"),
         ("usuarios", "criado_em",  "TEXT DEFAULT (datetime('now'))"),
         ("vendas",   "cliente_id", "INTEGER"),
+        ("vendas",   "metodo_pagamento", "TEXT DEFAULT 'Dinheiro'"),
+        ("vendas",   "status_pagamento", "TEXT DEFAULT 'Efetuado'"),
+        ("vendas",   "pagali_id", "TEXT"),
+        ("medicamentos", "criado_em", "TEXT DEFAULT (datetime('now'))"),
+        ("medicamentos", "criado_por", "TEXT"),
     ]:
         try:
             cursor.execute(f"ALTER TABLE {tabela} ADD COLUMN {col} {definition}")
@@ -89,7 +105,7 @@ def init_db():
     # Admin padrão
     cursor.execute("SELECT id FROM usuarios WHERE email = ?", ("admin@farmacia.cv",))
     if not cursor.fetchone():
-        cursor.execute(
+        cursor.execute( 
             "INSERT INTO usuarios (nome, email, password, perfil) VALUES (?, ?, ?, ?)",
             ("Administrador", "admin@farmacia.cv", hash_password("admin123"), "admin")
         )

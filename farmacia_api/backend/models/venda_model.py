@@ -26,12 +26,12 @@ def criar_tabelas_vendas():
     conn.commit()
     conn.close()
  
-def criar_venda(cliente: str, itens: list, criado_por: str):
+def criar_venda(cliente: str, itens: list, criado_por: str, metodo: str = "Dinheiro", status: str = "Efetuado"):
     conn = get_connection()
     total = sum(i["subtotal"] for i in itens)
     cursor = conn.execute(
-        "INSERT INTO vendas (cliente, total, criado_por) VALUES (?, ?, ?)",
-        (cliente, total, criado_por)
+        "INSERT INTO vendas (cliente, total, criado_por, metodo_pagamento, status_pagamento) VALUES (?, ?, ?, ?, ?)",
+        (cliente, total, criado_por, metodo, status)
     )
     venda_id = cursor.lastrowid
     for item in itens:
@@ -50,6 +50,15 @@ def criar_venda(cliente: str, itens: list, criado_por: str):
     conn.commit()
     conn.close()
     return venda_id
+
+def atualizar_venda_pagamento(venda_id: int, status: str, pagali_id: str = None):
+    conn = get_connection()
+    conn.execute(
+        "UPDATE vendas SET status_pagamento = ?, pagali_id = ? WHERE id = ?",
+        (status, pagali_id, venda_id)
+    )
+    conn.commit()
+    conn.close()
  
 def listar_vendas():
     conn = get_connection()

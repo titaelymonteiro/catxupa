@@ -44,9 +44,9 @@ uvicorn backend.main:app --reload
 Abrir `frontend/login.html` no browser.
  
 **Credenciais padrão:**
-- Email: `admin@farmacia.cv`
-- Senha: `admin123`
-
+- Email: `******`
+- Senha: `******`
+ 
 ## Endpoints da API
 
 | Método | Rota | Descrição |

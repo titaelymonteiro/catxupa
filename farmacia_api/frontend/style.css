@@ -1,8 +1,10 @@
 /* ── Farmácia CV – Global Styles ── */
 
+html,
 body {
     background: #f4f6f9;
     font-family: "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
 }
 
 /* LOGIN */
@@ -21,7 +23,7 @@ body {
     background: white;
     padding: 20px;
     border-radius: 14px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
 }
 
 /* STAT CARDS */
@@ -29,7 +31,7 @@ body {
     border-radius: 14px;
     padding: 20px;
     color: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card .stat-label {
@@ -45,28 +47,48 @@ body {
     font-weight: 700;
 }
 
-.blue   { background: linear-gradient(135deg, #0d6efd, #084298); }
-.green  { background: linear-gradient(135deg, #198754, #0a3622); }
-.orange { background: linear-gradient(135deg, #fd7e14, #984202); }
-.red    { background: linear-gradient(135deg, #dc3545, #842029); }
+.blue {
+    background: linear-gradient(135deg, #0d6efd, #084298);
+}
+
+.green {
+    background: linear-gradient(135deg, #198754, #0a3622);
+}
+
+.orange {
+    background: linear-gradient(135deg, #fd7e14, #984202);
+}
+
+.red {
+    background: linear-gradient(135deg, #dc3545, #842029);
+}
 
 /* NAVBAR */
-.navbar { padding: 12px 20px; }
+.navbar {
+    padding: 12px 20px;
+}
 
 /* TABLE */
-.table td, .table th { vertical-align: middle; }
+.table td,
+.table th {
+    vertical-align: middle;
+}
 
 /* ALERTS */
-.alert { border-radius: 10px; }
+.alert {
+    border-radius: 10px;
+}
 
 /* ── MODERN SIDEBAR & LAYOUT ── */
 :root {
     --sidebar-width: 280px;
-    --sidebar-bg: #156340; /* Matches Navbar Green */
+    --sidebar-bg: #156340;
+    /* Matches Navbar Green */
     --sidebar-active-bg: rgba(255, 255, 255, 0.15);
     --sidebar-text: #cbd5e1;
     --sidebar-text-active: #ffffff;
-    --accent-color: #4ade80; /* Brighter Green for highlight */
+    --accent-color: #4ade80;
+    /* Brighter Green for highlight */
     --navbar-height: 70px;
 }
 
@@ -82,7 +104,8 @@ body {
     left: 0;
     width: var(--sidebar-width);
     height: calc(100vh - var(--navbar-height));
-    background: rgba(2, 53, 30, 0.92); /* Semi-transparent version of #156340 */
+    background: rgba(2, 53, 30, 0.92);
+    /* Semi-transparent version of #156340 */
     backdrop-filter: blur(12px);
     z-index: 1030;
     padding: 1.5rem 1rem;
@@ -156,7 +179,8 @@ body {
 /* NAVBAR */
 .main-navbar {
     height: var(--navbar-height);
-    background: #066138 !important; /* Deep Green from dashboard */
+    background: #066138 !important;
+    /* Deep Green from dashboard */
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: white !important;
     padding: 0 2rem;
@@ -165,8 +189,10 @@ body {
     justify-content: space-between;
     z-index: 1040;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
 }
 
 .main-navbar .navbar-brand {
@@ -196,17 +222,23 @@ body {
 /* CONTENT AREA */
 .main-content {
     margin-left: var(--sidebar-width);
+    margin-top: var(--navbar-height);
     padding: 2rem;
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: calc(100vh - var(--navbar-height));
+    width: calc(100% - var(--sidebar-width));
+    max-width: 100%;
+    box-sizing: border-box;
+    /* Override Bootstrap container max-width restrictions */
+    max-width: none !important;
 }
 
-.sidebar.collapsed ~ .main-content {
-    margin-left: auto;
-    margin-right: auto;
+.sidebar.collapsed~.main-content {
+    margin-left: 0;
+    width: 100%;
 }
 
-.sidebar.collapsed ~ .main-navbar {
+.sidebar.collapsed~.main-navbar {
     margin-left: 0;
 }
 
@@ -215,15 +247,20 @@ body {
     .sidebar {
         transform: translateX(-100%);
     }
-    
+
     .sidebar.open {
         transform: translateX(0);
     }
-    
-    .main-content, .main-navbar {
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .main-navbar {
         margin-left: 0 !important;
     }
-    
+
     /* Overlay when sidebar is open on mobile */
     .sidebar-overlay {
         position: fixed;
@@ -236,16 +273,23 @@ body {
         backdrop-filter: blur(4px);
         display: none;
     }
-    
-    .sidebar.open ~ .sidebar-overlay {
+
+    .sidebar.open~.sidebar-overlay {
         display: block;
+    }
+}
+
+/* Laptop range: sidebar open pushes content, no overflow */
+@media (min-width: 993px) and (max-width: 1400px) {
+    .main-content {
+        padding: 1.25rem;
     }
 }
 
 /* UI COMPONENTS REFINEMENT */
 .card-box {
     border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card {

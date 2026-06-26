@@ -16,7 +16,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand mb-4">
-            <span class="fs-4">💊 Farmácia CV</span>
+            <span class="fs-4">📊 Dashboard</span>
         </div>
         <ul class="sidebar-nav">
             <li><a href="dashboard.html" class="active"><span class="nav-icon">📊</span> Dashboard</a></li>
@@ -24,6 +24,8 @@
             <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
             <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
             <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="auditoria.html"><span class="nav-icon">📜</span> Auditoria</a></li>
         </ul>
     </aside>
 
@@ -31,7 +33,10 @@
     <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle" title="Menu">☰</button>
-            <span class="navbar-brand fw-bold m-0 p-0">📊 Dashboard</span>
+            <div class="d-flex align-items-center gap-2">
+                <img src="assets/logo.jpg" alt="Logo" style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
+                <span class="navbar-brand fw-bold m-0 p-0">Farmácia CV</span>
+            </div>
         </div>
         <div>
             <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
@@ -85,10 +90,20 @@
         </div>
 
         <div id="alertaStock" class="card-box mb-4 d-none">
-            <h6 class="fw-bold">⚠️ Alertas de Stock</h6>
-            <div class="alert alert-warning mb-0">
-                Existem <strong id="stockAlerta">0</strong> medicamentos com stock baixo (menos de 10 unidades).
-                <a href="medicamentos.html" class="alert-link ms-2">Ver medicamentos →</a>
+            <h6 class="fw-bold">⚠️ Alertas</h6>
+            <div class="row g-3">
+                <div id="colStock" class="col-md-6 d-none">
+                    <div class="alert alert-warning mb-0">
+                        Existem <strong id="stockAlerta">0</strong> medicamentos com stock baixo.
+                        <a href="medicamentos.html" class="alert-link ms-2">Ver stock →</a>
+                    </div>
+                </div>
+                <div id="colValidade" class="col-md-6 d-none">
+                    <div class="alert alert-danger mb-0">
+                        Existem <strong id="validadeAlerta">0</strong> medicamentos a vencer brevemente.
+                        <a href="medicamentos.html" class="alert-link ms-2">Ver validade →</a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -176,9 +191,16 @@
                 document.getElementById("stock").innerText = data.stock_baixo;
                 document.getElementById("clientes").innerText = data.total_clientes;
 
-                if (data.stock_baixo > 0) {
+                if (data.stock_baixo > 0 || data.vencimento_proximo > 0) {
                     document.getElementById("alertaStock").classList.remove("d-none");
-                    document.getElementById("stockAlerta").innerText = data.stock_baixo;
+                    if (data.stock_baixo > 0) {
+                        document.getElementById("colStock").classList.remove("d-none");
+                        document.getElementById("stockAlerta").innerText = data.stock_baixo;
+                    }
+                    if (data.vencimento_proximo > 0) {
+                        document.getElementById("colValidade").classList.remove("d-none");
+                        document.getElementById("validadeAlerta").innerText = data.vencimento_proximo;
+                    }
                 }
 
                 criarGrafico(data.total_vendas, data.total_medicamentos, data.stock_baixo, data.total_clientes);

@@ -1,419 +1,502 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Entrar - Farmácia CV</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-    --teal-950:#062420;
-    --teal-900:#0a3530;
-    --teal-700:#0f5a4f;
-    --teal-500:#1d8c78;
-    --teal-300:#6dbfae;
-    --teal-100:#dcf0ea;
-    --sand-50:#faf8f3;
-    --ink:#13211e;
-    --ink-soft:#4b5d59;
-    --line:#e4e1d8;
-    --gold:#c9a45c;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-    font-family:'Inter',sans-serif;
-    background:var(--sand-50);
-    color:var(--ink);
-    min-height:100vh;
-}
-.wrap{
-    min-height:100vh;
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-}
-@media (max-width: 880px){
-    .wrap{grid-template-columns: 1fr;}
-    .panel{display:none;}
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - Farmácia CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --teal-950: #062420;
+            --teal-900: #0a3530;
+            --teal-700: #0f5a4f;
+            --teal-500: #1d8c78;
+            --teal-300: #6dbfae;
+            --teal-100: #dcf0ea;
+            --sand-50: #faf8f3;
+            --ink: #13211e;
+            --ink-soft: #4b5d59;
+            --line: #e4e1d8;
+            --gold: #c9a45c;
+        }
 
-/* ── LEFT PANEL ───────────────────────────────────────── */
-.panel{
-    position:relative;
-    background:linear-gradient(165deg, var(--teal-950) 0%, var(--teal-900) 55%, var(--teal-700) 100%);
-    color:white;
-    padding:4rem 3.5rem;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    overflow:hidden;
-}
-.panel::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:
-        radial-gradient(circle at 85% 15%, rgba(109,191,174,0.18), transparent 45%),
-        radial-gradient(circle at 10% 90%, rgba(201,164,92,0.12), transparent 40%);
-    pointer-events:none;
-}
-.panel-grid{
-    position:absolute;
-    inset:0;
-    opacity:0.07;
-    background-image:
-        repeating-linear-gradient(0deg, white 0, white 1px, transparent 1px, transparent 64px),
-        repeating-linear-gradient(90deg, white 0, white 1px, transparent 1px, transparent 64px);
-}
-.brand{
-    position:relative;
-    z-index:1;
-    display:flex;
-    align-items:center;
-    gap:14px;
-}
-.brand-mark{
-    width:44px;height:44px;
-    border:1.5px solid rgba(255,255,255,0.35);
-    border-radius:12px;
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;
-}
-.brand-mark svg{width:22px;height:22px;}
-.brand-name{
-    font-family:'Fraunces',serif;
-    font-weight:500;
-    font-size:20px;
-    letter-spacing:0.01em;
-}
-.brand-tag{
-    font-size:12px;
-    color:var(--teal-300);
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    margin-top:2px;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.hero{position:relative;z-index:1;}
-.hero-eyebrow{
-    font-size:12.5px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--gold);
-    margin-bottom:1.1rem;
-    font-weight:500;
-}
-.hero h1{
-    font-family:'Fraunces',serif;
-    font-weight:500;
-    font-size:clamp(2.1rem, 4vw, 3rem);
-    line-height:1.18;
-    max-width:480px;
-    margin-bottom:1.4rem;
-}
-.hero h1 em{
-    font-style:italic;
-    color:var(--teal-300);
-}
-.hero p{
-    font-size:15.5px;
-    line-height:1.7;
-    color:rgba(255,255,255,0.72);
-    max-width:400px;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--sand-50);
+            color: var(--ink);
+            min-height: 100vh;
+        }
 
-.stats-row{
-    position:relative;
-    z-index:1;
-    display:flex;
-    gap:2.5rem;
-    padding-top:2rem;
-    border-top:1px solid rgba(255,255,255,0.14);
-}
-.stat-num{
-    font-family:'Fraunces',serif;
-    font-size:1.9rem;
-    font-weight:500;
-}
-.stat-label{
-    font-size:12px;
-    color:rgba(255,255,255,0.55);
-    margin-top:2px;
-}
+        .wrap {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
 
-/* ── RIGHT PANEL (form) ───────────────────────────────── */
-.form-side{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:3rem 2rem;
-}
-.form-box{
-    width:100%;
-    max-width:380px;
-}
-.form-top{margin-bottom:2.4rem;}
-.form-top .kicker{
-    font-size:12.5px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--teal-500);
-    font-weight:600;
-    margin-bottom:0.6rem;
-}
-.form-top h2{
-    font-family:'Fraunces',serif;
-    font-weight:500;
-    font-size:1.9rem;
-    color:var(--ink);
-}
-.form-top p{
-    font-size:14px;
-    color:var(--ink-soft);
-    margin-top:0.5rem;
-}
+        @media (max-width: 880px) {
+            .wrap {
+                grid-template-columns: 1fr;
+            }
 
-.field{margin-bottom:1.3rem;}
-.field label{
-    display:block;
-    font-size:13px;
-    font-weight:500;
-    color:var(--ink);
-    margin-bottom:0.5rem;
-}
-.field input{
-    width:100%;
-    padding:0.85rem 1rem;
-    font-size:14.5px;
-    font-family:'Inter',sans-serif;
-    border:1.5px solid var(--line);
-    border-radius:10px;
-    background:white;
-    color:var(--ink);
-    transition:border-color 0.15s, box-shadow 0.15s;
-}
-.field input:focus{
-    outline:none;
-    border-color:var(--teal-500);
-    box-shadow:0 0 0 3px var(--teal-100);
-}
-.field input::placeholder{color:#9ba6a3;}
+            .panel {
+                display: none;
+            }
+        }
 
-.pwd-wrap{position:relative;}
-.pwd-toggle{
-    position:absolute;
-    right:12px; top:50%;
-    transform:translateY(-50%);
-    background:none;border:none;
-    cursor:pointer;
-    color:var(--ink-soft);
-    font-size:13px;
-    font-family:'Inter',sans-serif;
-    padding:4px;
-}
+        /* ── LEFT PANEL ───────────────────────────────────────── */
+        .panel {
+            position: relative;
+            background: linear-gradient(165deg, var(--teal-950) 0%, var(--teal-900) 55%, var(--teal-700) 100%);
+            color: white;
+            padding: 4rem 3.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
 
-.row-between{
-    display:flex;justify-content:space-between;align-items:center;
-    margin-bottom:1.5rem;
-}
-.check-label{
-    display:flex;align-items:center;gap:8px;
-    font-size:13px;color:var(--ink-soft);
-    cursor:pointer;
-}
-.check-label input{width:15px;height:15px;accent-color:var(--teal-500);}
+        .panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 85% 15%, rgba(109, 191, 174, 0.18), transparent 45%),
+                radial-gradient(circle at 10% 90%, rgba(201, 164, 92, 0.12), transparent 40%);
+            pointer-events: none;
+        }
 
-.btn-primary{
-    width:100%;
-    padding:0.95rem;
-    background:var(--teal-700);
-    color:white;
-    border:none;
-    border-radius:10px;
-    font-size:15px;
-    font-weight:600;
-    font-family:'Inter',sans-serif;
-    cursor:pointer;
-    transition:background 0.15s, transform 0.1s;
-}
-.btn-primary:hover{background:var(--teal-900);}
-.btn-primary:active{transform:scale(0.99);}
-.btn-primary:disabled{opacity:0.6;cursor:default;}
+        .panel-grid {
+            position: absolute;
+            inset: 0;
+            opacity: 0.07;
+            background-image:
+                repeating-linear-gradient(0deg, white 0, white 1px, transparent 1px, transparent 64px),
+                repeating-linear-gradient(90deg, white 0, white 1px, transparent 1px, transparent 64px);
+        }
 
-.error-box{
-    background:#fbeaea;
-    border:1px solid #e8b8b8;
-    color:#8a2f2f;
-    font-size:13.5px;
-    padding:0.75rem 1rem;
-    border-radius:8px;
-    margin-bottom:1.3rem;
-}
+        .brand {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
 
-.divider-note{
-    text-align:center;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    margin-top:1.8rem;
-}
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            /* border:1.5px solid rgba(255,255,255,0.35); */
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
 
-/* ── DECORATIVE CROSS GLYPH ───────────────────────────── */
-.cross-deco{
-    position:absolute;
-    right:-30px; bottom:-30px;
-    width:230px;height:230px;
-    opacity:0.10;
-    z-index:0;
-}
-</style>
+        .brand-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .brand-name {
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            font-size: 20px;
+            letter-spacing: 0.01em;
+        }
+
+        .brand-tag {
+            font-size: 12px;
+            color: var(--teal-300);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 12.5px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.1rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            font-size: clamp(2.1rem, 4vw, 3rem);
+            line-height: 1.18;
+            max-width: 480px;
+            margin-bottom: 1.4rem;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--teal-300);
+        }
+
+        .hero p {
+            font-size: 15.5px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.72);
+            max-width: 400px;
+        }
+
+        .stats-row {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .stat-num {
+            font-family: 'Fraunces', serif;
+            font-size: 1.9rem;
+            font-weight: 500;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.55);
+            margin-top: 2px;
+        }
+
+        /* ── RIGHT PANEL (form) ───────────────────────────────── */
+        .form-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .form-top {
+            margin-bottom: 2.4rem;
+        }
+
+        .form-top .kicker {
+            font-size: 12.5px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--teal-500);
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .form-top h2 {
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            font-size: 1.9rem;
+            color: var(--ink);
+        }
+
+        .form-top p {
+            font-size: 14px;
+            color: var(--ink-soft);
+            margin-top: 0.5rem;
+        }
+
+        .field {
+            margin-bottom: 1.3rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            font-size: 14.5px;
+            font-family: 'Inter', sans-serif;
+            border: 1.5px solid var(--line);
+            border-radius: 10px;
+            background: white;
+            color: var(--ink);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: var(--teal-500);
+            box-shadow: 0 0 0 3px var(--teal-100);
+        }
+
+        .field input::placeholder {
+            color: #9ba6a3;
+        }
+
+        .pwd-wrap {
+            position: relative;
+        }
+
+        .pwd-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--ink-soft);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            padding: 4px;
+        }
+
+        .row-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .check-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--ink-soft);
+            cursor: pointer;
+        }
+
+        .check-label input {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--teal-500);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.95rem;
+            background: var(--teal-700);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            background: var(--teal-900);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .error-box {
+            background: #fbeaea;
+            border: 1px solid #e8b8b8;
+            color: #8a2f2f;
+            font-size: 13.5px;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.3rem;
+        }
+
+        .divider-note {
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            margin-top: 1.8rem;
+        }
+
+        /* ── DECORATIVE CROSS GLYPH ───────────────────────────── */
+        .cross-deco {
+            position: absolute;
+            right: -30px;
+            bottom: -30px;
+            width: 230px;
+            height: 230px;
+            opacity: 0.10;
+            z-index: 0;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="wrap">
+    <div class="wrap">
 
-    <!-- LEFT — BRAND PANEL -->
-    <div class="panel">
-        <div class="panel-grid"></div>
+        <!-- LEFT — BRAND PANEL -->
+        <div class="panel">
+            <div class="panel-grid"></div>
 
-        <div class="brand">
-            <div class="brand-mark">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-                    <path d="M12 3v18M3 12h18"/>
-                </svg>
-            </div>
-            <div>
-                <div class="brand-name">Farmácia CV</div>
-                <div class="brand-tag">Sistema de gestão</div>
-            </div>
-        </div>
-
-        <div class="hero">
-            <div class="hero-eyebrow">Acesso reservado à equipa</div>
-            <h1>Cuidar de Cabo Verde, <em>um medicamento por vez.</em></h1>
-            <p>Entre com a sua conta para gerir stock, registar vendas e acompanhar a farmácia em tempo real.</p>
-        </div>
-
-        <div class="stats-row">
-            <div>
-                <div class="stat-num">+500</div>
-                <div class="stat-label">Medicamentos geridos</div>
-            </div>
-            <div>
-                <div class="stat-num">24/7</div>
-                <div class="stat-label">Acesso ao sistema</div>
-            </div>
-            <div>
-                <div class="stat-num">100%</div>
-                <div class="stat-label">Dados seguros</div>
-            </div>
-        </div>
-
-        <svg class="cross-deco" viewBox="0 0 24 24" fill="white">
-            <path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/>
-        </svg>
-    </div>
-
-    <!-- RIGHT — LOGIN FORM -->
-    <div class="form-side">
-        <div class="form-box">
-
-            <div class="form-top">
-                <div class="kicker">Bem-vindo de volta</div>
-                <h2>Entrar na sua conta</h2>
-                <p>Introduza as suas credenciais para continuar.</p>
-            </div>
-
-            <div id="erro" class="error-box" style="display:none;"></div>
-
-            <div class="field">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" placeholder="nome@farmacia.cv" autocomplete="email">
-            </div>
-
-            <div class="field">
-                <label for="password">Palavra-passe</label>
-                <div class="pwd-wrap">
-                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-                    <button type="button" class="pwd-toggle" onclick="togglePwd()" id="pwdToggleBtn">Ver</button>
+            <div class="brand">
+                <div class="brand-mark">
+                    <img src="assets/logo.jpg" alt="Logo Farmácia CV">
+                </div>
+                <div>
+                    <div class="brand-name">Farmácia CV</div>
+                    <div class="brand-tag">Sistema de gestão</div>
                 </div>
             </div>
 
-            <div class="row-between">
-                <label class="check-label">
-                    <input type="checkbox" id="lembrar">
-                    Lembrar-me
-                </label>
+            <div class="hero">
+                <div class="hero-eyebrow">Acesso reservado à equipa</div>
+                <h1>Cuidar de Cabo Verde, <em>um medicamento por vez.</em></h1>
+                <p>Entre com a sua conta para gerir stock, registar vendas e acompanhar a farmácia em tempo real.</p>
             </div>
 
-            <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+            <div class="stats-row">
+                <div>
+                    <div class="stat-num">+500</div>
+                    <div class="stat-label">Medicamentos geridos</div>
+                </div>
+                <div>
+                    <div class="stat-num">24/7</div>
+                    <div class="stat-label">Acesso ao sistema</div>
+                </div>
+                <div>
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Dados seguros</div>
+                </div>
+            </div>
 
-            <p class="divider-note">Acesso restrito a colaboradores autorizados da Farmácia CV</p>
+            <svg class="cross-deco" viewBox="0 0 24 24" fill="white">
+                <path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z" />
+            </svg>
         </div>
+
+        <!-- RIGHT — LOGIN FORM -->
+        <div class="form-side">
+            <div class="form-box">
+
+                <div class="form-top">
+                    <div class="kicker">Bem-vindo de volta</div>
+                    <h2>Entrar na sua conta</h2>
+                    <p>Introduza as suas credenciais para continuar.</p>
+                </div>
+
+                <div id="erro" class="error-box" style="display:none;"></div>
+
+                <div class="field">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="nome@farmacia.cv" autocomplete="email">
+                </div>
+
+                <div class="field">
+                    <label for="password">Palavra-passe</label>
+                    <div class="pwd-wrap">
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="pwd-toggle" onclick="togglePwd()" id="pwdToggleBtn">Ver</button>
+                    </div>
+                </div>
+
+                <div class="row-between">
+                    <label class="check-label">
+                        <input type="checkbox" id="lembrar">
+                        Lembrar-me
+                    </label>
+                </div>
+
+                <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+
+                <p class="divider-note">Acesso restrito a colaboradores autorizados da Farmácia CV</p>
+            </div>
+        </div>
+
     </div>
 
-</div>
-
-<script>
-function togglePwd() {
-    const input = document.getElementById("password");
-    const btn = document.getElementById("pwdToggleBtn");
-    if (input.type === "password") {
-        input.type = "text";
-        btn.innerText = "Ocultar";
-    } else {
-        input.type = "password";
-        btn.innerText = "Ver";
-    }
-}
-
-async function fazerLogin() {
-    const email    = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const erroBox  = document.getElementById("erro");
-    const btn      = document.getElementById("btnLogin");
-
-    erroBox.style.display = "none";
-
-    if (!email || !password) {
-        erroBox.innerText = "Preencha o e-mail e a senha.";
-        erroBox.style.display = "block";
-        return;
-    }
-
-    btn.disabled = true;
-    btn.innerText = "A entrar...";
-
-    try {
-        const res = await fetch("http://127.0.0.1:8000/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            erroBox.innerText = data.detail || "Credenciais inválidas.";
-            erroBox.style.display = "block";
-            return;
+    <script>
+        function togglePwd() {
+            const input = document.getElementById("password");
+            const btn = document.getElementById("pwdToggleBtn");
+            if (input.type === "password") {
+                input.type = "text";
+                btn.innerText = "Ocultar";
+            } else {
+                input.type = "password";
+                btn.innerText = "Ver";
+            }
         }
 
-        localStorage.setItem("token", data.access_token);
-        window.location.href = "dashboard.html";
+        async function fazerLogin() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const erroBox = document.getElementById("erro");
+            const btn = document.getElementById("btnLogin");
 
-    } catch (err) {
-        erroBox.innerText = "Erro de ligação com o servidor. Verifique se o backend está a correr.";
-        erroBox.style.display = "block";
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Entrar";
-    }
-}
+            erroBox.style.display = "none";
 
-document.addEventListener("keydown", e => {
-    if (e.key === "Enter") fazerLogin();
-});
-</script>
+            if (!email || !password) {
+                erroBox.innerText = "Preencha o e-mail e a senha.";
+                erroBox.style.display = "block";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "A entrar...";
+
+            try {
+                const res = await fetch("http://127.0.0.1:8000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    erroBox.innerText = data.detail || "Credenciais inválidas.";
+                    erroBox.style.display = "block";
+                    return;
+                }
+
+                localStorage.setItem("token", data.access_token);
+                window.location.href = "dashboard.html";
+
+            } catch (err) {
+                erroBox.innerText = "Erro de ligação com o servidor. Verifique se o backend está a correr.";
+                erroBox.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Entrar";
+            }
+        }
+
+        document.addEventListener("keydown", e => {
+            if (e.key === "Enter") fazerLogin();
+        });
+    </script>
 </body>
+
 </html>
