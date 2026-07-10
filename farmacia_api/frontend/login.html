@@ -7,22 +7,22 @@
     <title>Entrar - Farmácia CV</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --teal-950: #062420;
+            --teal-950: #041a17;
             --teal-900: #0a3530;
             --teal-700: #0f5a4f;
             --teal-500: #1d8c78;
             --teal-300: #6dbfae;
             --teal-100: #dcf0ea;
-            --sand-50: #faf8f3;
+            --sand-50: #faf8f5;
+            --sand-100: #f4efea;
             --ink: #13211e;
             --ink-soft: #4b5d59;
             --line: #e4e1d8;
             --gold: #c9a45c;
+            --gold-light: #dfc38a;
         }
 
         * {
@@ -36,15 +36,16 @@
             background: var(--sand-50);
             color: var(--ink);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .wrap {
             min-height: 100vh;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.1fr 0.9fr;
         }
 
-        @media (max-width: 880px) {
+        @media (max-width: 991px) {
             .wrap {
                 grid-template-columns: 1fr;
             }
@@ -57,129 +58,198 @@
         /* ── LEFT PANEL ───────────────────────────────────────── */
         .panel {
             position: relative;
-            background: linear-gradient(165deg, var(--teal-950) 0%, var(--teal-900) 55%, var(--teal-700) 100%);
+            background: #021411; /* deeper premium forest black background */
             color: white;
-            padding: 4rem 3.5rem;
+            padding: 5rem 4rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .panel::before {
-            content: "";
+        /* Moving Shifting Mesh Blobs */
+        @keyframes float-blob-1 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(40px, -60px) scale(1.15); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        @keyframes float-blob-2 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(-50px, 50px) scale(1.25); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        .blob {
             position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(circle at 85% 15%, rgba(109, 191, 174, 0.18), transparent 45%),
-                radial-gradient(circle at 10% 90%, rgba(201, 164, 92, 0.12), transparent 40%);
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.22;
+            z-index: 0;
             pointer-events: none;
+        }
+
+        .blob-1 {
+            top: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--teal-300) 0%, rgba(29,140,120,0) 70%);
+            animation: float-blob-1 14s infinite ease-in-out;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--gold) 0%, rgba(201,164,92,0) 70%);
+            animation: float-blob-2 16s infinite ease-in-out;
+        }
+
+        .blob-3 {
+            top: 30%;
+            left: 20%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, var(--teal-700) 0%, rgba(15,90,79,0) 70%);
+            animation: float-blob-1 22s infinite ease-in-out alternate;
+            opacity: 0.15;
         }
 
         .panel-grid {
             position: absolute;
             inset: 0;
-            opacity: 0.07;
+            opacity: 0.04;
             background-image:
                 repeating-linear-gradient(0deg, white 0, white 1px, transparent 1px, transparent 64px),
                 repeating-linear-gradient(90deg, white 0, white 1px, transparent 1px, transparent 64px);
+            z-index: 1;
         }
 
         .brand {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
         }
 
         .brand-mark {
-            width: 44px;
-            height: 44px;
-            /* border:1.5px solid rgba(255,255,255,0.35); */
-            border-radius: 12px;
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.08); /* glassmorphism */
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 4px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .brand-mark:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: scale(1.06) rotate(4deg);
         }
 
         .brand-mark img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            border-radius: 10px;
+            object-fit: cover;
+            border-radius: 12px;
         }
 
         .brand-name {
             font-family: 'Fraunces', serif;
-            font-weight: 500;
-            font-size: 20px;
+            font-weight: 600;
+            font-size: 22px;
             letter-spacing: 0.01em;
         }
 
         .brand-tag {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--teal-300);
-            letter-spacing: 0.08em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 1px;
+            font-weight: 600;
         }
 
         .hero {
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
 
         .hero-eyebrow {
-            font-size: 12.5px;
-            letter-spacing: 0.12em;
+            font-size: 12px;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--gold);
-            margin-bottom: 1.1rem;
-            font-weight: 500;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
         }
 
         .hero h1 {
             font-family: 'Fraunces', serif;
-            font-weight: 500;
-            font-size: clamp(2.1rem, 4vw, 3rem);
-            line-height: 1.18;
-            max-width: 480px;
-            margin-bottom: 1.4rem;
+            font-weight: 400;
+            font-size: clamp(2.3rem, 4.5vw, 3.2rem);
+            line-height: 1.28;
+            max-width: 520px;
+            margin-bottom: 1.8rem;
         }
 
         .hero h1 em {
             font-style: italic;
             color: var(--teal-300);
+            font-weight: 500;
         }
 
         .hero p {
-            font-size: 15.5px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.72);
-            max-width: 400px;
+            font-size: 16px;
+            line-height: 1.75;
+            color: rgba(255, 255, 255, 0.78);
+            max-width: 440px;
         }
 
         .stats-row {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             display: flex;
-            gap: 2.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.14);
+            gap: 3.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .stat-item {
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
         }
 
         .stat-num {
             font-family: 'Fraunces', serif;
-            font-size: 1.9rem;
+            font-size: 2.1rem;
             font-weight: 500;
+            color: var(--gold);
+            text-shadow: 0 4px 12px rgba(201, 164, 92, 0.1);
         }
 
         .stat-label {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.55);
-            margin-top: 2px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 3px;
         }
 
         /* ── RIGHT PANEL (form) ───────────────────────────────── */
@@ -187,21 +257,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 3rem 2rem;
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, var(--sand-50) 0%, var(--sand-100) 100%);
+            position: relative;
         }
 
         .form-box {
             width: 100%;
-            max-width: 380px;
+            max-width: 420px;
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 24px 60px -16px rgba(19, 33, 30, 0.08), 0 1px 3px rgba(19, 33, 30, 0.02);
+            border: 1px solid rgba(19, 33, 30, 0.03);
+            position: relative;
+            z-index: 5;
         }
 
         .form-top {
-            margin-bottom: 2.4rem;
+            margin-bottom: 2.8rem;
         }
 
         .form-top .kicker {
-            font-size: 12.5px;
-            letter-spacing: 0.1em;
+            font-size: 12px;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--teal-500);
             font-weight: 600;
@@ -211,48 +290,51 @@
         .form-top h2 {
             font-family: 'Fraunces', serif;
             font-weight: 500;
-            font-size: 1.9rem;
+            font-size: 2rem;
             color: var(--ink);
         }
 
         .form-top p {
-            font-size: 14px;
+            font-size: 14.5px;
             color: var(--ink-soft);
-            margin-top: 0.5rem;
+            margin-top: 0.6rem;
         }
 
         .field {
-            margin-bottom: 1.3rem;
+            margin-bottom: 1.5rem;
         }
 
         .field label {
             display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--ink);
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--teal-950);
             margin-bottom: 0.5rem;
+            transition: color 0.2s ease;
         }
 
         .field input {
             width: 100%;
-            padding: 0.85rem 1rem;
+            padding: 1rem 1.2rem;
             font-size: 14.5px;
             font-family: 'Inter', sans-serif;
-            border: 1.5px solid var(--line);
-            border-radius: 10px;
-            background: white;
+            border: 1.5px solid #e2e8e6;
+            border-radius: 12px;
+            background: #fafcfb;
             color: var(--ink);
-            transition: border-color 0.15s, box-shadow 0.15s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .field input:focus {
             outline: none;
             border-color: var(--teal-500);
-            box-shadow: 0 0 0 3px var(--teal-100);
+            background: white;
+            box-shadow: 0 12px 28px -6px rgba(29, 140, 120, 0.1), 0 0 0 4px var(--teal-100);
+            transform: translateY(-2px);
         }
 
-        .field input::placeholder {
-            color: #9ba6a3;
+        .field:focus-within label {
+            color: var(--teal-500);
         }
 
         .pwd-wrap {
@@ -261,7 +343,7 @@
 
         .pwd-toggle {
             position: absolute;
-            right: 12px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
@@ -269,86 +351,159 @@
             cursor: pointer;
             color: var(--ink-soft);
             font-size: 13px;
+            font-weight: 600;
             font-family: 'Inter', sans-serif;
-            padding: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .pwd-toggle:hover {
+            background: rgba(29, 140, 120, 0.08);
+            color: var(--teal-700);
         }
 
         .row-between {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         .check-label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            gap: 10px;
+            font-size: 13.5px;
             color: var(--ink-soft);
             cursor: pointer;
+            user-select: none;
         }
 
         .check-label input {
-            width: 15px;
-            height: 15px;
+            width: 17px;
+            height: 17px;
             accent-color: var(--teal-500);
+            border-radius: 4px;
+            cursor: pointer;
         }
 
         .btn-primary {
             width: 100%;
-            padding: 0.95rem;
-            background: var(--teal-700);
+            padding: 1.1rem;
+            background: linear-gradient(135deg, var(--teal-700) 0%, var(--teal-950) 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 15.5px;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
+            box-shadow: 0 10px 25px -5px rgba(15, 90, 79, 0.35);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: all 0.6s ease;
         }
 
         .btn-primary:hover {
-            background: var(--teal-900);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px -5px rgba(15, 90, 79, 0.45);
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
         }
 
         .btn-primary:active {
-            transform: scale(0.99);
+            transform: translateY(0) scale(0.98);
         }
 
         .btn-primary:disabled {
             opacity: 0.6;
-            cursor: default;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
         }
 
         .error-box {
-            background: #fbeaea;
-            border: 1px solid #e8b8b8;
-            color: #8a2f2f;
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
             font-size: 13.5px;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.3rem;
+            padding: 0.9rem 1.1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 6px 15px rgba(197, 48, 48, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .divider-note {
             text-align: center;
-            font-size: 12.5px;
+            font-size: 13px;
             color: var(--ink-soft);
-            margin-top: 1.8rem;
+            margin-top: 2rem;
+            line-height: 1.5;
         }
 
         /* ── DECORATIVE CROSS GLYPH ───────────────────────────── */
         .cross-deco {
             position: absolute;
-            right: -30px;
-            bottom: -30px;
-            width: 230px;
-            height: 230px;
-            opacity: 0.10;
-            z-index: 0;
+            right: -50px;
+            bottom: -50px;
+            width: 300px;
+            height: 300px;
+            opacity: 0.06;
+            color: var(--teal-300);
+            z-index: 1;
+            transform: rotate(15deg);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
+
+        .panel:hover .cross-deco {
+            opacity: 0.12;
+            color: var(--gold);
+            transform: scale(1.08) rotate(35deg);
+        }
+
+        /* ── ANIMATIONS ───────────────────────────────────────── */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-up {
+            animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.15s; opacity: 0; }
+        .delay-2 { animation-delay: 0.3s; opacity: 0; }
+        .delay-3 { animation-delay: 0.45s; opacity: 0; }
     </style>
 </head>
 
@@ -358,6 +513,9 @@
 
         <!-- LEFT — BRAND PANEL -->
         <div class="panel">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
             <div class="panel-grid"></div>
 
             <div class="brand">
@@ -377,28 +535,28 @@
             </div>
 
             <div class="stats-row">
-                <div>
+                <div class="stat-item">
                     <div class="stat-num">+500</div>
-                    <div class="stat-label">Medicamentos geridos</div>
+                    <div class="stat-label">Medicamentos</div>
                 </div>
-                <div>
+                <div class="stat-item">
                     <div class="stat-num">24/7</div>
-                    <div class="stat-label">Acesso ao sistema</div>
+                    <div class="stat-label">Acesso Online</div>
                 </div>
-                <div>
+                <div class="stat-item">
                     <div class="stat-num">100%</div>
-                    <div class="stat-label">Dados seguros</div>
+                    <div class="stat-label">Segurança</div>
                 </div>
             </div>
 
-            <svg class="cross-deco" viewBox="0 0 24 24" fill="white">
-                <path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z" />
+            <svg class="cross-deco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M2 12h20M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5z" />
             </svg>
         </div>
 
         <!-- RIGHT — LOGIN FORM -->
         <div class="form-side">
-            <div class="form-box">
+            <div class="form-box animate-fade-up">
 
                 <div class="form-top">
                     <div class="kicker">Bem-vindo de volta</div>
@@ -406,14 +564,21 @@
                     <p>Introduza as suas credenciais para continuar.</p>
                 </div>
 
-                <div id="erro" class="error-box" style="display:none;"></div>
+                <div id="erro" class="error-box" style="display:none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span></span>
+                </div>
 
-                <div class="field">
+                <div class="field animate-fade-up delay-1">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" placeholder="nome@farmacia.cv" autocomplete="email">
                 </div>
 
-                <div class="field">
+                <div class="field animate-fade-up delay-2">
                     <label for="password">Palavra-passe</label>
                     <div class="pwd-wrap">
                         <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
@@ -421,16 +586,16 @@
                     </div>
                 </div>
 
-                <div class="row-between">
+                <div class="row-between animate-fade-up delay-3">
                     <label class="check-label">
                         <input type="checkbox" id="lembrar">
                         Lembrar-me
                     </label>
                 </div>
 
-                <button class="btn-primary" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+                <button class="btn-primary animate-fade-up delay-3" id="btnLogin" onclick="fazerLogin()">Entrar</button>
 
-                <p class="divider-note">Acesso restrito a colaboradores autorizados da Farmácia CV</p>
+                <p class="divider-note animate-fade-up delay-3">Acesso restrito a colaboradores autorizados da Farmácia CV</p>
             </div>
         </div>
 
@@ -453,13 +618,14 @@
             const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value.trim();
             const erroBox = document.getElementById("erro");
+            const erroSpan = erroBox.querySelector("span");
             const btn = document.getElementById("btnLogin");
 
             erroBox.style.display = "none";
 
             if (!email || !password) {
-                erroBox.innerText = "Preencha o e-mail e a senha.";
-                erroBox.style.display = "block";
+                erroSpan.innerText = "Preencha o e-mail e a senha.";
+                erroBox.style.display = "flex";
                 return;
             }
 
@@ -476,8 +642,8 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    erroBox.innerText = data.detail || "Credenciais inválidas.";
-                    erroBox.style.display = "block";
+                    erroSpan.innerText = data.detail || "Credenciais inválidas.";
+                    erroBox.style.display = "flex";
                     return;
                 }
 
@@ -485,8 +651,9 @@
                 window.location.href = "dashboard.html";
 
             } catch (err) {
-                erroBox.innerText = "Erro de ligação com o servidor. Verifique se o backend está a correr.";
-                erroBox.style.display = "block";
+                erroSpan.innerText = "Erro de ligação com o servidor. Verifique se o backend está a correr.";
+                erroBox.style.display = "flex";
+                return;
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Entrar";

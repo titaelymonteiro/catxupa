@@ -61,7 +61,8 @@
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle" title="Menu">☰</button>
             <div class="d-flex align-items-center gap-2">
-                <img src="assets/logo.jpg" alt="Logo" style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
+                <img src="assets/logo.jpg" alt="Logo"
+                    style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
                 <span class="navbar-brand fw-bold m-0 p-0">Farmácia CV</span>
             </div>
         </div>
@@ -107,7 +108,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Método de Pagamento</label>
-                    <select id="metodoPagamento" class="form-select">
+                    <select id="metodoPagamento" class="form-select" onchange="toggleSeccaoTroco()">
                         <option value="Dinheiro">💵 Dinheiro / Vinti4 Presencial</option>
                         <option value="Pagali">📲 Pagali (Cartão/Online)</option>
                     </select>
@@ -235,6 +236,7 @@
             await carregarClientes();
             await carregarResumo();
             await carregarHistorico();
+            toggleSeccaoTroco();
         }
 
         // ── CLIENTES ──────────────────────────────────────────────────────────────────
@@ -337,6 +339,7 @@
             if (!itensVenda.length) {
                 tbody.innerHTML = '<tr id="linhaVazia"><td colspan="5" class="text-center text-muted py-3">Nenhum item adicionado</td></tr>';
                 document.getElementById("totalVenda").innerText = "0 CVE";
+                calcularTroco();
                 return;
             }
             tbody.innerHTML = itensVenda.map((item, i) => `
@@ -355,6 +358,7 @@
 
             const total = itensVenda.reduce((s, i) => s + i.subtotal, 0);
             document.getElementById("totalVenda").innerText = total.toLocaleString("pt-CV") + " CVE";
+            calcularTroco();
         }
 
         function alterarQtd(index, novaQtd) {
@@ -372,12 +376,29 @@
 
         function limparVenda() {
             itensVenda = [];
+            document.getElementById("valorEntregue").value = "";
             renderItens();
             document.getElementById("clienteSelect").value = "";
             clienteSelecionadoId = null;
             clienteSelecionadoNome = "Cliente Geral";
             document.getElementById("msgVenda").classList.add("d-none");
         }
+
+        // ── CALCULADORA DE TROCO ──────────────────────────────────────────────────────
+        function toggleSeccaoTroco() {
+            const metodo = document.getElementById("metodoPagamento").value;
+            const seccao = document.getElementById("seccaoTroco");
+            if (metodo === "Dinheiro") {
+                seccao.classList.remove("d-none");
+                calcularTroco();
+            } else {
+                seccao.classList.add("d-none");
+                document.getElementById("valorEntregue").value = "";
+                document.getElementById("valorTroco").value = "";
+            }
+        }
+
+
 
         // ── FINALIZAR VENDA ───────────────────────────────────────────────────────────
         async function finalizarVenda() {
@@ -387,15 +408,37 @@
             }
 
             const metodo = document.getElementById("metodoPagamento").value;
+            let valorEntregue = 0;
+            let troco = 0;
+
+            if (metodo === "Dinheiro") {
+                const total = itensVenda.reduce((s, i) => s + i.subtotal, 0);
+                const entregueInput = document.getElementById("valorEntregue");
+                const entregueVal = entregueInput.value.trim();
+
+                if (entregueVal !== "") {
+                    valorEntregue = parseFloat(entregueVal) || 0;
+                    if (valorEntregue < total) {
+                        mostrarMsgVenda(`Valor entregue insuficiente. Faltam ${(total - valorEntregue).toLocaleString("pt-CV")} CVE.`, "danger");
+                        return;
+                    }
+                    troco = valorEntregue - total;
+                } else {
+                    valorEntregue = total;
+                    troco = 0;
+                }
+            }
 
             const res = await fetch(`${API_URL}/vendas`, {
                 method: "POST",
                 headers: authHeaders(),
-                body: JSON.stringify({ 
-                    cliente: clienteSelecionadoNome, 
-                    cliente_id: clienteSelecionadoId, 
+                body: JSON.stringify({
+                    cliente: clienteSelecionadoNome,
+                    cliente_id: clienteSelecionadoId,
                     metodo_pagamento: metodo,
-                    itens: itensVenda 
+                    valor_entregue: valorEntregue,
+                    troco: troco,
+                    itens: itensVenda
                 })
             });
 
@@ -443,10 +486,10 @@
             }
 
             document.getElementById("historicoVendas").innerHTML = data.map(v => {
-                const badgeStatus = v.status_pagamento === "Efetuado" 
-                    ? '<span class="badge bg-success">Efetuado</span>' 
+                const badgeStatus = v.status_pagamento === "Efetuado"
+                    ? '<span class="badge bg-success">Efetuado</span>'
                     : '<span class="badge bg-warning text-dark">Pendente</span>';
-                
+
                 return `
                 <tr>
                     <td class="text-muted small">#${v.id}</td>
@@ -476,6 +519,17 @@
         </tr>
     `).join("");
 
+            const trocoHtml = (v.metodo_pagamento === "Dinheiro" && v.valor_entregue > 0) ? `
+                <tr class="table-light text-secondary">
+                    <td colspan="3" class="text-end fw-semibold">Valor Recebido:</td>
+                    <td>${parseFloat(v.valor_entregue).toLocaleString("pt-CV")} CVE</td>
+                </tr>
+                <tr class="table-light text-muted">
+                    <td colspan="3" class="text-end fw-semibold">Troco Devolvido:</td>
+                    <td>${parseFloat(v.troco || 0).toLocaleString("pt-CV")} CVE</td>
+                </tr>
+            ` : "";
+
             document.getElementById("modalDetalhesBody").innerHTML = `
         <div class="row mb-3">
             <div class="col-6"><strong>Cliente:</strong> ${v.cliente}</div>
@@ -493,6 +547,7 @@
                     <td colspan="3" class="text-end">TOTAL:</td>
                     <td>${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
                 </tr>
+                ${trocoHtml}
             </tfoot>
         </table>
     `;

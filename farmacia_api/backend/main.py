@@ -95,6 +95,8 @@ class VendaIn(BaseModel):
     cliente: str = "Cliente Geral"
     cliente_id: Optional[int] = None
     metodo_pagamento: str = "Dinheiro"  # "Dinheiro" ou "Pagali"
+    valor_entregue: Optional[float] = 0.0
+    troco: Optional[float] = 0.0
     itens: List[VendaItemIn]
 
 # ─── AUTH ────────────────────────────────────────────────────────────────────
@@ -271,7 +273,15 @@ async def criar_v(dados: VendaIn, user=Depends(verificar_token)):
     
     status_inicial = "Efetuado" if dados.metodo_pagamento == "Dinheiro" else "Pendente"
     
-    venda_id = criar_venda(dados.cliente, itens, user["email"], dados.metodo_pagamento, status_inicial)
+    venda_id = criar_venda(
+        dados.cliente, 
+        itens, 
+        user["email"], 
+        dados.metodo_pagamento, 
+        status_inicial,
+        dados.valor_entregue or 0.0,
+        dados.troco or 0.0
+    )
     
     checkout_url = None
     if dados.metodo_pagamento == "Pagali":

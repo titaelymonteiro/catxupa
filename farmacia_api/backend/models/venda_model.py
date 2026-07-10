@@ -26,12 +26,12 @@ def criar_tabelas_vendas():
     conn.commit()
     conn.close()
  
-def criar_venda(cliente: str, itens: list, criado_por: str, metodo: str = "Dinheiro", status: str = "Efetuado"):
+def criar_venda(cliente: str, itens: list, criado_por: str, metodo: str = "Dinheiro", status: str = "Efetuado", valor_entregue: float = 0.0, troco: float = 0.0):
     conn = get_connection()
     total = sum(i["subtotal"] for i in itens)
     cursor = conn.execute(
-        "INSERT INTO vendas (cliente, total, criado_por, metodo_pagamento, status_pagamento) VALUES (?, ?, ?, ?, ?)",
-        (cliente, total, criado_por, metodo, status)
+        "INSERT INTO vendas (cliente, total, criado_por, metodo_pagamento, status_pagamento, valor_entregue, troco) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (cliente, total, criado_por, metodo, status, valor_entregue, troco)
     )
     venda_id = cursor.lastrowid
     for item in itens:

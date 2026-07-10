@@ -38,7 +38,8 @@
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle" title="Menu">☰</button>
             <div class="d-flex align-items-center gap-2">
-                <img src="assets/logo.jpg" alt="Logo" style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
+                <img src="assets/logo.jpg" alt="Logo"
+                    style="height: 32px; width: 32px; border-radius: 6px; object-fit: cover;">
                 <span class="navbar-brand fw-bold m-0 p-0">Farmácia CV</span>
             </div>
         </div>
@@ -117,12 +118,22 @@
 
                 data.forEach(m => {
                     const hoje = new Date();
+                    hoje.setHours(0, 0, 0, 0);
                     const dataValidade = m.validade ? new Date(m.validade) : null;
+                    if (dataValidade) {
+                        dataValidade.setHours(0, 0, 0, 0);
+                    }
                     const diffDias = dataValidade ? Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24)) : 999;
 
                     let classeLinha = "";
                     if (m.estoque < 10) classeLinha = "table-warning";
-                    if (diffDias >= 0 && diffDias <= 30) classeLinha = "table-danger";
+                    if (dataValidade) {
+                        if (diffDias < 0) {
+                            classeLinha = "table-expired"; // Vencido (Vermelho mais carregado)
+                        } else if (diffDias <= 30) {
+                            classeLinha = "table-danger"; // Próximo de vencer (Vermelho claro)
+                        }
+                    }
 
                     tabela += `
                 <tr class="${classeLinha}">
@@ -196,12 +207,12 @@
             const res = await fetch(`${API_URL}/medicamentos/${id}`, {
                 method: "PUT",
                 headers: authHeaders(),
-                body: JSON.stringify({ 
-                    nome, 
-                    preco: parseFloat(preco), 
-                    estoque: parseInt(estoque), 
-                    validade, 
-                    categoria 
+                body: JSON.stringify({
+                    nome,
+                    preco: parseFloat(preco),
+                    estoque: parseInt(estoque),
+                    validade,
+                    categoria
                 })
             });
 

@@ -59,6 +59,11 @@ def init_db():
             total       REAL    NOT NULL,
             criado_em   TEXT    DEFAULT (datetime('now')),
             criado_por  TEXT,
+            metodo_pagamento TEXT DEFAULT 'Dinheiro',
+            status_pagamento TEXT DEFAULT 'Efetuado',
+            pagali_id   TEXT,
+            valor_entregue REAL DEFAULT 0,
+            troco       REAL DEFAULT 0,
             FOREIGN KEY (cliente_id) REFERENCES clientes(id)
         )
     """)
@@ -94,6 +99,8 @@ def init_db():
         ("vendas",   "metodo_pagamento", "TEXT DEFAULT 'Dinheiro'"),
         ("vendas",   "status_pagamento", "TEXT DEFAULT 'Efetuado'"),
         ("vendas",   "pagali_id", "TEXT"),
+        ("vendas",   "valor_entregue", "REAL DEFAULT 0"),
+        ("vendas",   "troco", "REAL DEFAULT 0"),
         ("medicamentos", "criado_em", "TEXT DEFAULT (datetime('now'))"),
         ("medicamentos", "criado_por", "TEXT"),
     ]:
