@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas - Farmácia CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand mb-4">
+            <span class="fs-4">💊 Farmácia CV</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+            <li><a href="medicamentos.html"><span class="nav-icon">💊</span> Medicamentos</a></li>
+            <li><a href="fornecedores.html"><span class="nav-icon">🚚</span> Fornecedores</a></li>
+            <li><a href="lotes.html"><span class="nav-icon">📦</span> Lotes</a></li>
+            <li><a href="pedidos.html"><span class="nav-icon">🛒</span> Pedidos Online</a></li>
+            <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
+            <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
+            <li><a href="vendas.html" class="active"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="historico.html"><span class="nav-icon">🕒</span> Histórico</a></li>
+        </ul>
+    </aside>
+
+    <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle" title="Menu">☰</button>
+            <span class="navbar-brand fw-bold m-0 p-0">🛒 Vendas</span>
+        </div>
+        <div>
+            <button class="btn btn-sair btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container py-4 main-content">
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card blue">
+                    <div class="stat-label">Total de Vendas (CVE)</div>
+                    <div class="stat-value" id="totalGeral">—</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card green">
+                    <div class="stat-label">Nº de Vendas</div>
+                    <div class="stat-value" id="totalVendas">—</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card orange">
+                    <div class="stat-label">Vendas Hoje (CVE)</div>
+                    <div class="stat-value" id="vendasHoje">—</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-box mb-4">
+            <h5 class="fw-bold mb-3">🛒 Nova Venda</h5>
+
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Cliente</label>
+                    <select id="clienteSelect" class="form-select" onchange="onClienteChange()">
+                        <option value="">Cliente Geral (sem registo)</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-none" id="areaFidelidadeVenda">
+                    <label class="form-label">⭐ Resgatar pontos (saldo: <span id="saldoPontosVenda">0</span>)</label>
+                    <div class="input-group">
+                        <input type="number" id="pontosResgatar" class="form-control" min="0" value="0" oninput="atualizarDescontoPontos()">
+                        <span class="input-group-text" id="descontoPontosTexto">= 0 CVE</span>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="fw-semibold mb-2">Adicionar Medicamento</h6>
+            <div id="avisoMed" class="alert alert-warning py-2 px-3 small d-none" role="alert"></div>
+            <div class="row g-2 mb-3">
+                <div class="col-md-5">
+                    <select id="selMed" class="form-select" onchange="preencherPreco()">
+                        <option value="">-- Escolhe um medicamento --</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input id="selPreco" type="number" class="form-control" placeholder="Preço" readonly>
+                </div>
+                <div class="col-md-2">
+                    <input id="selQtd" type="number" class="form-control" placeholder="Qtd" min="1" value="1">
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary w-100" onclick="adicionarItem()">➕ Adicionar</button>
+                </div>
+            </div>
+
+            <div class="row g-2 mb-3 d-none" id="areaReceita">
+                <div class="col-12">
+                    <div class="alert alert-warning py-2 px-3 mb-2 small">🔒 Este medicamento exige receita médica.</div>
+                </div>
+                <div class="col-md-6">
+                    <input id="selReceitaNumero" class="form-control" placeholder="Nº da receita (obrigatório)">
+                </div>
+                <div class="col-md-6">
+                    <input id="selReceitaMedico" class="form-control" placeholder="Médico prescritor (opcional)">
+                </div>
+            </div>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-sm align-middle" id="tabelaItens">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Medicamento</th>
+                            <th>Preço Unit.</th>
+                            <th>Qtd</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaItens">
+                        <tr id="linhaVazia">
+                            <td colspan="5" class="text-center text-muted py-3">Nenhum item adicionado</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-primary fw-bold">
+                            <td colspan="3" class="text-end">TOTAL:</td>
+                            <td id="totalVenda">0 CVE</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div id="msgVenda" class="alert d-none"></div>
+
+            <h6 class="fw-semibold mb-2 mt-4">💳 Forma de Pagamento</h6>
+            <div class="row g-2 mb-2">
+                <div class="col-md-4">
+                    <select id="selMetodo" class="form-select">
+                        <option value="cartao24">💳 Cartão 24</option>
+                        <option value="visa">💳 Visa</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input id="selValorPagamento" type="number" class="form-control" placeholder="Valor (CVE)" min="0"
+                        step="0.01">
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-primary w-100" onclick="adicionarPagamento()">➕ Adicionar</button>
+                </div>
+            </div>
+
+            <div class="table-responsive mb-2">
+                <table class="table table-sm align-middle" id="tabelaPagamentos">
+                    <tbody id="listaPagamentos">
+                        <tr id="linhaPagVazia">
+                            <td colspan="3" class="text-center text-muted py-2 small">Nenhuma forma de pagamento
+                                adicionada</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+                <span class="small text-muted">Total a pagar: <strong id="totalAPagar">0 CVE</strong></span>
+                <span class="small" id="restantePagar">Falta: 0 CVE</span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-success px-4" onclick="finalizarVenda()">✅ Finalizar Venda</button>
+                <button class="btn btn-outline-secondary" onclick="limparVenda()">🗑️ Limpar</button>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">📋 Histórico de Vendas</h5>
+                <button class="btn btn-outline-success btn-sm" onclick="exportarCSV('/exportar/vendas', 'vendas.csv')">⬇️ Exportar CSV</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Total (CVE)</th>
+                            <th>Data</th>
+                            <th>Registado por</th>
+                            <th>Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historicoVendas">
+                        <tr>
+                            <td colspan="6" class="text-center py-3">A carregar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-bar" id="paginacaoBar" style="display:none;">
+                <div class="pagination-info" id="paginacaoInfo"></div>
+                <div class="pagination-buttons" id="paginacaoBotoes"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetalhes" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🧾 Detalhes da Venda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalDetalhesBody"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" onclick="imprimirRecibo()">🖨️ Imprimir recibo</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) { window.location.href = "login.html"; }
+
+        let medicamentos = [];
+        let clientes = [];
+        let itensVenda = [];
+        let pagamentosVenda = [];
+        let vendaAtual = null;   // venda mostrada no modal de detalhes (para imprimir)
+        let clienteSelecionadoId = null;
+        let clienteSelecionadoNome = "Cliente Geral";
+
+        async function init() {
+            await carregarMedicamentos();
+            await carregarClientes();
+            await carregarResumo();
+            await carregarHistorico();
+        }
+
+        async function carregarClientes() {
+            const res = await fetch(`${API_URL}/clientes`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            clientes = await res.json();
+
+            const sel = document.getElementById("clienteSelect");
+            sel.innerHTML = '<option value="">Cliente Geral (sem registo)</option>';
+            clientes.forEach(c => {
+                const opt = document.createElement("option");
+                opt.value = c.id;
+                opt.textContent = c.nome;
+                sel.appendChild(opt);
+            });
+        }
+
+        async function onClienteChange() {
+            const sel = document.getElementById("clienteSelect");
+            const areaFidelidade = document.getElementById("areaFidelidadeVenda");
+            if (sel.value) {
+                clienteSelecionadoId = parseInt(sel.value);
+                clienteSelecionadoNome = sel.options[sel.selectedIndex].textContent;
+
+                const res = await fetch(`${API_URL}/clientes/${clienteSelecionadoId}/pontos`, {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                if (res.ok) {
+                    const dados = await res.json();
+                    document.getElementById("saldoPontosVenda").innerText = dados.saldo;
+                    document.getElementById("pontosResgatar").max = dados.saldo;
+                    areaFidelidade.classList.remove("d-none");
+                }
+            } else {
+                clienteSelecionadoId = null;
+                clienteSelecionadoNome = "Cliente Geral";
+                areaFidelidade.classList.add("d-none");
+                document.getElementById("pontosResgatar").value = 0;
+                atualizarDescontoPontos();
+            }
+        }
+
+        function atualizarDescontoPontos() {
+            const saldoMax = parseInt(document.getElementById("pontosResgatar").max || 0);
+            let pontos = parseInt(document.getElementById("pontosResgatar").value || 0);
+            if (pontos < 0) pontos = 0;
+            if (pontos > saldoMax) pontos = saldoMax;
+            document.getElementById("pontosResgatar").value = pontos;
+            document.getElementById("descontoPontosTexto").innerText = `= ${(pontos * 5).toLocaleString("pt-CV")} CVE`;
+            renderPagamentos();
+        }
+
+        async function carregarMedicamentos() {
+            const sel = document.getElementById("selMed");
+            const aviso = document.getElementById("avisoMed");
+            const btnAdd = document.querySelector('button[onclick="adicionarItem()"]');
+            const mostrarAviso = (texto) => {
+                if (!aviso) return;
+                if (texto) { aviso.textContent = texto; aviso.classList.remove("d-none"); }
+                else { aviso.classList.add("d-none"); }
+            };
+
+            let res;
+            try {
+                res = await fetch(`${API_URL}/medicamentos`, {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+            } catch (err) {
+                mostrarAviso("⚠️ Não foi possível ligar ao servidor. Confirme que a API está a correr.");
+                if (btnAdd) btnAdd.disabled = true;
+                return;
+            }
+            if (res.status === 401) { window.location.href = "login.html"; return; }
+            if (!res.ok) {
+                mostrarAviso("⚠️ Não foi possível carregar os medicamentos. Tente novamente.");
+                if (btnAdd) btnAdd.disabled = true;
+                return;
+            }
+            medicamentos = await res.json();
+
+            sel.innerHTML = '<option value="">-- Escolhe um medicamento --</option>';
+            let comStock = 0;
+            medicamentos.forEach(m => {
+                const opt = document.createElement("option");
+                opt.value = m.id;
+                opt.textContent = `${m.requer_receita ? "🔒 " : ""}${m.nome} (Stock: ${m.estoque})`;
+                opt.dataset.preco = m.preco;
+                opt.dataset.estoque = m.estoque;
+                opt.dataset.requerReceita = m.requer_receita ? "1" : "0";
+                if (m.estoque === 0) opt.disabled = true;
+                else comStock++;
+                sel.appendChild(opt);
+            });
+
+            // Avisos conforme o estado
+            if (medicamentos.length === 0) {
+                mostrarAviso("Ainda não há medicamentos registados. Adicione medicamentos na página «Medicamentos» antes de vender.");
+                if (btnAdd) btnAdd.disabled = true;
+            } else if (comStock === 0) {
+                mostrarAviso("Todos os medicamentos estão esgotados. Registe stock em «Medicamentos» ou «Lotes» para poder vender.");
+                if (btnAdd) btnAdd.disabled = true;
+            } else {
+                mostrarAviso(null);
+                if (btnAdd) btnAdd.disabled = false;
+            }
+        }
+
+        function preencherPreco() {
+            const sel = document.getElementById("selMed");
+            const opt = sel.options[sel.selectedIndex];
+            document.getElementById("selPreco").value = opt.dataset.preco || "";
+            document.getElementById("selQtd").value = 1;
+
+            const precisaReceita = opt.dataset.requerReceita === "1";
+            document.getElementById("areaReceita").classList.toggle("d-none", !precisaReceita);
+            if (!precisaReceita) {
+                document.getElementById("selReceitaNumero").value = "";
+                document.getElementById("selReceitaMedico").value = "";
+            }
+        }
+
+        function adicionarItem() {
+            const sel = document.getElementById("selMed");
+            const id = parseInt(sel.value);
+            const qtd = parseInt(document.getElementById("selQtd").value);
+            const preco = parseFloat(document.getElementById("selPreco").value);
+            const opt = sel.options[sel.selectedIndex];
+            const nome = opt ? opt.textContent.replace("🔒 ", "").split(" (Stock")[0] : "";
+            const estoque = parseInt(opt?.dataset.estoque || 0);
+            const precisaReceita = opt?.dataset.requerReceita === "1";
+
+            if (!id || !nome) { mostrarMsgVenda("Escolhe um medicamento.", "warning"); return; }
+            if (!qtd || qtd < 1) { mostrarMsgVenda("Quantidade inválida.", "warning"); return; }
+            if (qtd > estoque) { mostrarMsgVenda(`Stock insuficiente. Disponível: ${estoque}`, "danger"); return; }
+
+            let receitaNumero = null, receitaMedico = null;
+            if (precisaReceita) {
+                receitaNumero = document.getElementById("selReceitaNumero").value.trim();
+                receitaMedico = document.getElementById("selReceitaMedico").value.trim();
+                if (!receitaNumero) {
+                    mostrarMsgVenda("Este medicamento exige o número da receita médica.", "danger");
+                    return;
+                }
+            }
+
+            const existente = itensVenda.find(i => i.medicamento_id === id);
+            if (existente) {
+                if (existente.quantidade + qtd > estoque) {
+                    mostrarMsgVenda(`Stock insuficiente. Disponível: ${estoque}`, "danger");
+                    return;
+                }
+                existente.quantidade += qtd;
+                existente.subtotal = existente.quantidade * existente.preco_unitario;
+                if (precisaReceita) {
+                    existente.receita_numero = receitaNumero;
+                    existente.receita_medico = receitaMedico;
+                }
+            } else {
+                itensVenda.push({
+                    medicamento_id: id,
+                    medicamento_nome: nome,
+                    quantidade: qtd,
+                    preco_unitario: preco,
+                    subtotal: qtd * preco,
+                    receita_numero: receitaNumero,
+                    receita_medico: receitaMedico
+                });
+            }
+
+            renderItens();
+            sel.value = "";
+            document.getElementById("selPreco").value = "";
+            document.getElementById("selQtd").value = 1;
+            document.getElementById("selReceitaNumero").value = "";
+            document.getElementById("selReceitaMedico").value = "";
+            document.getElementById("areaReceita").classList.add("d-none");
+        }
+
+        function renderItens() {
+            const tbody = document.getElementById("listaItens");
+            if (!itensVenda.length) {
+                tbody.innerHTML = '<tr id="linhaVazia"><td colspan="5" class="text-center text-muted py-3">Nenhum item adicionado</td></tr>';
+                document.getElementById("totalVenda").innerText = "0 CVE";
+            } else {
+                tbody.innerHTML = itensVenda.map((item, i) => `
+            <tr>
+                <td class="fw-semibold">${item.medicamento_nome}</td>
+                <td>${item.preco_unitario.toLocaleString("pt-CV")} CVE</td>
+                <td>
+                    <input type="number" class="form-control form-control-sm" style="width:70px"
+                        value="${item.quantidade}" min="1"
+                        onchange="alterarQtd(${i}, this.value)">
+                </td>
+                <td class="fw-bold text-success">${item.subtotal.toLocaleString("pt-CV")} CVE</td>
+                <td><button class="btn btn-danger btn-sm" onclick="removerItem(${i})">✕</button></td>
+            </tr>
+        `).join("");
+
+                const total = itensVenda.reduce((s, i) => s + i.subtotal, 0);
+                document.getElementById("totalVenda").innerText = total.toLocaleString("pt-CV") + " CVE";
+            }
+            atualizarResumoPagamento();
+        }
+
+        function totalDaVenda() {
+            const bruto = itensVenda.reduce((s, i) => s + i.subtotal, 0);
+            const pontos = parseInt(document.getElementById("pontosResgatar")?.value || 0);
+            const desconto = pontos * 5;
+            return Math.max(0, bruto - desconto);
+        }
+
+        function totalPago() {
+            return pagamentosVenda.reduce((s, p) => s + p.valor, 0);
+        }
+
+        function totalNaoDinheiro() {
+            return pagamentosVenda.filter(p => p.metodo !== "dinheiro").reduce((s, p) => s + p.valor, 0);
+        }
+
+        function trocoCalculado() {
+            return Math.max(0, Math.round((totalPago() - totalDaVenda()) * 100) / 100);
+        }
+
+        function atualizarResumoPagamento() {
+            const total = totalDaVenda();
+            const pago = totalPago();
+            const falta = Math.round((total - pago) * 100) / 100;
+            const excessoNaoDinheiro = Math.round((totalNaoDinheiro() - total) * 100) / 100;
+
+            document.getElementById("totalAPagar").innerText = total.toLocaleString("pt-CV") + " CVE";
+
+            const restanteEl = document.getElementById("restantePagar");
+            if (excessoNaoDinheiro > 0.01) {
+                restanteEl.innerHTML = `<span class="text-danger">⚠️ Cartão/transferência excede o total em ${excessoNaoDinheiro.toLocaleString("pt-CV")} CVE</span>`;
+            } else if (falta > 0.01) {
+                restanteEl.innerHTML = `<span class="text-danger">Falta: ${falta.toLocaleString("pt-CV")} CVE</span>`;
+            } else if (falta < -0.01) {
+                const troco = trocoCalculado();
+                restanteEl.innerHTML = `<span class="text-success fw-bold">Troco: ${troco.toLocaleString("pt-CV")} CVE</span>`;
+            } else if (total > 0) {
+                restanteEl.innerHTML = `<span class="text-success">✓ Totalmente pago</span>`;
+            } else {
+                restanteEl.innerHTML = `<span class="text-muted">Falta: 0 CVE</span>`;
+            }
+        }
+
+        function adicionarPagamento() {
+            const metodo = document.getElementById("selMetodo").value;
+            const valor = parseFloat(document.getElementById("selValorPagamento").value);
+
+            if (!valor || valor <= 0) {
+                mostrarMsgVenda("Indica um valor válido para o pagamento.", "warning");
+                return;
+            }
+
+            const labels = { cartao24: "💳 Cartão 24", visa: "💳 Visa" };
+            pagamentosVenda.push({ metodo, label: labels[metodo], valor });
+            document.getElementById("selValorPagamento").value = "";
+            renderPagamentos();
+        }
+
+        function removerPagamento(index) {
+            pagamentosVenda.splice(index, 1);
+            renderPagamentos();
+        }
+
+        function renderPagamentos() {
+            const tbody = document.getElementById("listaPagamentos");
+            if (!pagamentosVenda.length) {
+                tbody.innerHTML = '<tr id="linhaPagVazia"><td colspan="3" class="text-center text-muted py-2 small">Nenhuma forma de pagamento adicionada</td></tr>';
+            } else {
+                tbody.innerHTML = pagamentosVenda.map((p, i) => `
+            <tr>
+                <td>${p.label}</td>
+                <td class="fw-bold text-primary">${p.valor.toLocaleString("pt-CV")} CVE</td>
+                <td><button class="btn btn-danger btn-sm" onclick="removerPagamento(${i})">✕</button></td>
+            </tr>
+        `).join("");
+            }
+            atualizarResumoPagamento();
+        }
+
+        function alterarQtd(index, novaQtd) {
+            novaQtd = parseInt(novaQtd);
+            if (novaQtd < 1) novaQtd = 1;
+            itensVenda[index].quantidade = novaQtd;
+            itensVenda[index].subtotal = novaQtd * itensVenda[index].preco_unitario;
+            renderItens();
+        }
+
+        function removerItem(index) {
+            itensVenda.splice(index, 1);
+            renderItens();
+        }
+
+        function limparVenda() {
+            itensVenda = [];
+            pagamentosVenda = [];
+            renderItens();
+            renderPagamentos();
+            document.getElementById("clienteSelect").value = "";
+            clienteSelecionadoId = null;
+            clienteSelecionadoNome = "Cliente Geral";
+            document.getElementById("areaFidelidadeVenda").classList.add("d-none");
+            document.getElementById("pontosResgatar").value = 0;
+            document.getElementById("msgVenda").classList.add("d-none");
+        }
+
+        async function finalizarVenda() {
+            if (!itensVenda.length) {
+                mostrarMsgVenda("Adiciona pelo menos um medicamento.", "warning");
+                return;
+            }
+
+            if (!pagamentosVenda.length) {
+                mostrarMsgVenda("Adiciona pelo menos uma forma de pagamento.", "warning");
+                return;
+            }
+
+            const total = totalDaVenda();
+            const pago = totalPago();
+            if (Math.round((totalNaoDinheiro() - total) * 100) / 100 > 0.01) {
+                mostrarMsgVenda("Os pagamentos não podem exceder o total da venda.", "danger");
+                return;
+            }
+            if (Math.round((total - pago) * 100) / 100 > 0.01) {
+                mostrarMsgVenda("O valor recebido não cobre o total da venda.", "danger");
+                return;
+            }
+
+            const pagamentosPayload = pagamentosVenda.map(p => ({ metodo: p.metodo, valor: p.valor }));
+
+            const res = await fetch(`${API_URL}/vendas`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({
+                    cliente: clienteSelecionadoNome,
+                    cliente_id: clienteSelecionadoId,
+                    itens: itensVenda,
+                    pagamentos: pagamentosPayload,
+                    pontos_resgatados: parseInt(document.getElementById("pontosResgatar")?.value || 0)
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                const troco = Math.round((data.troco || 0) * 100) / 100;
+                const msgTroco = troco > 0.01 ? ` — Troco: ${troco.toLocaleString("pt-CV")} CVE` : "";
+                mostrarMsgVenda(`✅ Venda #${data.venda_id} registada com sucesso!${msgTroco}`, "success");
+                limparVenda();
+                await carregarMedicamentos();
+                await carregarResumo();
+                await carregarHistorico();
+            } else {
+                mostrarMsgVenda(data.detail || "Erro ao registar venda.", "danger");
+            }
+        }
+
+        async function carregarResumo() {
+            const res = await fetch(`${API_URL}/vendas/resumo`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const data = await res.json();
+            document.getElementById("totalGeral").innerText = data.total_geral.toLocaleString("pt-CV") + " CVE";
+            document.getElementById("totalVendas").innerText = data.total_vendas;
+            document.getElementById("vendasHoje").innerText = data.vendas_hoje.toLocaleString("pt-CV") + " CVE";
+        }
+
+        let vendasTodas = [];
+        let paginaAtual = 1;
+        const ITENS_POR_PAGINA = 10;
+
+        async function carregarHistorico() {
+            const res = await fetch(`${API_URL}/vendas`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            vendasTodas = await res.json();
+            paginaAtual = 1;
+            renderHistorico(vendasTodas);
+        }
+
+        function irParaPagina(p) {
+            paginaAtual = p;
+            renderHistorico(vendasTodas);
+        }
+
+        function renderHistorico(data) {
+            if (!data.length) {
+                document.getElementById("historicoVendas").innerHTML =
+                    "<tr><td colspan='6' class='text-center text-muted py-3'>Sem vendas registadas.</td></tr>";
+                document.getElementById("paginacaoBar").style.display = "none";
+                return;
+            }
+
+            const { paginaAtual: pag, totalPaginas, itens } = fatiarPagina(data, paginaAtual, ITENS_POR_PAGINA);
+            paginaAtual = pag;
+
+            const ehAdmin = localStorage.getItem("perfil") === "admin";
+            document.getElementById("historicoVendas").innerHTML = itens.map(v => {
+                const anulada = v.anulada == 1;
+                const btnAnular = (!anulada && ehAdmin)
+                    ? `<button class="btn btn-outline-danger btn-sm ms-1" onclick="anularVenda(${v.id})">✖ Anular</button>`
+                    : "";
+                return `
+        <tr class="${anulada ? 'table-secondary text-muted' : ''}">
+            <td class="small">#${v.id}</td>
+            <td class="fw-semibold">${v.cliente} ${anulada ? '<span class="badge bg-danger ms-1">ANULADA</span>' : ''}</td>
+            <td class="${anulada ? 'text-decoration-line-through' : 'text-success fw-bold'}">${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
+            <td>${v.criado_em ? v.criado_em.substring(0, 16).replace("T", " ") : "—"}</td>
+            <td>${v.criado_por || "—"}</td>
+            <td>
+                <button class="btn btn-outline-primary btn-sm" onclick="verDetalhes(${v.id})">🧾 Ver</button>
+                ${btnAnular}
+            </td>
+        </tr>`;
+            }).join("");
+
+            renderPaginacao(data.length, paginaAtual, totalPaginas, ITENS_POR_PAGINA, "vendas");
+        }
+
+        async function anularVenda(id) {
+            const motivo = prompt(`Anular a venda #${id}?\n\nO stock dos itens será reposto e a venda deixa de contar nos relatórios.\n\nMotivo (opcional):`);
+            if (motivo === null) return; // cancelou o prompt
+            const res = await fetch(`${API_URL}/vendas/${id}/anular`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ motivo: motivo || null })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                mostrarMsgVenda(`✅ Venda #${id} anulada e stock reposto.`, "success");
+                await carregarHistorico();
+            } else {
+                mostrarMsgVenda(data.detail || "Erro ao anular a venda.", "danger");
+            }
+        }
+
+        async function verDetalhes(id) {
+            const res = await fetch(`${API_URL}/vendas/${id}`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const v = await res.json();
+            vendaAtual = v;
+
+            const podeDevolver = (v.anulada != 1);
+            const itensHtml = v.itens.map(i => {
+                const dev = i.qtd_devolvida || 0;
+                const restante = i.quantidade - dev;
+                const btn = (podeDevolver && restante > 0)
+                    ? `<button class="btn btn-outline-warning btn-sm" onclick="devolverItem(${v.id}, ${i.medicamento_id}, '${(i.medicamento_nome || "").replace(/'/g, "")}', ${restante})">↩️ Devolver</button>`
+                    : "";
+                return `
+        <tr>
+            <td>${i.medicamento_nome}</td>
+            <td>${parseFloat(i.preco_unitario).toLocaleString("pt-CV")} CVE</td>
+            <td>${i.quantidade}${dev > 0 ? ` <span class="badge bg-warning text-dark">−${dev} dev.</span>` : ""}</td>
+            <td class="fw-bold">${parseFloat(i.subtotal).toLocaleString("pt-CV")} CVE</td>
+            <td>${btn}</td>
+        </tr>
+    `;
+            }).join("");
+
+            const labels = {
+                cartao24: "💳 Cartão 24", visa: "💳 Visa",
+                // registos antigos:
+                dinheiro: "💵 Dinheiro", multicaixa: "💳 Multicaixa", transferencia: "🏦 Transferência"
+            };
+            const pagamentosHtml = (v.pagamentos || []).map(p => `
+        <span class="badge bg-light text-dark border me-2 mb-1">${labels[p.metodo] || p.metodo}: ${parseFloat(p.valor).toLocaleString("pt-CV")} CVE</span>
+    `).join("");
+
+            document.getElementById("modalDetalhesBody").innerHTML = `
+        ${v.anulada == 1 ? `<div class="alert alert-danger py-2 small mb-3">
+            <strong>⚠️ Venda anulada</strong> em ${v.anulada_em ? v.anulada_em.substring(0, 16).replace("T", " ") : "—"}
+            por ${v.anulada_por || "—"}${v.motivo_anulacao ? ` — Motivo: ${v.motivo_anulacao}` : ""}. O stock foi reposto.
+        </div>` : ""}
+        <div class="row mb-3">
+            <div class="col-6"><strong>Cliente:</strong> ${v.cliente}</div>
+            <div class="col-6"><strong>Data:</strong> ${v.criado_em ? v.criado_em.substring(0, 16).replace("T", " ") : "—"}</div>
+            <div class="col-6 mt-2"><strong>Registado por:</strong> ${v.criado_por || "—"}</div>
+            <div class="col-6 mt-2"><strong>Venda #${v.id}</strong></div>
+        </div>
+        <table class="table table-sm table-bordered">
+            <thead class="table-light">
+                <tr><th>Medicamento</th><th>Preço Unit.</th><th>Qtd</th><th>Subtotal</th><th>Ações</th></tr>
+            </thead>
+            <tbody>${itensHtml}</tbody>
+            <tfoot>
+                <tr class="table-success fw-bold">
+                    <td colspan="3" class="text-end">TOTAL:</td>
+                    <td>${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="mt-2">
+            <strong class="small text-muted">Forma(s) de pagamento:</strong><br>
+            ${pagamentosHtml || '<span class="text-muted small">Sem informação de pagamento</span>'}
+        </div>
+        ${parseFloat(v.troco || 0) > 0.01 ? `
+        <div class="mt-2 small">
+            <span class="text-muted">Valor recebido:</span> <strong>${parseFloat(v.valor_recebido).toLocaleString("pt-CV")} CVE</strong>
+            &nbsp;·&nbsp;
+            <span class="text-muted">Troco:</span> <strong class="text-success">${parseFloat(v.troco).toLocaleString("pt-CV")} CVE</strong>
+        </div>` : ""}
+        ${(v.devolucoes && v.devolucoes.length) ? `
+        <div class="mt-3 border-top pt-2">
+            <strong class="small text-muted">↩️ Devoluções:</strong>
+            <ul class="small mb-1">
+                ${v.devolucoes.map(dv => `<li>${dv.quantidade}× ${dv.medicamento_nome} — ${parseFloat(dv.valor).toLocaleString("pt-CV")} CVE${dv.motivo ? ` <em>(${dv.motivo})</em>` : ""} <span class="text-muted">· ${dv.criado_em ? dv.criado_em.substring(0, 16).replace("T", " ") : ""} por ${dv.criado_por || "—"}</span></li>`).join("")}
+            </ul>
+            <div><strong>Total devolvido:</strong> <span class="text-warning fw-bold">${parseFloat(v.total_devolvido).toLocaleString("pt-CV")} CVE</span></div>
+        </div>` : ""}
+    `;
+            new bootstrap.Modal(document.getElementById("modalDetalhes")).show();
+        }
+
+        async function devolverItem(vendaId, medId, nome, maxQtd) {
+            const qtdStr = prompt(`Devolver "${nome}"\n\nQuantas unidades? (máximo ${maxQtd})`, "1");
+            if (qtdStr === null) return;
+            const qtd = parseInt(qtdStr, 10);
+            if (!qtd || qtd < 1) { mostrarMsgVenda("Quantidade inválida.", "danger"); return; }
+            if (qtd > maxQtd) { mostrarMsgVenda(`Só podes devolver até ${maxQtd} unidade(s).`, "danger"); return; }
+            const motivo = prompt("Motivo da devolução (opcional):") || null;
+
+            const res = await fetch(`${API_URL}/vendas/${vendaId}/devolucao`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ medicamento_id: medId, quantidade: qtd, motivo })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                mostrarMsgVenda(`↩️ Devolvido ${data.quantidade}× ${data.medicamento_nome} (${parseFloat(data.valor).toLocaleString("pt-CV")} CVE). Stock reposto.`, "success");
+                bootstrap.Modal.getInstance(document.getElementById("modalDetalhes"))?.hide();
+                verDetalhes(vendaId);
+                carregarHistorico();
+            } else {
+                mostrarMsgVenda(data.detail || "Erro ao registar a devolução.", "danger");
+            }
+        }
+
+        function imprimirRecibo() {
+            const v = vendaAtual;
+            if (!v) return;
+
+            const labels = {
+                cartao24: "Cartao 24", visa: "Visa",
+                dinheiro: "Dinheiro", multicaixa: "Multicaixa", transferencia: "Transferencia"
+            };
+            const fmt = (n) => parseFloat(n || 0).toLocaleString("pt-CV") + " CVE";
+
+            const itens = v.itens.map(i => `
+        <tr>
+            <td>${i.medicamento_nome}</td>
+            <td class="c">${i.quantidade}</td>
+            <td class="r">${fmt(i.preco_unitario)}</td>
+            <td class="r">${fmt(i.subtotal)}</td>
+        </tr>`).join("");
+
+            const pagamentos = (v.pagamentos || []).map(p =>
+                `<div class="pg"><span>${labels[p.metodo] || p.metodo}</span><span>${fmt(p.valor)}</span></div>`
+            ).join("");
+
+            const trocoBloco = (parseFloat(v.troco || 0) > 0.01)
+                ? `<div class="pg"><span>Valor recebido</span><span>${fmt(v.valor_recebido)}</span></div>
+           <div class="pg"><strong>Troco</strong><strong>${fmt(v.troco)}</strong></div>`
+                : "";
+
+            const anuladaBloco = (v.anulada == 1)
+                ? `<div class="anulada">*** VENDA ANULADA ***<br>${v.anulada_em ? v.anulada_em.substring(0, 16).replace("T", " ") : ""}</div>`
+                : "";
+
+            const data = v.criado_em ? v.criado_em.substring(0, 16).replace("T", " ") : "—";
+
+            const html = `<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8">
+        <title>Recibo Venda #${v.id}</title>
+        <style>
+            * { box-sizing: border-box; }
+            body { font-family: 'Courier New', monospace; color: #000; margin: 0; padding: 12px; }
+            .recibo { width: 300px; margin: 0 auto; }
+            h1 { font-size: 18px; text-align: center; margin: 0; letter-spacing: 1px; }
+            .sub { text-align: center; font-size: 11px; margin: 2px 0 8px; }
+            .linha { border-top: 1px dashed #000; margin: 8px 0; }
+            .meta { font-size: 12px; }
+            .meta div { display: flex; justify-content: space-between; }
+            table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+            th { text-align: left; border-bottom: 1px solid #000; padding: 2px 0; }
+            td { padding: 2px 0; vertical-align: top; }
+            .c { text-align: center; } .r { text-align: right; }
+            .total { display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; margin-top: 6px; }
+            .pg { display: flex; justify-content: space-between; font-size: 12px; }
+            .obrigado { text-align: center; font-size: 11px; margin-top: 10px; }
+            .anulada { text-align: center; color: #b00; font-weight: bold; font-size: 13px; margin: 8px 0; }
+            @media print { body { padding: 0; } }
+        </style></head><body>
+        <div class="recibo">
+            <h1>FARMACIA CV</h1>
+            <div class="sub">Recibo de Venda</div>
+            ${anuladaBloco}
+            <div class="linha"></div>
+            <div class="meta">
+                <div><span>Venda:</span><span>#${v.id}</span></div>
+                <div><span>Data:</span><span>${data}</span></div>
+                <div><span>Cliente:</span><span>${v.cliente || "Cliente Geral"}</span></div>
+                <div><span>Atendido por:</span><span>${v.criado_por || "—"}</span></div>
+            </div>
+            <div class="linha"></div>
+            <table>
+                <thead><tr><th>Produto</th><th class="c">Qtd</th><th class="r">Preco</th><th class="r">Subtotal</th></tr></thead>
+                <tbody>${itens}</tbody>
+            </table>
+            <div class="linha"></div>
+            <div class="total"><span>TOTAL</span><span>${fmt(v.total)}</span></div>
+            <div class="linha"></div>
+            ${pagamentos}
+            ${trocoBloco}
+            <div class="linha"></div>
+            <div class="obrigado">Obrigado pela preferencia!<br>Volte sempre.</div>
+        </div>
+        <script>window.onload = function(){ window.print(); }<\/script>
+        </body></html>`;
+
+            const win = window.open("", "_blank", "width=380,height=640");
+            if (!win) {
+                mostrarMsgVenda("O navegador bloqueou a janela de impressao. Permite pop-ups para este site.", "danger");
+                return;
+            }
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+        }
+
+        function mostrarMsgVenda(texto, tipo = "success") {
+            const el = document.getElementById("msgVenda");
+            el.className = `alert alert-${tipo}`;
+            el.innerText = texto;
+            el.classList.remove("d-none");
+            setTimeout(() => el.classList.add("d-none"), 5000);
+        }
+
+        if (token) init();
+    </script>
+</body>
+
+</html>

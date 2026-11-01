@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilizadores - Farmácia CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand mb-4">
+            <span class="fs-4">💊 Farmácia CV</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+            <li><a href="medicamentos.html"><span class="nav-icon">💊</span> Medicamentos</a></li>
+            <li><a href="fornecedores.html"><span class="nav-icon">🚚</span> Fornecedores</a></li>
+            <li><a href="lotes.html"><span class="nav-icon">📦</span> Lotes</a></li>
+            <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
+            <li><a href="usuarios.html" class="active"><span class="nav-icon">👥</span> Utilizadores</a></li>
+            <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="historico.html"><span class="nav-icon">🕒</span> Histórico</a></li>
+        </ul>
+    </aside>
+
+    <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle" title="Menu">☰</button>
+            <span class="navbar-brand fw-bold m-0 p-0">👥 Utilizadores</span>
+        </div>
+        <div>
+            <button class="btn btn-sair btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container py-4 main-content">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold text-secondary mb-0">👥 Gestão de Utilizadores</h4>
+            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">
+                ➕ Novo Utilizador
+            </button>
+        </div>
+
+        <div class="collapse mb-3" id="formAdicionar">
+            <div class="card-box">
+                <h6 class="fw-bold mb-3">Novo Utilizador</h6>
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input id="nome" class="form-control" placeholder="Nome completo">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="email" type="email" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="password" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="col-md-3">
+                        <select id="perfil" class="form-select">
+                            <option value="funcionario">Funcionário</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-success" onclick="adicionar()">Guardar</button>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                        data-bs-target="#formAdicionar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mensagem" class="alert d-none mb-3"></div>
+
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela">
+                        <tr>
+                            <td colspan="6" class="text-center py-4">A carregar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-bar" id="paginacaoBar" style="display:none;">
+                <div class="pagination-info" id="paginacaoInfo"></div>
+                <div class="pagination-buttons" id="paginacaoBotoes"></div>
+            </div>
+        </div>
+
+        <div class="card-box mt-4" id="cardBackup" style="display:none;">
+            <h6 class="fw-bold mb-1">💾 Backup e Restauro da Base de Dados</h6>
+            <p class="text-muted small mb-3">Descarrega uma cópia de segurança de todos os dados, ou restaura a partir de um ficheiro de backup.</p>
+            <div class="d-flex flex-wrap gap-3 align-items-end">
+                <button class="btn btn-success" onclick="descarregarBackup()">⬇️ Descarregar backup</button>
+                <div>
+                    <label class="form-label small mb-1">Restaurar a partir de um ficheiro (.db)</label>
+                    <div class="d-flex gap-2">
+                        <input type="file" id="ficheiroBackup" accept=".db" class="form-control form-control-sm" style="max-width:280px;">
+                        <button class="btn btn-outline-danger btn-sm" onclick="restaurarBackup()">♻️ Restaurar</button>
+                    </div>
+                </div>
+            </div>
+            <p class="text-danger small mt-2 mb-0">⚠️ Restaurar substitui <strong>todos</strong> os dados atuais. Faz um backup antes, por segurança.</p>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✏️ Editar Utilizador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="mb-2">
+                        <label class="form-label">Nome</label>
+                        <input id="editNome" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Email</label>
+                        <input id="editEmail" type="email" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Perfil</label>
+                        <select id="editPerfil" class="form-select">
+                            <option value="funcionario">Funcionário</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardarEdicao()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPassword" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🔒 Alterar Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="pwdId">
+                    <div class="mb-3">
+                        <label class="form-label">Password Atual</label>
+                        <input id="pwdAtual" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nova Password</label>
+                        <input id="pwdNova" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirmar Nova Password</label>
+                        <input id="pwdConfirm" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div id="pwdErro" class="alert alert-danger d-none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-warning" onclick="guardarPassword()">🔒 Alterar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalResetPassword" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🔑 Repor Password (Admin)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="resetId">
+                    <p class="text-muted small">Isto define uma password nova sem precisar de saber a antiga. Comunica a nova password à pessoa por fora do sistema.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Nova Password</label>
+                        <input id="resetNova" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirmar Nova Password</label>
+                        <input id="resetConfirm" type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div id="resetErro" class="alert alert-danger d-none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger" onclick="confirmarResetPassword()">🔑 Repor Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) { window.location.href = "login.html"; }
+
+        let usuariosTodos = [];
+        let paginaAtual = 1;
+        const ITENS_POR_PAGINA = 8;
+
+        function mostrarMensagem(texto, tipo = "success") {
+            const el = document.getElementById("mensagem");
+            el.className = `alert alert-${tipo}`;
+            el.innerText = texto;
+            el.classList.remove("d-none");
+            setTimeout(() => el.classList.add("d-none"), 4000);
+        }
+
+        async function carregar() {
+            try {
+                const res = await fetch(`${API_URL}/usuarios`, {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                if (res.status === 401) { window.location.href = "login.html"; return; }
+                if (res.status === 403) {
+                    document.getElementById("tabela").innerHTML =
+                        "<tr><td colspan='6' class='text-center text-danger py-4'>⛔ Acesso restrito a administradores.</td></tr>";
+                    return;
+                }
+
+                usuariosTodos = await res.json();
+                window._users = {};
+                usuariosTodos.forEach(u => window._users[u.id] = u);
+                paginaAtual = 1;
+                renderTabela(usuariosTodos);
+            } catch (err) {
+                console.error(err);
+                mostrarMensagem("Erro de ligação com o servidor.", "danger");
+            }
+        }
+
+        function irParaPagina(p) {
+            paginaAtual = p;
+            renderTabela(usuariosTodos);
+        }
+
+        function renderTabela(data) {
+            if (!data.length) {
+                document.getElementById("tabela").innerHTML =
+                    "<tr><td colspan='6' class='text-center text-muted py-4'>Nenhum utilizador encontrado.</td></tr>";
+                document.getElementById("paginacaoBar").style.display = "none";
+                return;
+            }
+
+            const { paginaAtual: pag, totalPaginas, itens } = fatiarPagina(data, paginaAtual, ITENS_POR_PAGINA);
+            paginaAtual = pag;
+
+            {
+                document.getElementById("tabela").innerHTML = itens.map(u => {
+                    const badge = u.perfil === "admin"
+                        ? `<span class="badge bg-danger">Admin</span>`
+                        : u.perfil === "funcionario"
+                            ? `<span class="badge bg-secondary">Funcionário</span>`
+                            : `<span class="badge bg-success">Cliente</span>`;
+                    const data_fmt = u.criado_em ? u.criado_em.substring(0, 10) : "—";
+                    const ehAdmin = localStorage.getItem("perfil") === "admin";
+                    const botaoReset = ehAdmin
+                        ? `<button class="btn btn-outline-danger btn-sm me-1" onclick="abrirResetPassword(${u.id})" title="Repor Password (sem saber a antiga)">🔑</button>`
+                        : "";
+                    return `<tr>
+                <td class="text-muted small">#${u.id}</td>
+                <td class="fw-semibold">${u.nome}</td>
+                <td>${u.email}</td>
+                <td>${badge}</td>
+                <td>${data_fmt}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm me-1" onclick="abrirEditar(${u.id})" title="Editar">✏️</button>
+                    <button class="btn btn-info btn-sm me-1 text-white" onclick="abrirPassword(${u.id})" title="Alterar Password">🔒</button>
+                    ${botaoReset}
+                    <button class="btn btn-danger btn-sm" onclick="apagar(${u.id})" title="Apagar">🗑️</button>
+                </td>
+            </tr>`;
+                }).join("");
+            }
+
+            renderPaginacao(data.length, paginaAtual, totalPaginas, ITENS_POR_PAGINA, "utilizadores");
+        }
+
+        async function adicionar() {
+            const nome = document.getElementById("nome").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const perfil = document.getElementById("perfil").value;
+
+            if (!nome || !email || !password) {
+                mostrarMensagem("Preencha todos os campos.", "warning");
+                return;
+            }
+
+            const res = await fetch(`${API_URL}/usuarios`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ nome, email, password, perfil })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                mostrarMensagem("Utilizador criado com sucesso!");
+                ["nome", "email", "password"].forEach(id => document.getElementById(id).value = "");
+                document.getElementById("formAdicionar").classList.remove("show");
+                carregar();
+            } else {
+                mostrarMensagem(data.detail || "Erro ao criar utilizador.", "danger");
+            }
+        }
+
+        function abrirEditar(id) {
+            const u = window._users[id];
+            document.getElementById("editId").value = u.id;
+            document.getElementById("editNome").value = u.nome;
+            document.getElementById("editEmail").value = u.email;
+            document.getElementById("editPerfil").value = u.perfil;
+            new bootstrap.Modal(document.getElementById("modalEditar")).show();
+        }
+
+        async function guardarEdicao() {
+            const id = document.getElementById("editId").value;
+            const nome = document.getElementById("editNome").value.trim();
+            const email = document.getElementById("editEmail").value.trim();
+            const perfil = document.getElementById("editPerfil").value;
+
+            const res = await fetch(`${API_URL}/usuarios/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ nome, email, perfil })
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+            const data = await res.json();
+
+            if (res.ok) {
+                mostrarMensagem("Utilizador atualizado com sucesso!");
+                carregar();
+            } else {
+                mostrarMensagem(data.detail || "Erro ao atualizar.", "danger");
+            }
+        }
+
+        function abrirPassword(id) {
+            document.getElementById("pwdId").value = id;
+            document.getElementById("pwdAtual").value = "";
+            document.getElementById("pwdNova").value = "";
+            document.getElementById("pwdConfirm").value = "";
+            document.getElementById("pwdErro").classList.add("d-none");
+            new bootstrap.Modal(document.getElementById("modalPassword")).show();
+        }
+
+        function abrirResetPassword(id) {
+            document.getElementById("resetId").value = id;
+            document.getElementById("resetNova").value = "";
+            document.getElementById("resetConfirm").value = "";
+            document.getElementById("resetErro").classList.add("d-none");
+            new bootstrap.Modal(document.getElementById("modalResetPassword")).show();
+        }
+
+        async function confirmarResetPassword() {
+            const id = document.getElementById("resetId").value;
+            const nova = document.getElementById("resetNova").value;
+            const confirmar = document.getElementById("resetConfirm").value;
+            const erroEl = document.getElementById("resetErro");
+
+            erroEl.classList.add("d-none");
+
+            if (!nova || !confirmar) {
+                erroEl.innerText = "Preencha os dois campos.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+            if (nova !== confirmar) {
+                erroEl.innerText = "A nova password e a confirmação não coincidem.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+            if (nova.length < 4) {
+                erroEl.innerText = "A nova password deve ter pelo menos 4 caracteres.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            const res = await fetch(`${API_URL}/usuarios/${id}/reset-password`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ password_nova: nova })
+            });
+
+            const data = await res.json();
+            bootstrap.Modal.getInstance(document.getElementById("modalResetPassword")).hide();
+
+            if (res.ok) {
+                mostrarMensagem("Password reposta com sucesso. Comunica a nova password à pessoa.");
+            } else {
+                mostrarMensagem(data.detail || "Erro ao repor a password.", "danger");
+            }
+        }
+
+        async function guardarPassword() {
+            const id = document.getElementById("pwdId").value;
+            const atual = document.getElementById("pwdAtual").value;
+            const nova = document.getElementById("pwdNova").value;
+            const confirmar = document.getElementById("pwdConfirm").value;
+            const erroEl = document.getElementById("pwdErro");
+
+            erroEl.classList.add("d-none");
+
+            if (!atual || !nova || !confirmar) {
+                erroEl.innerText = "Preencha todos os campos.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            if (nova !== confirmar) {
+                erroEl.innerText = "A nova password e a confirmação não coincidem.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            if (nova.length < 4) {
+                erroEl.innerText = "A nova password deve ter pelo menos 4 caracteres.";
+                erroEl.classList.remove("d-none");
+                return;
+            }
+
+            const res = await fetch(`${API_URL}/usuarios/${id}/password`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ password_atual: atual, password_nova: nova })
+            });
+
+            const data = await res.json();
+            bootstrap.Modal.getInstance(document.getElementById("modalPassword")).hide();
+
+            if (res.ok) {
+                mostrarMensagem("Password alterada com sucesso!");
+            } else {
+                mostrarMensagem(data.detail || "Erro ao alterar password.", "danger");
+            }
+        }
+
+        async function apagar(id) {
+            const u = window._users[id];
+            if (!confirm(`Tens a certeza que queres apagar o utilizador "${u.nome}"?`)) return;
+
+            const res = await fetch(`${API_URL}/usuarios/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                mostrarMensagem("Utilizador removido.");
+                carregar();
+            } else {
+                mostrarMensagem(data.detail || "Erro ao remover.", "danger");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+
+        // ── Backup / Restauro (só admin) ─────────────────────────────
+        if (localStorage.getItem("perfil") === "admin") {
+            document.getElementById("cardBackup").style.display = "block";
+        }
+
+        async function descarregarBackup() {
+            const res = await fetch(`${API_URL}/backup`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (!res.ok) { alert("Erro ao gerar o backup (só admin)."); return; }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            const agora = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
+            a.href = url;
+            a.download = `farmacia_backup_${agora}.db`;
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        async function restaurarBackup() {
+            const inp = document.getElementById("ficheiroBackup");
+            if (!inp.files.length) { alert("Escolhe primeiro um ficheiro de backup (.db)."); return; }
+            if (!confirm("ATENÇÃO: isto substitui TODA a base de dados atual pelos dados do ficheiro. Esta ação não pode ser desfeita.\n\nContinuar?")) return;
+            const fd = new FormData();
+            fd.append("ficheiro", inp.files[0]);
+            const res = await fetch(`${API_URL}/restaurar`, {
+                method: "POST",
+                headers: { "Authorization": "Bearer " + token },
+                body: fd
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert("✅ " + data.mensagem + "\n\nA página vai recarregar.");
+                location.reload();
+            } else {
+                alert("Erro: " + (data.detail || "não foi possível restaurar."));
+            }
+        }
+
+        if (token) carregar();
+    </script>
+</body>
+
+</html>

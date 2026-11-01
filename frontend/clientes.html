@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Farmácia CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/mapa.js"></script>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand mb-4">
+            <span class="fs-4">💊 Farmácia CV</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+            <li><a href="medicamentos.html"><span class="nav-icon">💊</span> Medicamentos</a></li>
+            <li><a href="fornecedores.html"><span class="nav-icon">🚚</span> Fornecedores</a></li>
+            <li><a href="lotes.html"><span class="nav-icon">📦</span> Lotes</a></li>
+            <li><a href="clientes.html" class="active"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
+            <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
+            <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="historico.html"><span class="nav-icon">🕒</span> Histórico</a></li>
+        </ul>
+    </aside>
+
+    <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle" title="Menu">☰</button>
+            <span class="navbar-brand fw-bold m-0 p-0">🧑‍🤝‍🧑 Clientes</span>
+        </div>
+        <div>
+            <button class="btn btn-sair btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container py-4 main-content">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold text-secondary mb-0">🧑‍🤝‍🧑 Gestão de Clientes</h4>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success" onclick="exportarCSV('/exportar/clientes', 'clientes.csv')">⬇️ Exportar CSV</button>
+                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">
+                    ➕ Novo Cliente
+                </button>
+            </div>
+        </div>
+
+        <div class="collapse mb-3" id="formAdicionar">
+            <div class="card-box">
+                <h6 class="fw-bold mb-3">Novo Cliente</h6>
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input id="nome" class="form-control" placeholder="Nome completo">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="telefone" class="form-control" placeholder="Telefone">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="email" type="email" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="endereco" class="form-control" placeholder="Endereço">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label small text-muted mb-1">📍 Localização no mapa (opcional — clica para marcar, arrasta para acertar)</label>
+                    <div id="mapaAdd" style="height:220px; border-radius:8px;"></div>
+                    <input type="hidden" id="lat"><input type="hidden" id="lng">
+                    <p class="small mt-1 mb-0" id="coordAdd">Nenhum ponto marcado.</p>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-success" onclick="adicionar()">Guardar</button>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                        data-bs-target="#formAdicionar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-box mb-3">
+            <input id="busca" class="form-control" placeholder="🔍 Pesquisar cliente por nome, telefone ou email..."
+                onkeyup="filtrar()">
+        </div>
+
+        <div id="mensagem" class="alert d-none mb-3"></div>
+
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Endereço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela">
+                        <tr>
+                            <td colspan="6" class="text-center py-4">A carregar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-bar" id="paginacaoBar" style="display:none;">
+                <div class="pagination-info" id="paginacaoInfo"></div>
+                <div class="pagination-buttons" id="paginacaoBotoes"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✏️ Editar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="mb-2">
+                        <label class="form-label">Nome</label>
+                        <input id="editNome" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Telefone</label>
+                        <input id="editTelefone" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Email</label>
+                        <input id="editEmail" type="email" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Endereço</label>
+                        <input id="editEndereco" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">📍 Localização no mapa</label>
+                        <div id="mapaEdit" style="height:220px; border-radius:8px;"></div>
+                        <input type="hidden" id="editLat"><input type="hidden" id="editLng">
+                        <p class="small mt-1 mb-0" id="coordEdit">Nenhum ponto marcado.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardarEdicao()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalHistorico" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🧾 Histórico de Compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalHistoricoBody"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/clientes.js"></script>
+</body>
+
+</html>
