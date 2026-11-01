@@ -1,0 +1,112 @@
+                                     💊
+                                 Farmácia CV
+                        Sistema de Gestão de Farmácia
+                             MANUAL DE UTILIZADOR
+Índice
+1. Introdução
+A Farmácia CV é um sistema de gestão que reúne, num só lugar, o dia a dia de uma farmácia: o stock de medicamentos e os lotes, as vendas ao balcão, as encomendas feitas pelos clientes online, os clientes e fornecedores, os relatórios e as cópias de segurança.
+Este manual explica, passo a passo, como usar cada área do sistema.
+Perfis de utilizador
+O que cada pessoa pode fazer depende do seu perfil:
+ Administrador  --  acesso a tudo, incluindo a gestão de utilizadores, as cópias de segurança e a exportação de vendas.
+ Funcionário  --  a operação diária: stock, vendas, devoluções, encomendas, clientes e fornecedores.
+ Cliente  --  o portal de encomendas online, onde faz e acompanha as suas encomendas.
+2. Aceder ao Sistema
+Iniciar sessão
+  1.  Abra a página de entrada (login) no navegador.
+  2.  Escreva o seu email e a palavra-passe.
+  3.  Carregue em <<Entrar>>. O staff é levado para o painel; os clientes para o portal.
+--------------------------------------------------------------------------------
+ Nota:  O administrador de origem é admin@farmacia.cv com a palavra-passe admin123. Deve alterá-la após o primeiro acesso.
+Criar conta de cliente
+Um novo cliente pode criar a sua própria conta a partir da página de entrada, carregando em <<Criar conta>> e preenchendo nome, email e palavra-passe. Fica automaticamente com acesso ao portal.
+3. Painel Principal (Dashboard)
+Ao entrar, o staff vê um resumo do estado da farmácia:
+ Receita líquida  --  o valor das vendas, já descontadas as devoluções e sem contar as vendas anuladas.
+ Número de medicamentos, alertas de stock baixo e número de clientes.
+ Um cartão de Alertas de Stock e Validade, que lista os medicamentos com stock baixo, a expirar ou já expirados.
+ Um gráfico de vendas e a lista dos últimos medicamentos adicionados.
+4. Medicamentos
+Nesta área gere o catálogo de medicamentos e o respetivo stock.
+Adicionar um medicamento
+  1.  Carregue em <<➕ Adicionar>>.
+  2.  Preencha o nome, o preço, o stock, a validade e a categoria.
+  3.  Guarde. O medicamento passa a aparecer na lista e no catálogo do portal.
+Editar ou apagar
+Cada linha da tabela tem botões para editar (✏️) e apagar (🗑️) o medicamento.
+Exportar para Excel
+O botão <<⬇️ Exportar CSV>> descarrega a lista completa num ficheiro que abre diretamente no Excel.
+5. Lotes (Entrada de Stock)
+Sempre que chega mercadoria nova, regista-se um lote. Isso aumenta automaticamente o stock do medicamento.
+  1.  Abra a página de Lotes e carregue em adicionar.
+  2.  Escolha o medicamento e, se quiser, o fornecedor.
+  3.  Indique o número do lote, a quantidade, a validade e o preço de custo.
+  4.  Guarde. O stock do medicamento sobe pela quantidade indicada.
+--------------------------------------------------------------------------------
+ Nota:  Apagar um lote desconta de volta a quantidade correspondente ao stock.
+6. Vendas
+Registar uma venda
+  1.  Na página de Vendas, procure e adicione os medicamentos ao carrinho, indicando as quantidades.
+  2.  Se for um cliente registado, associe-o à venda (para acumular pontos de fidelidade).
+  3.  Escolha o método de pagamento (Cartão 24 ou Visa) e confirme o valor.
+  4.  Finalize. O stock desce automaticamente e é gerado um recibo imprimível.
+--------------------------------------------------------------------------------
+ Nota:  O preço usado é sempre o que está na base de dados  --  não é possível alterá-lo no momento da venda.
+Fidelidade (pontos)
+Uma venda associada a um cliente gera pontos. Esses pontos podem depois ser usados como desconto numa compra futura.
+Anular uma venda
+No histórico, ao abrir os detalhes de uma venda, o administrador pode anulá-la. O stock é reposto e a venda deixa de contar para a receita.
+Devolver um item
+  1.  No histórico de vendas, abra os detalhes da venda (🧾 Ver).
+  2.  Na linha do item a devolver, carregue em <<↩️ Devolver>>.
+  3.  Indique a quantidade e, se quiser, o motivo.
+  4.  Confirme. O stock é reposto e a devolução fica registada, visível no detalhe da venda.
+--------------------------------------------------------------------------------
+ Nota:  Não é possível devolver mais unidades do que as vendidas, nem devolver itens de uma venda já anulada.
+7. Encomendas Online (Staff)
+Aqui o staff acompanha as encomendas feitas pelos clientes no portal.
+  1.  Quando entra uma encomenda nova, aparece uma notificação no sino.
+  2.  Abra a encomenda para ver os itens, o cliente e a morada de entrega (com ligação ao mapa).
+  3.  Faça avançar o estado: pendente --> confirmado --> pronto --> concluído. Ao confirmar, o stock é descontado.
+  4.  Se necessário, cancele a encomenda  --  o stock é reposto.
+O botão <<🖨️ Talão>> imprime uma nota da encomenda, útil para a preparação e entrega.
+8. Clientes e Fornecedores
+As duas áreas funcionam de forma semelhante: permitem adicionar, editar, apagar e exportar registos.
+Localização no mapa
+Ao adicionar ou editar um cliente ou fornecedor, pode marcar a localização exata num mini-mapa (clicando e arrastando o marcador). Depois, na lista, o botão <<📍>> mostra essa localização no mapa.
+--------------------------------------------------------------------------------
+ Nota:  Se não marcar o ponto no mapa, o botão 📍 tenta na mesma localizar a morada escrita  --  mas com menos precisão.
+9. Relatórios
+A área de relatórios reúne análises do negócio, como as vendas por período, os produtos mais vendidos, a margem de lucro e os métodos de pagamento. Servem para acompanhar o desempenho da farmácia.
+10. Alertas e Notificações
+O sistema verifica automaticamente o stock e as validades e avisa o staff através do sino de notificações (🔔), sempre que há:
+ Medicamentos com stock baixo.
+ Medicamentos a aproximarem-se da validade.
+ Medicamentos já expirados.
+Os mesmos alertas aparecem, com detalhe, no cartão de alertas do painel principal.
+11. Utilizadores (Administrador)
+O administrador gere as contas do staff: criar, editar e definir o perfil (administrador ou funcionário) de cada utilizador.
+12. Cópias de Segurança (Administrador)
+Na página de Utilizadores, o administrador tem um cartão de Backup e Restauro.
+Descarregar um backup
+Carregue em <<⬇️ Descarregar backup>> para guardar uma cópia completa da base de dados num ficheiro.
+Restaurar
+  1.  Escolha um ficheiro de backup (.db).
+  2.  Carregue em <<♻️ Restaurar>> e confirme.
+--------------------------------------------------------------------------------
+ Nota:  O restauro substitui TODOS os dados atuais pelos do ficheiro. Faça sempre um backup antes, por segurança.
+13. Portal do Cliente
+Os clientes com conta acedem a um portal próprio, onde podem encomendar medicamentos.
+Fazer uma encomenda
+  1.  No catálogo, adicione medicamentos ao carrinho.
+  2.  Indique a morada de entrega e, se quiser, marque o ponto exato no mapa.
+  3.  Envie a encomenda. Fica com o estado <<pendente>> até a farmácia a confirmar.
+Acompanhar as encomendas
+Em <<Os meus pedidos>>, o cliente vê o estado de cada encomenda, pode cancelá-la enquanto está pendente, e imprimir o respetivo talão (🖨️).
+14. Dicas e Perguntas Frequentes
+Os mapas não aparecem
+Os mapas precisam de ligação à internet. Confirme que está online.
+A janela de impressão não abre
+Para imprimir recibos e talões, o navegador tem de permitir janelas de pop-up para o site.
+Esqueci-me da palavra-passe
+Peça a um administrador para redefinir a palavra-passe da sua conta na área de Utilizadores.

@@ -1,0 +1,59 @@
+                                     💊
+                                 Farmácia CV
+                        Sistema de Gestão de Farmácia
+                           DOCUMENTO DE ARQUITETURA
+Índice
+1. Visão Geral
+A Farmácia CV é uma aplicação web construída sobre uma arquitetura cliente-servidor. O cliente (o navegador do utilizador) apresenta a interface e comunica, através de pedidos HTTP, com um servidor que expõe uma API REST. Toda a lógica de negócio e o acesso aos dados vivem no servidor; o navegador limita-se a apresentar informação e a recolher ações do utilizador.
+O servidor está organizado em camadas, o que separa responsabilidades e torna o sistema mais fácil de testar e de manter.
+2. Estilo Arquitetural
+O sistema segue três princípios principais:
+ Cliente-servidor  --  a interface (frontend) e a lógica (backend) são independentes e comunicam por HTTP/JSON.
+ API REST  --  o servidor expõe recursos (medicamentos, vendas, pedidos, etc.) através de rotas HTTP com verbos GET, POST, PUT e DELETE.
+ Camadas no servidor  --  a API delega o acesso aos dados numa camada de modelos, que por sua vez fala com a base de dados. Nenhuma camada superior acede diretamente à base de dados.
+3. Arquitetura em Camadas
+O diagrama seguinte mostra as camadas do sistema e como comunicam entre si.
+                                       
+Frontend (navegador)
+Páginas HTML com Bootstrap e JavaScript. Cada página tem o seu ficheiro .js; há ainda ficheiros partilhados (config.js com o endereço da API, app.js com o menu, o sino de notificações e a exportação, e mapa.js para os mapas). Os mapas usam Leaflet com OpenStreetMap, sem necessidade de chave de API.
+API REST (FastAPI)
+O ficheiro backend/main.py concentra cerca de 69 rotas. Recebe os pedidos, valida os dados de entrada com Pydantic, verifica as permissões, e chama a camada de modelos. Tem ainda o CORS configurado para permitir o acesso a partir do frontend.
+Camada de Modelos
+Em backend/models/, cada ficheiro trata de uma entidade (medicamento_model, venda_model, pedido_model, cliente_model, etc.). É aqui que ficam as regras de negócio (por exemplo, repor stock ao anular uma venda) e o acesso à base de dados através de SQL.
+Base de Dados
+Uma base de dados SQLite, num único ficheiro (farmacia.db). É leve, não precisa de servidor próprio e é ideal para uma aplicação deste tamanho.
+4. Fluxo de um Pedido
+Quando o utilizador executa uma ação (por exemplo, registar uma venda), o percurso é:
+ O JavaScript da página envia um pedido HTTP à API, com o token de autenticação no cabeçalho.
+ A API valida os dados, confirma as permissões e chama a função correspondente na camada de modelos.
+ O modelo executa o SQL necessário na base de dados (ler, inserir, atualizar).
+ A resposta volta em JSON até ao navegador, que atualiza a interface.
+5. Autenticação e Autorização
+O acesso é controlado por tokens JWT (JSON Web Tokens). O diagrama seguinte resume o processo, do início de sessão até à execução de um pedido protegido.
+                                       
+Como funciona
+No início de sessão, o servidor confirma a palavra-passe e devolve um token JWT assinado (algoritmo HS256, válido por 8 horas). O navegador guarda esse token e envia-o em todos os pedidos seguintes, no cabeçalho Authorization. Em cada pedido protegido, o servidor descodifica o token para identificar o utilizador.
+Perfis e permissões
+Cada rota exige um nível de acesso, através de dependências do FastAPI:
+ verificar_token  --  qualquer utilizador autenticado (usado, por exemplo, no portal do cliente).
+ apenas_staff  --  administradores e funcionários (operação diária).
+ apenas_admin  --  apenas administradores (utilizadores, backup/restauro, exportação de vendas).
+6. Camada de Dados
+A ligação à base de dados é aberta e fechada a cada operação. No arranque, a função init_db cria as tabelas caso não existam e aplica migrações  --  ou seja, acrescenta automaticamente colunas novas às tabelas já existentes, sem apagar dados. Isto permite evoluir o modelo de dados sem perder o que já lá está.
+--------------------------------------------------------------------------------
+ Nota:  Alguns campos, como o nome do medicamento em venda_itens e devolucoes, são cópias (snapshots) guardadas no momento da transação. Assim, o histórico permanece correto mesmo que o medicamento seja mais tarde renomeado ou removido.
+7. Segurança
+ Palavras-passe  --  guardadas com hash, nunca em texto simples.
+ Tokens JWT  --  assinados com uma chave secreta e com validade limitada (8 horas).
+ Rate limiting  --  o início de sessão bloqueia após 5 tentativas falhadas por email, dificultando ataques de força bruta.
+ Segredos em .env  --  a chave secreta fica num ficheiro .env, fora do controlo de versões; sem ela, a aplicação não arranca.
+ CORS  --  o servidor controla que origens podem aceder à API.
+ Log de auditoria  --  as operações sensíveis (criar, editar, apagar, anular, devolver, backup, restauro) ficam registadas com o utilizador, a data e a descrição.
+8. Estratégia de Testes
+O projeto tem 174 testes automáticos com pytest. Cada teste corre numa base de dados temporária e isolada, garantindo que os testes não interferem uns com os outros nem com os dados reais. Os testes cobrem a autenticação, as permissões de cada perfil, as regras de negócio e os casos-limite  --  por exemplo, a integridade do stock quando se combinam devoluções e anulações.
+9. Principais Decisões de Design
+ SQLite  --  escolhido pela simplicidade e por não exigir um servidor de base de dados separado, adequado à dimensão do projeto.
+ Migrações automáticas  --  permitem evoluir o esquema sem perder dados nem correr scripts manuais.
+ Snapshots de nomes  --  preservam a fidelidade do histórico de vendas e devoluções.
+ Mapas com OpenStreetMap  --  gratuitos e sem chave de API, ao contrário de alternativas comerciais.
+ Frontend sem framework  --  HTML, Bootstrap e JavaScript simples, o que reduz dependências e facilita a manutenção.

@@ -1,0 +1,3 @@
+-r frontend/requirements.txt
+pytest
+httpx
