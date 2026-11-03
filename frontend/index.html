@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmácia CV — Cuidar de si, todos os dias</title>
+<style>
+:root{
+    --night: #1a1245;
+    --night-deep: #100a2e;
+    --coral: #e8663f;
+    --coral-soft: #f0966b;
+    --gold: #f4b942;
+    --sand: #faf3e7;
+    --green: #0e6b4f;
+    --ink: #14181a;
+    --ink-soft: #5b6660;
+    --line: #e2e5de;
+    --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--sand);
+}
+a{color:inherit;}
+.container{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+/* ── NAVBAR ──────────────────────────────────────────────────────────── */
+.navbar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,231,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+}
+.navbar-inner{
+    max-width:1120px; margin:0 auto; padding:16px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+}
+.marca{display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px;}
+.marca .selo{
+    width:34px;height:34px;border-radius:9px;
+    background:var(--night);
+    display:flex;align-items:center;justify-content:center;
+    color:white; flex-shrink:0;
+}
+.marca .selo svg{width:18px;height:18px;}
+.nav-links{display:flex; align-items:center; gap:28px; font-size:14.5px; font-weight:600;}
+.nav-links a:not(.btn-nav){color:var(--ink-soft); text-decoration:none;}
+.nav-links a:not(.btn-nav):hover{color:var(--ink);}
+.btn-nav{
+    background:var(--coral); color:white; padding:9px 20px;
+    border-radius:8px; text-decoration:none; font-weight:700;
+}
+.btn-nav:hover{background:#d3512c;}
+.menu-mobile-toggle{display:none; background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink);}
+
+/* ── HERO ────────────────────────────────────────────────────────────── */
+.hero{
+    position:relative;
+    background:linear-gradient(165deg, var(--night) 0%, var(--night-deep) 100%);
+    color:white;
+    overflow:hidden;
+    padding:90px 0 110px;
+}
+.hero::before{
+    content:"";
+    position:absolute; inset:0;
+    opacity:0.10;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 42px);
+    pointer-events:none;
+}
+.hero::after{
+    content:"";
+    position:absolute; right:-140px; top:-140px;
+    width:460px;height:460px;border-radius:50%;
+    background:radial-gradient(circle, rgba(244,185,66,0.18) 0%, transparent 70%);
+    pointer-events:none;
+}
+.hero-conteudo{position:relative; z-index:1; max-width:640px;}
+.hero-grid{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:center;
+}
+@media (max-width: 900px){.hero-grid{grid-template-columns:1fr;}}
+.hero-eyebrow{
+    font-size:13px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--gold); font-weight:700; margin-bottom:16px;
+}
+.hero h1{
+    font-size:clamp(2.2rem, 5vw, 3.4rem);
+    font-weight:700; line-height:1.15; letter-spacing:-0.01em;
+    margin-bottom:20px;
+}
+.hero h1 em{font-style:normal; color:var(--coral-soft);}
+.hero p{
+    font-size:17px; line-height:1.7; color:rgba(255,255,255,0.68);
+    max-width:520px; margin-bottom:34px;
+}
+.hero-botoes{display:flex; gap:14px; flex-wrap:wrap;}
+.btn-primario{
+    background:var(--coral); color:white; padding:15px 28px;
+    border-radius:10px; text-decoration:none; font-weight:700; font-size:15.5px;
+}
+.btn-primario:hover{background:#d3512c;}
+.btn-secundario{
+    background:transparent; color:white; padding:15px 28px;
+    border:1.5px solid rgba(255,255,255,0.35);
+    border-radius:10px; text-decoration:none; font-weight:700; font-size:15.5px;
+}
+.btn-secundario:hover{border-color:white;}
+
+/* ── CARROSSEL DE IMAGENS (hero) ─────────────────────────────────────── */
+.carrossel{
+    position:relative;
+    aspect-ratio:4/3.1;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -24px rgba(0,0,0,0.45);
+}
+.slide-carrossel{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:30px;
+    opacity:0;
+    transition:opacity 1s ease;
+    color:white;
+}
+.slide-carrossel.ativo{opacity:1;}
+.slide-carrossel .ilustracao-slide{width:78%; max-width:280px; margin-bottom:18px;}
+.slide-carrossel .ilustracao-slide svg{width:100%; height:auto; display:block;}
+.slide-carrossel .legenda-slide{font-size:14.5px; font-weight:700; letter-spacing:0.01em;}
+.slide-carrossel .aviso-slide{
+    font-size:11px; color:rgba(255,255,255,0.55); margin-top:8px;
+    text-transform:uppercase; letter-spacing:0.06em;
+}
+/* Fundo de exemplo por slide -- troca por background:url("a-tua-foto.jpg") center/cover quando tiveres fotos reais */
+.slide-carrossel:nth-child(1){background:linear-gradient(160deg, var(--night) 0%, var(--night-deep) 100%);}
+.slide-carrossel:nth-child(2){background:linear-gradient(160deg, var(--green) 0%, #073c2c 100%);}
+.slide-carrossel:nth-child(3){background:linear-gradient(160deg, var(--coral) 0%, #a1421f 100%);}
+
+.pontos-carrossel{
+    position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+    display:flex; gap:8px; z-index:2;
+}
+.ponto-carrossel{
+    width:8px;height:8px;border-radius:50%;
+    background:rgba(255,255,255,0.4);
+    border:none; cursor:pointer; padding:0;
+    transition:background 0.2s, transform 0.2s;
+}
+.ponto-carrossel.ativo{background:white; transform:scale(1.25);}
+
+/* ── SERVICOS ────────────────────────────────────────────────────────── */
+.secao{padding:80px 0;}
+.secao-titulo{text-align:center; max-width:600px; margin:0 auto 50px;}
+.secao-eyebrow{
+    font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--green); font-weight:700; margin-bottom:12px;
+}
+.secao-titulo h2{font-size:clamp(1.6rem,3vw,2.1rem); font-weight:700; letter-spacing:-0.01em; margin-bottom:14px;}
+.secao-titulo p{color:var(--ink-soft); font-size:15.5px; line-height:1.7;}
+
+.grid-servicos{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:22px;
+}
+@media (max-width: 980px){.grid-servicos{grid-template-columns:repeat(2, 1fr);}}
+@media (max-width: 560px){.grid-servicos{grid-template-columns:1fr;}}
+
+.card-servico{
+    background:white; border:1px solid var(--line); border-radius:14px;
+    padding:26px; box-shadow:0 4px 16px -8px rgba(26,18,69,0.10);
+}
+.card-servico .icone{
+    width:44px;height:44px;border-radius:10px;
+    background:rgba(14,107,79,0.10); color:var(--green);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px; margin-bottom:16px;
+}
+.card-servico h3{font-size:16.5px; font-weight:700; margin-bottom:8px;}
+.card-servico p{font-size:14px; color:var(--ink-soft); line-height:1.6;}
+
+/* ── LOCALIZACAO / CONTACTO ──────────────────────────────────────────── */
+.secao-contacto{background:white; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+.grid-contacto{
+    display:grid; grid-template-columns:1.1fr 1fr; gap:50px; align-items:center;
+}
+@media (max-width: 860px){.grid-contacto{grid-template-columns:1fr;}}
+.lista-info{list-style:none; margin-top:22px;}
+.lista-info li{
+    display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line);
+    font-size:14.5px;
+}
+.lista-info li:last-child{border-bottom:none;}
+.lista-info .rotulo{font-weight:700; min-width:120px; color:var(--ink);}
+.lista-info .valor{color:var(--ink-soft);}
+.painel-mapa{
+    border:1px solid var(--line); border-radius:16px;
+    overflow:hidden;
+    height:260px;
+}
+.painel-mapa iframe{width:100%; height:100%; border:0; display:block;}
+
+/* ── CTA FINAL ───────────────────────────────────────────────────────── */
+.cta-final{
+    background:var(--green); color:white; text-align:center; padding:70px 24px;
+}
+.cta-final h2{font-size:clamp(1.5rem,3vw,2rem); font-weight:700; margin-bottom:14px;}
+.cta-final p{color:rgba(255,255,255,0.82); margin-bottom:28px; font-size:15.5px;}
+
+/* ── RODAPE ──────────────────────────────────────────────────────────── */
+footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 24px; font-size:13px;}
+.footer-inner{
+    max-width:1120px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+}
+.footer-inner a{color:rgba(255,255,255,0.75); text-decoration:none; margin-left:18px;}
+.footer-inner a:hover{color:white;}
+
+@media (max-width: 760px){
+    .nav-links{display:none;}
+}
+
+/* ── SOBRE NOS ───────────────────────────────────────────────────────── */
+.grid-sobre{
+    display:grid; grid-template-columns:1fr 1.1fr; gap:56px; align-items:center;
+}
+@media (max-width: 860px){.grid-sobre{grid-template-columns:1fr;}}
+.painel-sobre{
+    background:linear-gradient(165deg, var(--night) 0%, var(--night-deep) 100%);
+    border-radius:18px; height:320px; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+}
+.painel-sobre::before{
+    content:"";
+    position:absolute; inset:0; opacity:0.12;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 36px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 36px);
+}
+.painel-sobre .icone-grande{font-size:64px; position:relative; z-index:1;}
+.texto-sobre h2{font-size:clamp(1.6rem,3vw,2.1rem); font-weight:700; letter-spacing:-0.01em; margin-bottom:16px;}
+.texto-sobre p{color:var(--ink-soft); font-size:15.5px; line-height:1.75; margin-bottom:14px;}
+
+/* ── COMO FUNCIONA ───────────────────────────────────────────────────── */
+.secao-escura{
+    background:linear-gradient(165deg, var(--night) 0%, var(--night-deep) 100%);
+    color:white;
+}
+.secao-escura .secao-eyebrow{color:var(--gold);}
+.secao-escura .secao-titulo p{color:rgba(255,255,255,0.65);}
+.grid-passos{display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; counter-reset:passo;}
+@media (max-width: 860px){.grid-passos{grid-template-columns:1fr;}}
+.passo{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px; padding:28px;
+    counter-increment:passo;
+}
+.passo::before{
+    content:counter(passo);
+    display:flex; align-items:center; justify-content:center;
+    width:38px;height:38px; border-radius:10px;
+    background:var(--coral); color:white; font-weight:700; font-size:16px;
+    margin-bottom:18px;
+}
+.passo h3{font-size:16.5px; font-weight:700; margin-bottom:8px;}
+.passo p{font-size:14px; color:rgba(255,255,255,0.65); line-height:1.6;}
+
+/* ── PORQUE ESCOLHER-NOS ─────────────────────────────────────────────── */
+.grid-diferenciais{display:grid; grid-template-columns:repeat(3, 1fr); gap:26px;}
+@media (max-width: 860px){.grid-diferenciais{grid-template-columns:1fr;}}
+.diferencial{display:flex; gap:16px;}
+.diferencial .marca-check{
+    width:36px;height:36px;border-radius:9px; flex-shrink:0;
+    background:rgba(14,107,79,0.10); color:var(--green);
+    display:flex; align-items:center; justify-content:center; font-size:17px;
+}
+.diferencial h3{font-size:15.5px; font-weight:700; margin-bottom:5px;}
+.diferencial p{font-size:13.5px; color:var(--ink-soft); line-height:1.6;}
+
+/* ── FAQ ─────────────────────────────────────────────────────────────── */
+.lista-faq{max-width:760px; margin:0 auto;}
+.item-faq{
+    border-bottom:1px solid var(--line);
+}
+.pergunta-faq{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:20px 0; display:flex; justify-content:space-between; align-items:center;
+    font-size:15.5px; font-weight:700; color:var(--ink);
+    font-family:var(--sans);
+}
+.pergunta-faq .sinal{font-size:20px; color:var(--coral); transition:transform 0.2s; flex-shrink:0; margin-left:16px;}
+.item-faq.aberto .sinal{transform:rotate(45deg);}
+.resposta-faq{
+    max-height:0; overflow:hidden; transition:max-height 0.25s ease;
+    font-size:14.5px; color:var(--ink-soft); line-height:1.7;
+}
+.item-faq.aberto .resposta-faq{max-height:220px; padding-bottom:20px;}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-inner">
+        <div class="marca">
+            <span class="selo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg>
+            </span>
+            Farmácia CV
+        </div>
+        <div class="nav-links">
+            <a href="#sobre">Sobre</a>
+            <a href="#como-funciona">Como Funciona</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#contacto">Contacto</a>
+            <a href="login.html" class="btn-nav">Entrar</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-conteudo">
+            <div class="hero-eyebrow">Farmácia CV · Praia, Cabo Verde</div>
+            <h1>Cuidar de si,<br><em>todos os dias.</em></h1>
+            <p>Sistema de gestão da farmácia e portal para os nossos clientes — consulte o seu histórico de compras, e a nossa equipa gere stock, vendas e receituário num só lugar.</p>
+            <div class="hero-botoes">
+                <a href="login.html" class="btn-primario">Entrar na minha conta</a>
+                <a href="registar.html" class="btn-secundario">Criar conta de cliente</a>
+            </div>
+        </div>
+
+        <!-- Carrossel: substitui cada linha "background:linear-gradient(...)" no CSS
+             por background:url("caminho-da-foto.jpg") center/cover quando tiveres fotos reais -->
+        <div class="carrossel" id="carrossel">
+            <div class="slide-carrossel ativo">
+                <div class="ilustracao-slide"><svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+  <rect x="55" y="95" width="210" height="130" rx="4" fill="rgba(255,255,255,0.95)"/>
+  <rect x="45" y="72" width="230" height="26" rx="6" fill="rgba(244,185,66,0.95)"/>
+  <rect x="150" y="30" width="20" height="46" rx="3" fill="rgba(244,185,66,0.95)"/>
+  <rect x="132" y="48" width="56" height="18" rx="3" fill="rgba(244,185,66,0.95)"/>
+  <rect x="140" y="165" width="40" height="60" fill="rgba(26,18,69,0.85)"/>
+  <circle cx="172" cy="195" r="2.5" fill="rgba(244,185,66,0.9)"/>
+  <rect x="72" y="112" width="46" height="42" rx="3" fill="rgba(26,18,69,0.12)"/>
+  <rect x="202" y="112" width="46" height="42" rx="3" fill="rgba(26,18,69,0.12)"/>
+  <rect x="88" y="126" width="14" height="4" fill="rgba(14,107,79,0.7)"/>
+  <rect x="93" y="120" width="4" height="14" fill="rgba(14,107,79,0.7)"/>
+  <rect x="218" y="126" width="14" height="4" fill="rgba(232,102,63,0.7)"/>
+  <rect x="223" y="120" width="4" height="14" fill="rgba(232,102,63,0.7)"/>
+  <rect x="30" y="225" width="260" height="6" rx="3" fill="rgba(255,255,255,0.25)"/>
+</svg></div>
+                <div class="legenda-slide">A nossa farmácia na Praia</div>
+            </div>
+            <div class="slide-carrossel">
+                <div class="ilustracao-slide"><svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+  <rect x="40" y="150" width="240" height="18" rx="4" fill="rgba(255,255,255,0.20)"/>
+  <rect x="40" y="150" width="240" height="55" rx="4" fill="rgba(255,255,255,0.10)"/>
+  <circle cx="110" cy="88" r="26" fill="rgba(255,255,255,0.92)"/>
+  <path d="M70 150 q40 -34 80 0 v18 h-80 z" fill="rgba(255,255,255,0.92)"/>
+  <circle cx="212" cy="88" r="26" fill="rgba(255,255,255,0.98)"/>
+  <path d="M172 150 q40 -34 80 0 v18 h-80 z" fill="rgba(255,255,255,0.98)"/>
+  <rect x="196" y="105" width="32" height="24" rx="6" fill="rgba(14,107,79,0.9)"/>
+  <rect x="209" y="112" width="6" height="10" fill="white"/>
+  <rect x="206" y="115" width="12" height="4" fill="white"/>
+  <path d="M150 96 q10 -14 20 0 q-10 12 -20 0z" fill="rgba(244,185,66,0.9)"/>
+  <circle cx="146" cy="80" r="3" fill="rgba(244,185,66,0.7)"/>
+  <circle cx="174" cy="76" r="2.2" fill="rgba(244,185,66,0.6)"/>
+</svg></div>
+                <div class="legenda-slide">Atendimento próximo e atento</div>
+            </div>
+            <div class="slide-carrossel">
+                <div class="ilustracao-slide"><svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+  <rect x="40" y="70" width="240" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="40" y="140" width="240" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="40" y="210" width="240" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="55" y="35" width="26" height="35" rx="4" fill="rgba(255,255,255,0.95)"/>
+  <rect x="88" y="28" width="22" height="42" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="117" y="40" width="30" height="30" rx="4" fill="rgba(255,255,255,0.85)"/>
+  <rect x="154" y="30" width="20" height="40" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="181" y="36" width="26" height="34" rx="4" fill="rgba(255,255,255,0.95)"/>
+  <rect x="214" y="26" width="22" height="44" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="55" y="105" width="30" height="35" rx="4" fill="rgba(255,255,255,0.9)"/>
+  <rect x="92" y="98" width="24" height="42" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="123" y="110" width="28" height="30" rx="4" fill="rgba(255,255,255,0.85)"/>
+  <rect x="158" y="100" width="22" height="40" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="187" y="108" width="30" height="32" rx="4" fill="rgba(255,255,255,0.95)"/>
+  <rect x="224" y="96" width="20" height="44" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="55" y="175" width="24" height="35" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="86" y="168" width="30" height="42" rx="4" fill="rgba(255,255,255,0.9)"/>
+  <rect x="123" y="180" width="22" height="30" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="152" y="170" width="28" height="40" rx="4" fill="rgba(255,255,255,0.85)"/>
+  <rect x="187" y="178" width="24" height="32" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="218" y="168" width="26" height="42" rx="4" fill="rgba(255,255,255,0.95)"/>
+</svg></div>
+                <div class="legenda-slide">Stock organizado, lote a lote</div>
+            </div>
+            <div class="pontos-carrossel" id="pontosCarrossel"></div>
+        </div>
+    </div>
+</section>
+
+<section class="secao" id="sobre">
+    <div class="container">
+        <div class="grid-sobre">
+            <div class="painel-sobre">
+                <div class="icone-grande">💊</div>
+            </div>
+            <div class="texto-sobre">
+                <div class="secao-eyebrow">Sobre nós</div>
+                <h2>Uma farmácia de bairro, com as ferramentas de uma farmácia moderna</h2>
+                <p>A Farmácia CV nasceu para servir a comunidade da Praia com rigor e proximidade. Acreditamos que cuidar de si é mais do que vender medicamentos — é garantir que cada receita, cada lote e cada conselho chegam com confiança.</p>
+                <p>Por isso construímos o nosso próprio sistema de gestão: para que a nossa equipa tenha sempre a informação certa à mão, e para que os nossos clientes consigam acompanhar o seu histórico sem complicações.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="secao secao-escura" id="como-funciona">
+    <div class="container">
+        <div class="secao-titulo">
+            <div class="secao-eyebrow">Como funciona</div>
+            <h2>Criar a sua conta demora menos de um minuto</h2>
+            <p>Depois de registado, o seu histórico de compras fica sempre disponível.</p>
+        </div>
+        <div class="grid-passos">
+            <div class="passo">
+                <h3>Crie a sua conta</h3>
+                <p>Registe-se com o seu nome, email e uma palavra-passe — sem burocracia.</p>
+            </div>
+            <div class="passo">
+                <h3>Compre na farmácia</h3>
+                <p>Ao indicar o seu email na compra, esta fica associada à sua conta automaticamente.</p>
+            </div>
+            <div class="passo">
+                <h3>Consulte quando quiser</h3>
+                <p>Entre no seu portal a qualquer momento para ver o histórico completo das suas compras.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="secao" id="servicos">
+    <div class="container">
+        <div class="secao-titulo">
+            <div class="secao-eyebrow">O que fazemos</div>
+            <h2>Tudo o que precisa da sua farmácia</h2>
+            <p>Da dispensa de medicamentos ao aconselhamento — a nossa equipa está para ajudar.</p>
+        </div>
+        <div class="grid-servicos">
+            <div class="card-servico">
+                <div class="icone">💊</div>
+                <h3>Medicamentos</h3>
+                <p>Vasto stock de medicamentos, com controlo rigoroso de validade e lotes de fabrico.</p>
+            </div>
+            <div class="card-servico">
+                <div class="icone">🧑‍⚕️</div>
+                <h3>Aconselhamento</h3>
+                <p>A nossa equipa ajuda a esclarecer dúvidas sobre posologia e interações.</p>
+            </div>
+            <div class="card-servico">
+                <div class="icone">🧾</div>
+                <h3>Histórico de Compras</h3>
+                <p>Clientes registados conseguem consultar o seu histórico de compras a qualquer momento.</p>
+            </div>
+            <div class="card-servico">
+                <div class="icone">📦</div>
+                <h3>Rastreabilidade</h3>
+                <p>Cada lote é registado com fornecedor e validade, para total confiança na qualidade.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="container">
+        <div class="secao-titulo">
+            <div class="secao-eyebrow">Porquê escolher-nos</div>
+            <h2>O que nos distingue</h2>
+        </div>
+        <div class="grid-diferenciais">
+            <div class="diferencial">
+                <div class="marca-check">✓</div>
+                <div>
+                    <h3>Rigor no controlo de validade</h3>
+                    <p>Cada lote é acompanhado desde a receção, com alertas automáticos antes de qualquer medicamento vencer.</p>
+                </div>
+            </div>
+            <div class="diferencial">
+                <div class="marca-check">✓</div>
+                <div>
+                    <h3>Histórico sempre acessível</h3>
+                    <p>Os clientes registados podem consultar todas as suas compras a qualquer momento, sem ter de guardar recibos.</p>
+                </div>
+            </div>
+            <div class="diferencial">
+                <div class="marca-check">✓</div>
+                <div>
+                    <h3>Equipa próxima</h3>
+                    <p>Somos uma farmácia de bairro — conhecemos os nossos clientes e estamos disponíveis para esclarecer dúvidas.</p>
+                </div>
+            </div>
+            <div class="diferencial">
+                <div class="marca-check">✓</div>
+                <div>
+                    <h3>Fornecedores verificados</h3>
+                    <p>Trabalhamos só com fornecedores registados e rastreáveis, lote a lote.</p>
+                </div>
+            </div>
+            <div class="diferencial">
+                <div class="marca-check">✓</div>
+                <div>
+                    <h3>Sem custos escondidos</h3>
+                    <p>Criar conta é gratuito, e consultar o seu histórico de compras também.</p>
+                </div>
+            </div>
+            <div class="diferencial">
+                <div class="marca-check">✓</div>
+                <div>
+                    <h3>Dados protegidos</h3>
+                    <p>As suas informações ficam guardadas com segurança, com acesso restrito só à sua conta.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="secao" style="background:white;" id="faq">
+    <div class="container">
+        <div class="secao-titulo">
+            <div class="secao-eyebrow">Dúvidas frequentes</div>
+            <h2>Perguntas Frequentes</h2>
+        </div>
+        <div class="lista-faq">
+            <div class="item-faq">
+                <button class="pergunta-faq" onclick="alternarFaq(this)">
+                    Preciso de pagar para criar conta?
+                    <span class="sinal">+</span>
+                </button>
+                <div class="resposta-faq">Não. Criar conta e consultar o seu histórico de compras é sempre gratuito.</div>
+            </div>
+            <div class="item-faq">
+                <button class="pergunta-faq" onclick="alternarFaq(this)">
+                    Como é que as minhas compras aparecem no meu histórico?
+                    <span class="sinal">+</span>
+                </button>
+                <div class="resposta-faq">Basta indicar o seu email à equipa no momento da compra. A venda fica associada à sua conta automaticamente.</div>
+            </div>
+            <div class="item-faq">
+                <button class="pergunta-faq" onclick="alternarFaq(this)">
+                    Esqueci-me da minha palavra-passe, o que faço?
+                    <span class="sinal">+</span>
+                </button>
+                <div class="resposta-faq">Ainda não temos reposição automática por email. Contacte a equipa da farmácia pessoalmente ou por telefone para repormos a sua password.</div>
+            </div>
+            <div class="item-faq">
+                <button class="pergunta-faq" onclick="alternarFaq(this)">
+                    Posso encomendar medicamentos online?
+                    <span class="sinal">+</span>
+                </button>
+                <div class="resposta-faq">Sim! Depois de entrares na tua conta, podes escolher medicamentos no catálogo, montar o teu pedido e enviá-lo — a nossa equipa confirma a disponibilidade e prepara-o para levantares na farmácia. Podes acompanhar o estado do pedido a qualquer momento na tua área de cliente.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="secao-contacto" id="contacto">
+    <div class="container secao" style="padding-top:70px; padding-bottom:70px;">
+        <div class="grid-contacto">
+            <div>
+                <div class="secao-eyebrow">Onde estamos</div>
+                <h2 style="font-size:1.8rem; font-weight:700; letter-spacing:-0.01em; margin-bottom:6px;">Visite-nos ou contacte a equipa</h2>
+                <ul class="lista-info">
+                    <li><span class="rotulo">📍 Morada</span><span class="valor">Praia, Cabo Verde</span></li>
+                    <li><span class="rotulo">🕒 Horário</span><span class="valor">Segunda a Sábado, 08h00–20h00</span></li>
+                    <li><span class="rotulo">📞 Telefone</span><span class="valor">+238 000 00 00</span></li>
+                    <li><span class="rotulo">✉️ Email</span><span class="valor">geral@farmacia.cv</span></li>
+                </ul>
+            </div>
+            <div class="painel-mapa">
+                <!-- Troca "Praia,Cabo+Verde" pela morada exata da farmácia quando a tiveres -->
+                <iframe
+                    src="https://www.google.com/maps?q=Praia,Cabo+Verde&output=embed"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Localização da Farmácia CV">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-final">
+    <h2>Ainda não tem conta?</h2>
+    <p>Registe-se para acompanhar o seu histórico de compras a qualquer momento.</p>
+    <a href="registar.html" class="btn-primario" style="background:white; color:var(--green);">Criar conta gratuita</a>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div>© 2026 Farmácia CV — Praia, Cabo Verde</div>
+        <div>
+            <a href="login.html">Entrar</a>
+            <a href="registar.html">Criar conta</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+function alternarFaq(botao) {
+    const item = botao.closest(".item-faq");
+    const jaAberto = item.classList.contains("aberto");
+    document.querySelectorAll(".item-faq.aberto").forEach(el => el.classList.remove("aberto"));
+    if (!jaAberto) item.classList.add("aberto");
+}
+
+/* ── CARROSSEL DE IMAGENS ─────────────────────────────────────────────── */
+(function () {
+    const carrossel = document.getElementById("carrossel");
+    if (!carrossel) return;
+
+    const slides = carrossel.querySelectorAll(".slide-carrossel");
+    const areaPontos = document.getElementById("pontosCarrossel");
+    let atual = 0;
+    let temporizador;
+
+    slides.forEach((_, i) => {
+        const ponto = document.createElement("button");
+        ponto.className = "ponto-carrossel" + (i === 0 ? " ativo" : "");
+        ponto.setAttribute("aria-label", `Ver imagem ${i + 1}`);
+        ponto.onclick = () => irParaSlide(i);
+        areaPontos.appendChild(ponto);
+    });
+    const pontos = areaPontos.querySelectorAll(".ponto-carrossel");
+
+    function irParaSlide(indice) {
+        slides[atual].classList.remove("ativo");
+        pontos[atual].classList.remove("ativo");
+        atual = indice;
+        slides[atual].classList.add("ativo");
+        pontos[atual].classList.add("ativo");
+        reiniciarTemporizador();
+    }
+
+    function proximoSlide() {
+        irParaSlide((atual + 1) % slides.length);
+    }
+
+    function reiniciarTemporizador() {
+        clearInterval(temporizador);
+        temporizador = setInterval(proximoSlide, 4500);
+    }
+
+    reiniciarTemporizador();
+})();
+</script>
+
+</body>
+</html>

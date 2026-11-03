@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicamentos - Farmácia CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand mb-4">
+            <span class="fs-4">💊 Farmácia CV</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+            <li><a href="medicamentos.html" class="active"><span class="nav-icon">💊</span> Medicamentos</a></li>
+            <li><a href="fornecedores.html"><span class="nav-icon">🚚</span> Fornecedores</a></li>
+            <li><a href="lotes.html"><span class="nav-icon">📦</span> Lotes</a></li>
+            <li><a href="pedidos.html"><span class="nav-icon">🛒</span> Pedidos Online</a></li>
+            <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
+            <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
+            <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="historico.html"><span class="nav-icon">🕒</span> Histórico</a></li>
+        </ul>
+    </aside>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle" title="Menu">☰</button>
+            <span class="navbar-brand fw-bold m-0 p-0">💊 Medicamentos</span>
+        </div>
+        <div>
+            <button class="btn btn-sair btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container py-4 main-content">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold text-secondary mb-0">💊 Gestão de Medicamentos</h4>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success" onclick="exportarCSV('/exportar/medicamentos', 'medicamentos.csv')">⬇️ Exportar CSV</button>
+                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formAdicionar">
+                    ➕ Adicionar
+                </button>
+            </div>
+        </div>
+
+        <!-- FORMULÁRIO ADICIONAR -->
+        <div class="collapse mb-3" id="formAdicionar">
+            <div class="card-box">
+                <h6 class="fw-bold mb-3">Novo Medicamento</h6>
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input id="nome" class="form-control" placeholder="Nome do medicamento">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="preco" type="number" class="form-control" placeholder="Preço venda (CVE)" min="0"
+                            step="0.01">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="precoCusto" type="number" class="form-control" placeholder="Preço custo (CVE)" min="0"
+                            step="0.01">
+                    </div>
+                    <div class="col-md-1">
+                        <input id="estoque" type="number" class="form-control" placeholder="Estoque" min="0">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="validade" type="date" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="categoria" class="form-control" placeholder="Categoria">
+                    </div>
+                </div>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="requerReceita">
+                    <label class="form-check-label small" for="requerReceita">
+                        🔒 Exige receita médica (não pode ser encomendado online)
+                    </label>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-success" onclick="adicionar()">Guardar</button>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                        data-bs-target="#formAdicionar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BUSCA -->
+        <div class="card-box mb-3">
+            <input id="busca" class="form-control" placeholder="🔍 Pesquisar medicamento por nome ou categoria..."
+                onkeyup="filtrar()">
+        </div>
+
+        <!-- TABELA -->
+        <div class="card-box">
+            <div id="mensagem" class="alert d-none"></div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Margem</th>
+                            <th>Estoque</th>
+                            <th>Validade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela">
+                        <tr>
+                            <td colspan="8" class="text-center py-4">A carregar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-bar" id="paginacaoBar" style="display:none;">
+                <div class="pagination-info" id="paginacaoInfo"></div>
+                <div class="pagination-buttons" id="paginacaoBotoes"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✏️ Editar Medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="mb-2">
+                        <label class="form-label">Nome</label>
+                        <input id="editNome" class="form-control">
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label">Preço venda (CVE)</label>
+                            <input id="editPreco" type="number" class="form-control" min="0" step="0.01">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Preço custo (CVE)</label>
+                            <input id="editPrecoCusto" type="number" class="form-control" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-1">
+                        <div class="col-6">
+                            <label class="form-label">Estoque</label>
+                            <input id="editEstoque" type="number" class="form-control" min="0">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Validade</label>
+                            <input id="editValidade" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-1">
+                        <div class="col-6">
+                            <label class="form-label">Categoria</label>
+                            <input id="editCategoria" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="editRequerReceita">
+                        <label class="form-check-label small" for="editRequerReceita">
+                            🔒 Exige receita médica (não pode ser encomendado online)
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardarEdicao()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) { window.location.href = "login.html"; }
+
+        let medicamentosTodos = [];
+        let paginaAtual = 1;
+        const ITENS_POR_PAGINA = 8;
+
+        function mostrarMensagem(texto, tipo = "success") {
+            const el = document.getElementById("mensagem");
+            el.className = `alert alert-${tipo}`;
+            el.innerText = texto;
+            el.classList.remove("d-none");
+            setTimeout(() => el.classList.add("d-none"), 3000);
+        }
+
+        function renderSkeleton() {
+            let html = "";
+            for (let i = 0; i < 6; i++) {
+                html += `<tr class="skeleton-row">
+            <td><div class="skeleton-bar" style="width:30px;"></div></td>
+            <td><div class="skeleton-bar" style="width:140px;"></div></td>
+            <td><div class="skeleton-bar" style="width:90px;"></div></td>
+            <td><div class="skeleton-bar" style="width:70px;"></div></td>
+            <td><div class="skeleton-bar" style="width:50px;"></div></td>
+            <td><div class="skeleton-bar" style="width:50px;"></div></td>
+            <td><div class="skeleton-bar" style="width:80px;"></div></td>
+            <td><div class="skeleton-bar" style="width:60px;"></div></td>
+        </tr>`;
+            }
+            document.getElementById("tabela").innerHTML = html;
+        }
+
+        async function carregar() {
+            renderSkeleton();
+            try {
+                const res = await fetch(`${API_URL}/medicamentos`, {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                if (res.status === 401) { window.location.href = "login.html"; return; }
+
+                medicamentosTodos = await res.json();
+                window._meds = {};
+                medicamentosTodos.forEach(m => window._meds[m.id] = m);
+                paginaAtual = 1;
+                renderTabela(medicamentosTodos);
+
+            } catch (err) {
+                console.error(err);
+                mostrarMensagem("Erro de ligação com o servidor.", "danger");
+            }
+        }
+
+        function renderTabela(lista) {
+            if (!lista.length) {
+                document.getElementById("tabela").innerHTML =
+                    "<tr><td colspan='8' class='text-center text-muted py-4'>Nenhum medicamento encontrado.</td></tr>";
+                document.getElementById("paginacaoBar").style.display = "none";
+                return;
+            }
+
+            const totalPaginas = Math.max(1, Math.ceil(lista.length / ITENS_POR_PAGINA));
+            if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
+
+            const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;
+            const paginaItens = lista.slice(inicio, inicio + ITENS_POR_PAGINA);
+
+            document.getElementById("tabela").innerHTML = paginaItens.map(m => {
+                const badge = m.estoque < 10
+                    ? `<span class="badge bg-danger">${m.estoque} ⚠️</span>`
+                    : `<span class="badge bg-success">${m.estoque}</span>`;
+
+                let validadeTexto = m.validade || "—";
+                if (m.validade) {
+                    const hoje = new Date();
+                    const dataValidade = new Date(m.validade + "T00:00:00");
+                    const diasRestantes = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
+                    if (diasRestantes < 0) {
+                        validadeTexto = `<span class="text-danger fw-bold">${m.validade} ⛔ vencido</span>`;
+                    } else if (diasRestantes <= 30) {
+                        validadeTexto = `<span class="text-warning fw-bold">${m.validade} ⚠️ ${diasRestantes}d</span>`;
+                    }
+                }
+
+                let margemTexto = "—";
+                if (m.preco_custo != null && m.preco_custo > 0) {
+                    const margemPct = ((m.preco - m.preco_custo) / m.preco_custo) * 100;
+                    const corMargem = margemPct >= 30 ? "text-success" : (margemPct >= 0 ? "text-warning" : "text-danger");
+                    margemTexto = `<span class="${corMargem} fw-semibold">${margemPct.toFixed(0)}%</span>`;
+                }
+
+                return `<tr>
+            <td class="text-muted small">#${m.id}</td>
+            <td class="fw-semibold">${m.nome} ${m.requer_receita ? '<span class="badge bg-dark" title="Exige receita médica">🔒 Receita</span>' : ''}</td>
+            <td><span class="badge bg-secondary">${m.categoria || "—"}</span></td>
+            <td>${parseFloat(m.preco).toLocaleString("pt-CV")} CVE</td>
+            <td>${margemTexto}</td>
+            <td>${badge}</td>
+            <td>${validadeTexto}</td>
+            <td>
+                <button class="btn btn-warning btn-sm me-1" onclick="abrirEditar(${m.id})">✏️</button>
+                <button class="btn btn-danger btn-sm" onclick="apagar(${m.id})">🗑️</button>
+            </td>
+        </tr>`;
+            }).join("");
+
+            renderPaginacao(lista.length, totalPaginas);
+        }
+
+        function renderPaginacao(totalItens, totalPaginas) {
+            const bar = document.getElementById("paginacaoBar");
+            if (totalPaginas <= 1) { bar.style.display = "none"; return; }
+            bar.style.display = "flex";
+
+            const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA + 1;
+            const fim = Math.min(paginaAtual * ITENS_POR_PAGINA, totalItens);
+            document.getElementById("paginacaoInfo").innerText =
+                `A mostrar ${inicio}–${fim} de ${totalItens} medicamentos`;
+
+            let botoes = `<button class="btn btn-outline-secondary btn-sm" ${paginaAtual === 1 ? "disabled" : ""} onclick="irParaPagina(${paginaAtual - 1})">‹</button>`;
+            for (let p = 1; p <= totalPaginas; p++) {
+                botoes += `<button class="btn btn-sm ${p === paginaAtual ? "btn-primary" : "btn-outline-secondary"}" onclick="irParaPagina(${p})">${p}</button>`;
+            }
+            botoes += `<button class="btn btn-outline-secondary btn-sm" ${paginaAtual === totalPaginas ? "disabled" : ""} onclick="irParaPagina(${paginaAtual + 1})">›</button>`;
+            document.getElementById("paginacaoBotoes").innerHTML = botoes;
+        }
+
+        function irParaPagina(p) {
+            paginaAtual = p;
+            const termo = document.getElementById("busca").value.toLowerCase();
+            const lista = termo
+                ? medicamentosTodos.filter(m => m.nome.toLowerCase().includes(termo) || (m.categoria || "").toLowerCase().includes(termo))
+                : medicamentosTodos;
+            renderTabela(lista);
+        }
+
+        function filtrar() {
+            const termo = document.getElementById("busca").value.toLowerCase();
+            const filtrados = medicamentosTodos.filter(m =>
+                m.nome.toLowerCase().includes(termo) ||
+                (m.categoria || "").toLowerCase().includes(termo)
+            );
+            paginaAtual = 1;
+            renderTabela(filtrados);
+        }
+
+        async function adicionar() {
+            const nome = document.getElementById("nome").value.trim();
+            const preco = document.getElementById("preco").value;
+            const precoCusto = document.getElementById("precoCusto").value;
+            const estoque = document.getElementById("estoque").value;
+            const validade = document.getElementById("validade").value;
+            const categoria = document.getElementById("categoria").value.trim();
+            const requerReceita = document.getElementById("requerReceita").checked;
+
+            if (!nome || !preco || !estoque) {
+                mostrarMensagem("Preencha pelo menos Nome, Preço e Estoque.", "warning");
+                return;
+            }
+
+            const res = await fetch(`${API_URL}/medicamentos`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({
+                    nome, preco: parseFloat(preco), estoque: parseInt(estoque), validade, categoria,
+                    preco_custo: precoCusto ? parseFloat(precoCusto) : null,
+                    requer_receita: requerReceita
+                })
+            });
+
+            if (res.ok) {
+                mostrarMensagem("Medicamento adicionado com sucesso!");
+                ["nome", "preco", "precoCusto", "estoque", "validade", "categoria"].forEach(id => document.getElementById(id).value = "");
+                document.getElementById("requerReceita").checked = false;
+                document.getElementById("formAdicionar").classList.remove("show");
+                carregar();
+            } else {
+                mostrarMensagem("Erro ao adicionar medicamento.", "danger");
+            }
+        }
+
+        function abrirEditar(id) {
+            const m = window._meds[id];
+            document.getElementById("editId").value = m.id;
+            document.getElementById("editNome").value = m.nome;
+            document.getElementById("editPreco").value = m.preco;
+            document.getElementById("editPrecoCusto").value = m.preco_custo != null ? m.preco_custo : "";
+            document.getElementById("editEstoque").value = m.estoque;
+            document.getElementById("editValidade").value = m.validade || "";
+            document.getElementById("editCategoria").value = m.categoria || "";
+            document.getElementById("editRequerReceita").checked = !!m.requer_receita;
+            new bootstrap.Modal(document.getElementById("modalEditar")).show();
+        }
+
+        async function guardarEdicao() {
+            const id = document.getElementById("editId").value;
+            const nome = document.getElementById("editNome").value.trim();
+            const preco = document.getElementById("editPreco").value;
+            const precoCusto = document.getElementById("editPrecoCusto").value;
+            const estoque = document.getElementById("editEstoque").value;
+            const validade = document.getElementById("editValidade").value;
+            const categoria = document.getElementById("editCategoria").value.trim();
+            const requerReceita = document.getElementById("editRequerReceita").checked;
+
+            const res = await fetch(`${API_URL}/medicamentos/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({
+                    nome, preco: parseFloat(preco), estoque: parseInt(estoque), validade, categoria,
+                    preco_custo: precoCusto ? parseFloat(precoCusto) : null,
+                    requer_receita: requerReceita
+                })
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+
+            if (res.ok) {
+                mostrarMensagem("Medicamento atualizado com sucesso!");
+                carregar();
+            } else {
+                mostrarMensagem("Erro ao atualizar medicamento.", "danger");
+            }
+        }
+
+        async function apagar(id) {
+            if (!confirm("Tens a certeza que queres apagar este medicamento?")) return;
+
+            const res = await fetch(`${API_URL}/medicamentos/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            if (res.ok) {
+                mostrarMensagem("Medicamento removido.");
+                carregar();
+            } else {
+                mostrarMensagem("Erro ao remover medicamento.", "danger");
+            }
+        }
+
+        if (token) carregar();
+    </script>
+</body>
+
+</html>

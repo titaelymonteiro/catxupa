@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precisa de ajuda? - Farmácia CV</title>
+<style>
+:root{
+    --night: #1a1245;
+    --night-deep: #100a2e;
+    --coral: #e8663f;
+    --gold: #f4b942;
+    --sand: #faf3e7;
+    --green: #0e6b4f;
+    --ink: #14181a;
+    --ink-soft: #5b6660;
+    --line: #e2e5de;
+    --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans); color:var(--ink); background:var(--sand);}
+a{color:inherit;}
+.container{max-width:880px;margin:0 auto;padding:0 24px;}
+
+.topo{
+    background:linear-gradient(165deg, var(--night) 0%, var(--night-deep) 100%);
+    color:white;
+    padding:22px 0 60px;
+    position:relative;
+    overflow:hidden;
+}
+.topo::before{
+    content:"";
+    position:absolute; inset:0; opacity:0.10;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 42px);
+    pointer-events:none;
+}
+.topo-nav{
+    display:flex; justify-content:space-between; align-items:center;
+    position:relative; z-index:1; margin-bottom:44px;
+    font-size:14px;
+}
+.topo-nav a{text-decoration:none; color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.35); padding-bottom:2px;}
+.topo-nav a:hover{color:white; border-color:white;}
+.marca{display:flex; align-items:center; gap:9px; font-weight:700;}
+.marca .selo{
+    width:30px;height:30px;border-radius:8px; background:rgba(255,255,255,0.12);
+    display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.3);
+}
+.marca .selo svg{width:16px;height:16px;}
+
+.topo-conteudo{position:relative; z-index:1;}
+.topo-eyebrow{font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:14px;}
+.topo h1{font-size:clamp(1.8rem,4vw,2.4rem); font-weight:700; letter-spacing:-0.01em; margin-bottom:12px;}
+.topo p{color:rgba(255,255,255,0.68); font-size:15.5px; max-width:520px; line-height:1.6;}
+
+.caixa-busca{
+    position:relative; z-index:1;
+    margin-top:28px;
+    max-width:460px;
+}
+.caixa-busca input{
+    width:100%; padding:14px 16px;
+    border-radius:10px; border:none;
+    font-size:15px; font-family:var(--sans);
+}
+.caixa-busca input:focus{outline:2px solid var(--coral);}
+
+/* ── CARTOES DE TOPICO ───────────────────────────────────────────────── */
+.secao{padding:50px 0;}
+.grid-topicos{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:-70px; position:relative; z-index:2;}
+@media (max-width: 760px){.grid-topicos{grid-template-columns:1fr;}}
+.card-topico{
+    background:white; border:1px solid var(--line); border-radius:14px; padding:22px;
+    box-shadow:0 10px 26px -14px rgba(26,18,69,0.18);
+    text-decoration:none; color:var(--ink); display:block;
+    transition:transform 0.15s, box-shadow 0.15s;
+}
+.card-topico:hover{transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(26,18,69,0.24);}
+.card-topico .icone{font-size:24px; margin-bottom:10px;}
+.card-topico h3{font-size:15.5px; font-weight:700; margin-bottom:6px;}
+.card-topico p{font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
+
+/* ── FAQ AGRUPADO ────────────────────────────────────────────────────── */
+.grupo-faq{margin-bottom:38px;}
+.grupo-faq h2{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--green); font-weight:700; margin-bottom:16px;
+    display:flex; align-items:center; gap:8px;
+}
+.item-faq{border-bottom:1px solid var(--line);}
+.pergunta-faq{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:18px 0; display:flex; justify-content:space-between; align-items:center;
+    font-size:15px; font-weight:700; color:var(--ink); font-family:var(--sans);
+}
+.pergunta-faq .sinal{font-size:19px; color:var(--coral); transition:transform 0.2s; flex-shrink:0; margin-left:16px;}
+.item-faq.aberto .sinal{transform:rotate(45deg);}
+.resposta-faq{
+    max-height:0; overflow:hidden; transition:max-height 0.25s ease;
+    font-size:14px; color:var(--ink-soft); line-height:1.7;
+}
+.item-faq.aberto .resposta-faq{max-height:260px; padding-bottom:18px;}
+.resposta-faq strong{color:var(--ink);}
+
+.sem-resultados{display:none; text-align:center; color:var(--ink-soft); padding:30px 0; font-size:14px;}
+
+/* ── CONTACTO ────────────────────────────────────────────────────────── */
+.caixa-contacto{
+    background:white; border:1px solid var(--line); border-radius:16px;
+    padding:32px; text-align:center; margin-top:20px;
+}
+.caixa-contacto h3{font-size:18px; font-weight:700; margin-bottom:8px;}
+.caixa-contacto p{color:var(--ink-soft); font-size:14.5px; margin-bottom:20px;}
+.contacto-linhas{display:flex; justify-content:center; gap:30px; flex-wrap:wrap; font-size:14.5px;}
+.contacto-linhas div{display:flex; align-items:center; gap:8px;}
+
+/* ── MAPA / LOCALIZACAO ──────────────────────────────────────────────── */
+.caixa-mapa{
+    background:white; border:1px solid var(--line); border-radius:16px;
+    padding:24px; margin-top:20px;
+}
+.caixa-mapa h3{font-size:18px; font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
+.caixa-mapa .morada{color:var(--ink-soft); font-size:14.5px; margin-bottom:16px;}
+#mapa{height:320px; width:100%; border-radius:12px; border:1px solid var(--line); z-index:0;}
+.mapa-link{
+    display:inline-block; margin-top:14px; font-size:14px; color:var(--green);
+    font-weight:700; text-decoration:none; border-bottom:1px solid var(--green); padding-bottom:2px;
+}
+.mapa-link:hover{color:var(--ink);}
+
+footer{background:var(--night-deep); color:rgba(255,255,255,0.5); text-align:center; padding:26px; font-size:13px; margin-top:40px;}
+</style>
+
+<!-- Leaflet (mapas OpenStreetMap, sem chave de API) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/mapa.js"></script>
+</head>
+<body>
+
+<div class="topo">
+    <div class="container">
+        <div class="topo-nav">
+            <div class="marca">
+                <span class="selo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg>
+                </span>
+                Farmácia CV
+            </div>
+            <a href="login.html">← Voltar ao login</a>
+        </div>
+        <div class="topo-conteudo">
+            <div class="topo-eyebrow">Centro de ajuda</div>
+            <h1>Como podemos ajudar?</h1>
+            <p>Respostas às dúvidas mais comuns sobre o acesso à sua conta. Se não encontrar o que procura, contacte a nossa equipa em baixo.</p>
+            <div class="caixa-busca">
+                <input type="text" id="busca" placeholder="🔍 Pesquisar por palavra-chave..." oninput="filtrarFaq()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="grid-topicos">
+        <a href="#acesso" class="card-topico">
+            <div class="icone">🔑</div>
+            <h3>Acesso e password</h3>
+            <p>Esqueci-me da password, conta bloqueada, não consigo entrar.</p>
+        </a>
+        <a href="#conta" class="card-topico">
+            <div class="icone">👤</div>
+            <h3>A minha conta</h3>
+            <p>Criar conta, alterar dados, ver o meu histórico de compras.</p>
+        </a>
+        <a href="#contacto" class="card-topico">
+            <div class="icone">💬</div>
+            <h3>Falar com a equipa</h3>
+            <p>Não encontrou resposta? Contacte-nos diretamente.</p>
+        </a>
+    </div>
+</div>
+
+<div class="container secao">
+
+    <div class="grupo-faq" id="acesso">
+        <h2>🔑 Acesso e Password</h2>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                Esqueci-me da minha palavra-passe. O que faço?
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Ainda não temos reposição automática por email. <strong>Contacte um administrador da farmácia</strong> (pessoalmente, por telefone ou pelos contactos em baixo) para lhe ser definida uma password nova.</div>
+        </div>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                A mensagem diz "demasiadas tentativas". O que significa?
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Por segurança, o sistema bloqueia novas tentativas de login durante <strong>15 minutos</strong> depois de 5 tentativas falhadas seguidas com o mesmo email. Espere esse tempo e tente novamente, com atenção a maiúsculas/minúsculas na password.</div>
+        </div>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                Entrei com a password certa, mas continua a dizer "credenciais inválidas".
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Confirme que o email está escrito exatamente como no registo (sem espaços a mais). Se o problema persistir, pode ter sido bloqueado temporariamente — veja a pergunta anterior, ou contacte a equipa.</div>
+        </div>
+    </div>
+
+    <div class="grupo-faq" id="conta">
+        <h2>👤 A Minha Conta</h2>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                Como crio uma conta?
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Na página de login, clique em <strong>"Registe-se"</strong> e preencha nome, email e uma palavra-passe. É gratuito e demora menos de um minuto.</div>
+        </div>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                Como aparecem as minhas compras no meu histórico?
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Basta indicar o seu email à equipa no momento da compra na farmácia. A venda fica associada à sua conta automaticamente, e pode consultá-la a qualquer momento na sua área de cliente.</div>
+        </div>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                Posso mudar o email ou nome da minha conta?
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Por agora essa alteração não está disponível diretamente na sua área de cliente — contacte a equipa da farmácia para o fazer por si.</div>
+        </div>
+
+        <div class="item-faq">
+            <button class="pergunta-faq" onclick="alternarFaq(this)">
+                A minha conta é de funcionário/admin, não de cliente. É diferente?
+                <span class="sinal">+</span>
+            </button>
+            <div class="resposta-faq">Sim. Contas de equipa (funcionário/admin) acedem ao sistema de gestão da farmácia; contas de cliente acedem só à área pessoal de histórico de compras. Se acha que devia ter acesso de equipa, contacte um administrador.</div>
+        </div>
+    </div>
+
+    <p class="sem-resultados" id="semResultados">Sem resultados para essa pesquisa. Tente outra palavra, ou contacte-nos em baixo.</p>
+
+    <div class="caixa-contacto" id="contacto">
+        <h3>Não encontrou o que procurava?</h3>
+        <p>A nossa equipa está disponível para ajudar diretamente.</p>
+        <div class="contacto-linhas">
+            <div>📞 +238 000 00 00</div>
+            <div>✉️ geral@farmacia.cv</div>
+            <div>🕒 Segunda a Sábado, 08h00–20h00</div>
+        </div>
+    </div>
+
+    <div class="caixa-mapa">
+        <h3>📍 Onde estamos</h3>
+        <p class="morada" id="moradaFarmacia"></p>
+        <div id="mapa"></div>
+        <a class="mapa-link" id="linkDirecoes" href="#" target="_blank" rel="noopener">Abrir direções ↗</a>
+    </div>
+</div>
+
+<footer>© 2026 Farmácia CV — Praia, Cabo Verde</footer>
+
+<script>
+function alternarFaq(botao) {
+    const item = botao.closest(".item-faq");
+    const jaAberto = item.classList.contains("aberto");
+    document.querySelectorAll(".item-faq.aberto").forEach(el => el.classList.remove("aberto"));
+    if (!jaAberto) item.classList.add("aberto");
+}
+
+function filtrarFaq() {
+    const termo = document.getElementById("busca").value.toLowerCase().trim();
+    const itens = document.querySelectorAll(".item-faq");
+    let algumVisivel = false;
+
+    itens.forEach(item => {
+        const texto = item.textContent.toLowerCase();
+        const corresponde = !termo || texto.includes(termo);
+        item.style.display = corresponde ? "" : "none";
+        if (corresponde) algumVisivel = true;
+    });
+
+    document.querySelectorAll(".grupo-faq").forEach(grupo => {
+        const temVisivel = Array.from(grupo.querySelectorAll(".item-faq")).some(i => i.style.display !== "none");
+        grupo.style.display = temVisivel ? "" : "none";
+    });
+
+    document.getElementById("semResultados").style.display = algumVisivel ? "none" : "block";
+}
+
+// Mapa "Onde estamos" (config e logica em js/mapa.js)
+iniciarMapaFarmacia();
+</script>
+
+</body>
+</html>

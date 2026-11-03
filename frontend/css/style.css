@@ -1,0 +1,575 @@
+/* ══════════════════════════════════════════════════════════════════════
+   Farmácia CV — folha de estilos partilhada (dashboard, vendas, etc.)
+   Alinhada com a identidade visual do login: verde/dourado, Space Grotesk.
+   ══════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --paper: #faf9f6;
+    --card: #ffffff;
+    --ink: #14181a;
+    --ink-soft: #5b6660;
+    --line: #e2e5de;
+    --green: #0e6b4f;
+    --green-dark: #0a5640;
+    --green-dim: rgba(14, 107, 79, 0.10);
+    --green-ring: rgba(14, 107, 79, 0.22);
+    --gold: #c9a45c;
+    --sidebar-bg: var(--night-deep);
+    --sidebar-bg-soft: var(--night);
+    --display: 'Space Grotesk', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+    /* paleta "por-do-sol" do login, usada agora no fundo geral */
+    --night: #1a1245;
+    --night-deep: #100a2e;
+    --coral: #e8663f;
+}
+
+body {
+    background:
+        radial-gradient(circle at 88% 4%, var(--coral) 0%, rgba(232,102,63,0.55) 20%, rgba(244,185,66,0.22) 38%, transparent 58%),
+        linear-gradient(190deg, var(--night) 0%, var(--night-deep) 100%);
+    background-attachment: fixed;
+    position: relative;
+    font-family: var(--sans);
+    color: var(--ink);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,0.30) 1px, transparent 1px);
+    background-size: 46px 46px;
+    background-position: 10px 10px;
+    opacity: 0.30;
+}
+
+.sidebar, .main-navbar, .main-content {
+    position: relative;
+    z-index: 1;
+}
+
+h1, h2, h3, h4, h5, h6,
+.navbar-brand,
+.sidebar-brand {
+    font-family: var(--display);
+    letter-spacing: -0.01em;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────────────────────── */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100vh;
+    background: linear-gradient(180deg, var(--sidebar-bg) 0%, var(--sidebar-bg-soft) 100%);
+    color: white;
+    padding: 24px 16px;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.2s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-brand {
+    color: white;
+    padding: 0 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 4px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.68);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.sidebar-nav a.active {
+    background: var(--coral);
+    color: white;
+    box-shadow: 0 2px 8px -2px rgba(232, 102, 63, 0.55);
+}
+
+.sidebar-nav .nav-icon {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* ── MAIN NAVBAR (top, beside sidebar) ──────────────────────────────── */
+.main-navbar {
+    margin-left: 230px;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    background: linear-gradient(135deg, var(--night) 0%, var(--night-deep) 100%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.main-navbar .navbar-brand {
+    color: #fdfbf7 !important;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: rgba(253, 251, 247, 0.75);
+    display: none;
+}
+
+/* ── MAIN CONTENT ────────────────────────────────────────────────────── */
+.main-content {
+    margin-left: 230px;
+}
+
+@media (max-width: 880px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-navbar,
+    .main-content {
+        margin-left: 0;
+    }
+
+    .menu-toggle {
+        display: inline-block;
+    }
+}
+
+/* ── CARDS ───────────────────────────────────────────────────────────── */
+.card-box {
+    background: #fdfbf7;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 16px -6px rgba(26, 18, 69, 0.10);
+}
+
+/* ── STAT CARDS ──────────────────────────────────────────────────────── */
+.stat-card {
+    border-radius: 14px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 10px 24px -12px rgba(20, 24, 26, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.14), transparent 55%);
+    pointer-events: none;
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.stat-card .stat-value {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.blue {
+    background: linear-gradient(135deg, var(--night), var(--night-deep));
+}
+
+.green {
+    background: linear-gradient(135deg, var(--green), #073c2c);
+}
+
+.orange {
+    background: linear-gradient(135deg, #d69a3f, #a06a1f);
+}
+
+.red {
+    background: linear-gradient(135deg, var(--coral), #a1421f);
+}
+
+/* ── BOTÕES (alinhados com a marca) ─────────────────────────────────── */
+.btn-primary {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--green-dark);
+    border-color: var(--green-dark);
+}
+
+.btn-outline-primary {
+    color: var(--green);
+    border-color: var(--green);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.btn-sair {
+    color: var(--coral);
+    border-color: var(--coral);
+    background: transparent;
+}
+
+.btn-sair:hover {
+    background: var(--coral);
+    border-color: var(--coral);
+    color: white;
+}
+
+.btn-check:checked + .btn-outline-primary,
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--green) !important;
+    box-shadow: 0 0 0 3px var(--green-ring) !important;
+}
+
+/* ── NAVBAR ──────────────────────────────────────────────────────────── */
+.navbar {
+    padding: 12px 20px;
+}
+
+/* ── TABLE ───────────────────────────────────────────────────────────── */
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.table thead th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    font-weight: 700;
+    border-bottom-width: 1px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--green-dim);
+}
+
+/* ── ALERTS ──────────────────────────────────────────────────────────── */
+.alert {
+    border-radius: 10px;
+}
+
+/* ── SKELETON LOADING ────────────────────────────────────────────────── */
+.skeleton-row td {
+    padding: 14px 12px;
+}
+
+.skeleton-bar {
+    height: 14px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #e9ecef 25%, #f4f6f8 50%, #e9ecef 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.3s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ── PAGINATION ──────────────────────────────────────────────────────── */
+.pagination-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pagination-info {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.pagination-buttons button {
+    min-width: 36px;
+}
+
+/* ── PRINT ───────────────────────────────────────────────────────────── */
+@media print {
+
+    .sidebar,
+    .main-navbar,
+    .btn {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .card-box {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+}
+
+/* ── MODO ESCURO ─────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+    --paper: #0f0a2e;
+    --card: #1a1245;
+    --ink: #f0ede6;
+    --ink-soft: #b3add9;
+    --line: rgba(255, 255, 255, 0.14);
+}
+
+[data-theme="dark"] body {
+    background:
+        radial-gradient(circle at 88% 4%, var(--coral) 0%, rgba(232,102,63,0.30) 20%, rgba(244,185,66,0.12) 38%, transparent 58%),
+        linear-gradient(190deg, #100a2e 0%, #070417 100%);
+}
+
+[data-theme="dark"] body::before {
+    opacity: 0.15;
+}
+
+[data-theme="dark"] .table {
+    color: var(--ink);
+}
+
+[data-theme="dark"] .table-light,
+[data-theme="dark"] .table thead.table-light th {
+    background-color: #241a5c;
+    color: var(--ink);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(232, 102, 63, 0.10);
+    color: var(--ink);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #241a5c;
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #8b85b8;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: #241a5c;
+    color: var(--ink);
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: var(--card);
+    color: var(--ink);
+}
+
+[data-theme="dark"] .form-label,
+[data-theme="dark"] .text-secondary,
+[data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6 {
+    color: var(--ink) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--ink-soft) !important;
+}
+
+[data-theme="dark"] .card-box {
+    background: var(--card);
+    box-shadow: 0 4px 16px -6px rgba(0, 0, 0, 0.45);
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    margin-right: 8px;
+    transition: background 0.15s;
+}
+
+.theme-toggle:hover {
+    background: var(--green-dim);
+}
+
+/* --- SINO DE NOTIFICAÇÕES ---------------------------------------------------------*/
+.sino-wrap {
+    position: relative;
+    margin-right: 8px;
+}
+
+.sino-botao {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+}
+
+.sino-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--coral);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+}
+
+.sino-painel {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    width: 320px;
+    max-height: 380px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.35);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sino-painel-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 700;
+    font-size: 13.5px;
+}
+
+.sino-painel-topo button {
+    background: none;
+    border: none;
+    color: var(--coral);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.sino-lista {
+    overflow-y: auto;
+    max-height: 320px;
+}
+
+.sino-item {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.sino-item:hover {
+    background: var(--green-dim);
+}
+
+.sino-item-nao-lida {
+    background: rgba(232, 102, 63, 0.06);
+}
+
+.sino-item-msg {
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 3px;
+}
+
+.sino-item-tempo {
+    font-size: 11px;
+    color: var(--ink-soft);
+}
+
+.sino-vazio {
+    padding: 24px 14px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+}

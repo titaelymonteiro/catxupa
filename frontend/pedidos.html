@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos Online - Farmácia CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand mb-4">
+            <span class="fs-4">💊 Farmácia CV</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+            <li><a href="medicamentos.html"><span class="nav-icon">💊</span> Medicamentos</a></li>
+            <li><a href="fornecedores.html"><span class="nav-icon">🚚</span> Fornecedores</a></li>
+            <li><a href="lotes.html"><span class="nav-icon">📦</span> Lotes</a></li>
+            <li><a href="pedidos.html" class="active"><span class="nav-icon">🛒</span> Pedidos Online</a></li>
+            <li><a href="clientes.html"><span class="nav-icon">🧑‍🤝‍🧑</span> Clientes</a></li>
+            <li><a href="usuarios.html"><span class="nav-icon">👥</span> Utilizadores</a></li>
+            <li><a href="vendas.html"><span class="nav-icon">🛒</span> Vendas</a></li>
+            <li><a href="relatorios.html"><span class="nav-icon">📈</span> Relatórios</a></li>
+            <li><a href="historico.html"><span class="nav-icon">🕒</span> Histórico</a></li>
+        </ul>
+    </aside>
+
+    <nav class="navbar navbar-dark bg-white shadow-sm main-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle" title="Menu">☰</button>
+            <span class="navbar-brand fw-bold m-0 p-0">🛒 Pedidos Online</span>
+        </div>
+        <div>
+            <button class="btn btn-sair btn-sm rounded-pill px-3" onclick="logout()">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container py-4 main-content">
+
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h4 class="fw-bold text-secondary mb-0">🛒 Pedidos Feitos Online por Clientes</h4>
+            <button class="btn btn-outline-success btn-sm" onclick="exportarCSV('/exportar/pedidos', 'pedidos.csv')">⬇️ Exportar CSV</button>
+            <select id="filtroEstado" class="form-select form-select-sm" style="width:auto;" onchange="renderTabela()">
+                <option value="">Todos os estados</option>
+                <option value="pendente">Pendentes</option>
+                <option value="confirmado">Confirmados</option>
+                <option value="pronto">Prontos p/ Levantamento</option>
+                <option value="concluido">Concluídos</option>
+                <option value="cancelado">Cancelados</option>
+            </select>
+        </div>
+
+        <div id="mensagem" class="alert d-none mb-3"></div>
+
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nº</th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Itens</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela">
+                        <tr>
+                            <td colspan="7" class="text-center py-4">A carregar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-bar" id="paginacaoBar" style="display:none;">
+                <div class="pagination-info" id="paginacaoInfo"></div>
+                <div class="pagination-buttons" id="paginacaoBotoes"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetalhes" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🛒 Detalhes do Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalDetalhesBody"></div>
+                <div class="modal-footer" id="modalDetalhesAcoes"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/talao.js"></script>
+    <script src="js/pedidos.js"></script>
+</body>
+
+</html>
