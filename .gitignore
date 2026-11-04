@@ -1,0 +1,26 @@
+# Segredos / configuração local
+.env
+*.env
+!.env.example
+
+# Base de dados local (recriada automaticamente por init_db())
+backend/models/farmacia.db
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
