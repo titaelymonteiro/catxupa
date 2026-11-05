@@ -1,270 +1,417 @@
-:root{
-    --night: #1a1245;
-    --night-deep: #100a2e;
-    --coral: #e8663f;
-    --coral-soft: #f0966b;
-    --gold: #f4b942;
-    --sand: #faf3e7;
-    --ink: #14181a;
-    --ink-soft: #5b6660;
-    --line: #e2e5de;
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --paper: #f0f4f9;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --line: #d8e2ec;
+    --navy: #0f4c81;
+    --navy-dark: #0a3156;
+    --navy-dim: rgba(15, 76, 129, 0.08);
+    --navy-ring: rgba(15, 76, 129, 0.22);
+    --sky: #38bdf8;
+    --teal: #0f4c81;
+    --teal-dark: #0a3156;
+    --teal-dim: rgba(15, 76, 129, 0.08);
+    --teal-ring: rgba(15, 76, 129, 0.22);
+    --blue: #0f4c81;
+    --blue-dark: #0a3156;
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', monospace;
     --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
-body{
-    font-family:var(--sans);
-    color:var(--ink);
-    display:flex;
-    min-height:100vh;
+    --display: 'Space Grotesk', var(--sans);
 }
 
-
-/* ── PAINEL ESQUERDO ─────────────────────────────────────────────────── */
-.painel-esquerdo{
-    flex:1 1 48%;
-    position:relative;
-    background:
-        radial-gradient(circle at 80% 15%, rgba(232,102,63,0.18), transparent 45%),
-        linear-gradient(165deg, var(--night) 0%, var(--night-deep) 100%);
-    color:white;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    padding:32px 48px;
-    overflow:hidden;
-    min-height:100vh;
-}
-.painel-esquerdo::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    opacity:0.10;
-    background-image:
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 42px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 42px);
-    pointer-events:none;
-}
-.painel-esquerdo::after{
-    content:"";
-    position:absolute;
-    right:-120px; bottom:-120px;
-    width:420px; height:420px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(244,185,66,0.16) 0%, transparent 70%);
-    pointer-events:none;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.topo-esquerdo{
-    position:relative;
-    z-index:1;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-size:14px;
-}
-.topo-esquerdo a{
-    color:rgba(255,255,255,0.82);
-    text-decoration:none;
-    border-bottom:1px solid rgba(255,255,255,0.35);
-    padding-bottom:2px;
-}
-.topo-esquerdo a:hover{color:white; border-color:white;}
-
-.meio-esquerdo{
-    position:relative;
-    z-index:1;
-    margin-top:auto;
-    margin-bottom:auto;
-}
-.marca-login{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:38px;
-}
-.marca-login .selo{
-    width:46px;height:46px;
-    border-radius:12px;
-    border:1.5px solid rgba(255,255,255,0.35);
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;
-}
-.marca-login .selo svg{width:24px;height:24px;}
-.marca-login .nome{
-    font-weight:700;
-    font-size:21px;
-    letter-spacing:-0.01em;
-}
-.marca-login .subnome{
-    font-size:11.5px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.55);
-    margin-top:2px;
+html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: linear-gradient(160deg, #f0f4f9 0%, #e8eef6 50%, #f6f9fc 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    position: relative;
+    overflow-x: hidden;
 }
 
-.slogan{
-    font-size:clamp(2rem, 3.4vw, 2.7rem);
-    font-weight:700;
-    line-height:1.18;
-    letter-spacing:-0.01em;
-    max-width:460px;
-}
-.slogan .destaque{color:var(--coral-soft);}
-.slogan-sub{
-    margin-top:18px;
-    font-size:15px;
-    color:rgba(255,255,255,0.62);
-    max-width:400px;
-    line-height:1.6;
+/* Canvas com cápsulas/cruzes hospitalares a flutuar */
+#cne-bg-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.rodape-esquerdo{
-    position:relative;
-    z-index:1;
-    font-size:12px;
-    color:rgba(255,255,255,0.45);
+.topo-links {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 13.5px;
+    position: relative;
+    z-index: 1;
 }
 
-/* ── PAINEL DIREITO ──────────────────────────────────────────────────── */
-.painel-direito{
-    flex:1 1 52%;
-    background:var(--sand);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:40px 24px;
+.topo-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
 }
 
-.form-caixa{
-    width:100%;
-    max-width:400px;
+.topo-links a:hover {
+    color: var(--navy);
 }
 
-.form-caixa h1{
-    font-size:1.55rem;
-    font-weight:700;
-    margin-bottom:8px;
-    color:var(--ink);
-}
-.form-caixa .subtexto{
-    font-size:14px;
-    color:var(--ink-soft);
-    margin-bottom:30px;
-    line-height:1.6;
+@keyframes entrarCartao {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-.campo{margin-bottom:18px;}
-.campo label{
-    display:block;
-    font-size:12.5px;
-    font-weight:600;
-    color:var(--ink-soft);
-    margin-bottom:7px;
-}
-.campo input{
-    width:100%;
-    padding:13px 14px;
-    font-size:15px;
-    font-family:var(--sans);
-    color:var(--ink);
-    background:#fff;
-    border:1.5px solid var(--line);
-    border-radius:10px;
-    transition:border-color 0.15s, box-shadow 0.15s;
-}
-.campo input::placeholder{color:#a3ab9f;}
-.campo input:focus{
-    outline:none;
-    border-color:var(--coral);
-    box-shadow:0 0 0 4px rgba(232,102,63,0.13);
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        animation: none !important;
+    }
 }
 
-.senha-wrap{position:relative;}
-.senha-wrap input{padding-right:52px;}
-.senha-toggle{
-    position:absolute;
-    right:12px; top:50%;
-    transform:translateY(-50%);
-    background:none;border:none;
-    cursor:pointer;
-    color:var(--ink-soft);
-    font-size:18px;
-    padding:4px;
-    line-height:1;
+.card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 24px 60px -24px rgba(15, 76, 129, 0.20), 0 2px 8px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    animation: entrarCartao 0.55s cubic-bezier(.16, .8, .3, 1) both;
 }
 
-.linha-opcoes{
-    display:flex;justify-content:space-between;align-items:center;
-    margin:4px 0 26px;
-    font-size:13.5px;
-}
-.linha-opcoes label{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;color:var(--ink-soft);}
-.linha-opcoes input{width:16px;height:16px;accent-color:var(--coral);}
-.linha-opcoes a{color:var(--coral); text-decoration:none; font-weight:600;}
-.linha-opcoes a:hover{text-decoration:underline;}
-
-.linha-botoes{
-    display:flex;
-    gap:12px;
-    margin-bottom:24px;
-}
-.btn-entrar{
-    flex:1.3;
-    padding:14px;
-    background:var(--coral);
-    color:white;
-    border:none;
-    border-radius:10px;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-    transition:background 0.15s, transform 0.05s;
-}
-.btn-entrar:hover{background:#d3512c;}
-.btn-entrar:active{transform:scale(0.99);}
-.btn-entrar:disabled{opacity:0.6;cursor:default;}
-
-.btn-registar{
-    flex:1;
-    padding:14px;
-    background:transparent;
-    color:var(--ink);
-    border:1.5px solid var(--line);
-    border-radius:10px;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-    text-decoration:none;
-    text-align:center;
-    transition:border-color 0.15s, background 0.15s;
-}
-.btn-registar:hover{border-color:var(--coral); background:rgba(232,102,63,0.06);}
-
-.nota-legal{
-    text-align:center;
-    font-size:12px;
-    color:var(--ink-soft);
-    line-height:1.6;
-}
-.nota-legal a{color:var(--ink); font-weight:600; text-decoration:underline;}
-
-.erro-caixa{
-    background:#fdece5;
-    border:1px solid #f3c2ac;
-    color:#a1421f;
-    font-size:13px;
-    padding:10px 13px;
-    border-radius:10px;
-    margin-bottom:18px;
+.card-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--line);
+    background: #ffffff;
 }
 
-@media (max-width: 880px){
-    body{flex-direction:column;}
-    .painel-esquerdo{min-height:280px; padding:24px 28px;}
-    .slogan{font-size:1.6rem;}
-    .slogan-sub{display:none;}
-    .rodape-esquerdo{display:none;}
-    .painel-direito{padding:32px 20px;}
+.wordmark {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+}
+
+.wordmark .glyph {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--navy-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+    flex-shrink: 0;
+}
+
+.wordmark .glyph svg {
+    width: 16px;
+    height: 16px;
+}
+
+.strip-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+}
+
+.card-body {
+    padding: 30px 28px 28px;
+}
+
+.heading {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+    color: var(--ink);
+}
+
+.subheading {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 7px;
+    transition: color 0.15s;
+}
+
+.field:has(input:focus) label {
+    color: var(--navy);
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap .field-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #94a3b8;
+    pointer-events: none;
+    transition: color 0.15s;
+    display: flex;
+}
+
+.input-wrap .field-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.field input {
+    width: 100%;
+    padding: 11px 13px 11px 38px;
+    font-size: 15px;
+    font-family: var(--sans);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field input::placeholder {
+    color: #94a3b8;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px var(--navy-ring);
+}
+
+.field input:focus ~ .field-icon {
+    color: var(--navy);
+}
+
+.pwd-wrap {
+    position: relative;
+}
+
+.pwd-wrap input {
+    padding-right: 44px;
+}
+
+.pwd-toggle,
+.senha-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 16px;
+    padding: 4px;
+    line-height: 1;
+    transition: opacity 0.15s;
+}
+
+.pwd-toggle:hover,
+.senha-toggle:hover {
+    opacity: 0.7;
+}
+
+.linha-opcoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 6px 0 22px;
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+
+.linha-opcoes label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.linha-opcoes input {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--navy);
+    cursor: pointer;
+}
+
+.linha-opcoes a {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.linha-opcoes a:hover {
+    text-decoration: underline;
+}
+
+.btn-primary,
+.btn-entrar {
+    width: 100%;
+    padding: 12px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.05s, box-shadow 0.15s;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-primary:hover,
+.btn-entrar:hover {
+    background: var(--navy-dark);
+    box-shadow: 0 6px 16px -6px rgba(15, 76, 129, 0.45);
+}
+
+.btn-primary:active,
+.btn-entrar:active {
+    transform: scale(0.99);
+}
+
+.btn-primary:disabled,
+.btn-entrar:disabled {
+    opacity: 0.7;
+    cursor: default;
+    box-shadow: none;
+}
+
+.error-box,
+.erro-caixa {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    font-size: 13px;
+    padding: 10px 13px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    animation: shake 0.4s;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+}
+
+.signup-note {
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 22px;
+}
+
+.signup-note a {
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--navy-ring);
+    transition: border-color 0.15s;
+}
+
+.signup-note a:hover {
+    border-bottom-color: var(--navy);
+}
+
+.nota-legal {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-top: 14px;
+}
+
+.nota-legal a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.foot-note {
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 440px) {
+    body {
+        padding: 20px 14px;
+    }
+    .card-strip {
+        padding: 14px 18px;
+    }
+    .card-body {
+        padding: 24px 20px 22px;
+    }
+    .heading {
+        font-size: 22px;
+    }
 }

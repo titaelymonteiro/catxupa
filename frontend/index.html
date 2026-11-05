@@ -6,16 +6,20 @@
 <title>Farmácia CV — Cuidar de si, todos os dias</title>
 <style>
 :root{
-    --night: #1a1245;
-    --night-deep: #100a2e;
-    --coral: #e8663f;
-    --coral-soft: #f0966b;
-    --gold: #f4b942;
-    --sand: #faf3e7;
-    --green: #0e6b4f;
-    --ink: #14181a;
-    --ink-soft: #5b6660;
-    --line: #e2e5de;
+    --night: #115e59;
+    --night-deep: #134e4a;
+    --coral: #0d9488;
+    --coral-soft: #2dd4bf;
+    --gold: #14b8a6;
+    --sand: #f0fdfa;
+    --blue: #0d9488;
+    --blue-dark: #0f766e;
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --mint: #14b8a6;
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --line: #d1f0ea;
     --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -23,7 +27,8 @@ html{scroll-behavior:smooth;}
 body{
     font-family:var(--sans);
     color:var(--ink);
-    background:var(--sand);
+    background:linear-gradient(160deg, #f0fdfa 0%, #e6f8f5 50%, #f7fdfc 100%);
+    background-attachment:fixed;
 }
 a{color:inherit;}
 .container{max-width:1120px;margin:0 auto;padding:0 24px;}
@@ -31,30 +36,32 @@ a{color:inherit;}
 /* ── NAVBAR ──────────────────────────────────────────────────────────── */
 .navbar{
     position:sticky; top:0; z-index:50;
-    background:rgba(250,243,231,0.92);
+    background:rgba(255, 255, 255, 0.94);
     backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(13, 148, 136, 0.04);
 }
 .navbar-inner{
     max-width:1120px; margin:0 auto; padding:16px 24px;
     display:flex; align-items:center; justify-content:space-between;
 }
-.marca{display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px;}
+.marca{display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; color:var(--ink);}
 .marca .selo{
     width:34px;height:34px;border-radius:9px;
-    background:var(--night);
+    background:var(--teal);
     display:flex;align-items:center;justify-content:center;
     color:white; flex-shrink:0;
 }
 .marca .selo svg{width:18px;height:18px;}
 .nav-links{display:flex; align-items:center; gap:28px; font-size:14.5px; font-weight:600;}
-.nav-links a:not(.btn-nav){color:var(--ink-soft); text-decoration:none;}
-.nav-links a:not(.btn-nav):hover{color:var(--ink);}
+.nav-links a:not(.btn-nav){color:var(--ink-soft); text-decoration:none; transition:color 0.15s;}
+.nav-links a:not(.btn-nav):hover{color:var(--teal);}
 .btn-nav{
-    background:var(--coral); color:white; padding:9px 20px;
+    background:var(--teal); color:white; padding:9px 20px;
     border-radius:8px; text-decoration:none; font-weight:700;
+    transition:background 0.15s;
 }
-.btn-nav:hover{background:#d3512c;}
+.btn-nav:hover{background:var(--teal-dark);}
 .menu-mobile-toggle{display:none; background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink);}
 
 /* ── HERO ────────────────────────────────────────────────────────────── */
@@ -78,7 +85,7 @@ a{color:inherit;}
     content:"";
     position:absolute; right:-140px; top:-140px;
     width:460px;height:460px;border-radius:50%;
-    background:radial-gradient(circle, rgba(244,185,66,0.18) 0%, transparent 70%);
+    background:radial-gradient(circle, rgba(20,184,166,0.22) 0%, transparent 70%);
     pointer-events:none;
 }
 .hero-conteudo{position:relative; z-index:1; max-width:640px;}
@@ -98,21 +105,23 @@ a{color:inherit;}
 }
 .hero h1 em{font-style:normal; color:var(--coral-soft);}
 .hero p{
-    font-size:17px; line-height:1.7; color:rgba(255,255,255,0.68);
+    font-size:17px; line-height:1.7; color:rgba(255,255,255,0.80);
     max-width:520px; margin-bottom:34px;
 }
 .hero-botoes{display:flex; gap:14px; flex-wrap:wrap;}
 .btn-primario{
-    background:var(--coral); color:white; padding:15px 28px;
+    background:var(--teal); color:white; padding:15px 28px;
     border-radius:10px; text-decoration:none; font-weight:700; font-size:15.5px;
+    transition:background 0.15s, transform 0.05s;
 }
-.btn-primario:hover{background:#d3512c;}
+.btn-primario:hover{background:var(--teal-dark);}
 .btn-secundario{
     background:transparent; color:white; padding:15px 28px;
     border:1.5px solid rgba(255,255,255,0.35);
     border-radius:10px; text-decoration:none; font-weight:700; font-size:15.5px;
+    transition:border-color 0.15s, background 0.15s;
 }
-.btn-secundario:hover{border-color:white;}
+.btn-secundario:hover{border-color:white; background:rgba(255,255,255,0.08);}
 
 /* ── CARROSSEL DE IMAGENS (hero) ─────────────────────────────────────── */
 .carrossel{
@@ -135,13 +144,12 @@ a{color:inherit;}
 .slide-carrossel .ilustracao-slide svg{width:100%; height:auto; display:block;}
 .slide-carrossel .legenda-slide{font-size:14.5px; font-weight:700; letter-spacing:0.01em;}
 .slide-carrossel .aviso-slide{
-    font-size:11px; color:rgba(255,255,255,0.55); margin-top:8px;
+    font-size:11px; color:rgba(255,255,255,0.65); margin-top:8px;
     text-transform:uppercase; letter-spacing:0.06em;
 }
-/* Fundo de exemplo por slide -- troca por background:url("a-tua-foto.jpg") center/cover quando tiveres fotos reais */
-.slide-carrossel:nth-child(1){background:linear-gradient(160deg, var(--night) 0%, var(--night-deep) 100%);}
-.slide-carrossel:nth-child(2){background:linear-gradient(160deg, var(--green) 0%, #073c2c 100%);}
-.slide-carrossel:nth-child(3){background:linear-gradient(160deg, var(--coral) 0%, #a1421f 100%);}
+.slide-carrossel:nth-child(1){background:linear-gradient(160deg, #115e59 0%, #134e4a 100%);}
+.slide-carrossel:nth-child(2){background:linear-gradient(160deg, #0d9488 0%, #115e59 100%);}
+.slide-carrossel:nth-child(3){background:linear-gradient(160deg, #14b8a6 0%, #0f766e 100%);}
 
 .pontos-carrossel{
     position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
@@ -160,7 +168,7 @@ a{color:inherit;}
 .secao-titulo{text-align:center; max-width:600px; margin:0 auto 50px;}
 .secao-eyebrow{
     font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
-    color:var(--green); font-weight:700; margin-bottom:12px;
+    color:var(--teal); font-weight:700; margin-bottom:12px;
 }
 .secao-titulo h2{font-size:clamp(1.6rem,3vw,2.1rem); font-weight:700; letter-spacing:-0.01em; margin-bottom:14px;}
 .secao-titulo p{color:var(--ink-soft); font-size:15.5px; line-height:1.7;}
@@ -173,11 +181,16 @@ a{color:inherit;}
 
 .card-servico{
     background:white; border:1px solid var(--line); border-radius:14px;
-    padding:26px; box-shadow:0 4px 16px -8px rgba(26,18,69,0.10);
+    padding:26px; box-shadow:0 4px 16px -8px rgba(13,148,136,0.12);
+    transition:transform 0.15s, box-shadow 0.15s;
+}
+.card-servico:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px -8px rgba(13,148,136,0.18);
 }
 .card-servico .icone{
     width:44px;height:44px;border-radius:10px;
-    background:rgba(14,107,79,0.10); color:var(--green);
+    background:rgba(13,148,136,0.08); color:var(--teal);
     display:flex;align-items:center;justify-content:center;
     font-size:20px; margin-bottom:16px;
 }
@@ -207,18 +220,18 @@ a{color:inherit;}
 
 /* ── CTA FINAL ───────────────────────────────────────────────────────── */
 .cta-final{
-    background:var(--green); color:white; text-align:center; padding:70px 24px;
+    background:var(--teal); color:white; text-align:center; padding:70px 24px;
 }
 .cta-final h2{font-size:clamp(1.5rem,3vw,2rem); font-weight:700; margin-bottom:14px;}
-.cta-final p{color:rgba(255,255,255,0.82); margin-bottom:28px; font-size:15.5px;}
+.cta-final p{color:rgba(255,255,255,0.90); margin-bottom:28px; font-size:15.5px;}
 
 /* ── RODAPE ──────────────────────────────────────────────────────────── */
-footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 24px; font-size:13px;}
+footer{background:var(--night-deep); color:rgba(255,255,255,0.65); padding:36px 24px; font-size:13px;}
 .footer-inner{
     max-width:1120px; margin:0 auto;
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
 }
-.footer-inner a{color:rgba(255,255,255,0.75); text-decoration:none; margin-left:18px;}
+.footer-inner a{color:rgba(255,255,255,0.85); text-decoration:none; margin-left:18px; transition:color 0.15s;}
 .footer-inner a:hover{color:white;}
 
 @media (max-width: 760px){
@@ -252,7 +265,7 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
     color:white;
 }
 .secao-escura .secao-eyebrow{color:var(--gold);}
-.secao-escura .secao-titulo p{color:rgba(255,255,255,0.65);}
+.secao-escura .secao-titulo p{color:rgba(255,255,255,0.75);}
 .grid-passos{display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; counter-reset:passo;}
 @media (max-width: 860px){.grid-passos{grid-template-columns:1fr;}}
 .passo{
@@ -265,11 +278,11 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
     content:counter(passo);
     display:flex; align-items:center; justify-content:center;
     width:38px;height:38px; border-radius:10px;
-    background:var(--coral); color:white; font-weight:700; font-size:16px;
+    background:var(--teal); color:white; font-weight:700; font-size:16px;
     margin-bottom:18px;
 }
 .passo h3{font-size:16.5px; font-weight:700; margin-bottom:8px;}
-.passo p{font-size:14px; color:rgba(255,255,255,0.65); line-height:1.6;}
+.passo p{font-size:14px; color:rgba(255,255,255,0.75); line-height:1.6;}
 
 /* ── PORQUE ESCOLHER-NOS ─────────────────────────────────────────────── */
 .grid-diferenciais{display:grid; grid-template-columns:repeat(3, 1fr); gap:26px;}
@@ -277,7 +290,7 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
 .diferencial{display:flex; gap:16px;}
 .diferencial .marca-check{
     width:36px;height:36px;border-radius:9px; flex-shrink:0;
-    background:rgba(14,107,79,0.10); color:var(--green);
+    background:rgba(13,148,136,0.08); color:var(--teal);
     display:flex; align-items:center; justify-content:center; font-size:17px;
 }
 .diferencial h3{font-size:15.5px; font-weight:700; margin-bottom:5px;}
@@ -294,7 +307,7 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
     font-size:15.5px; font-weight:700; color:var(--ink);
     font-family:var(--sans);
 }
-.pergunta-faq .sinal{font-size:20px; color:var(--coral); transition:transform 0.2s; flex-shrink:0; margin-left:16px;}
+.pergunta-faq .sinal{font-size:20px; color:var(--teal); transition:transform 0.2s; flex-shrink:0; margin-left:16px;}
 .item-faq.aberto .sinal{transform:rotate(45deg);}
 .resposta-faq{
     max-height:0; overflow:hidden; transition:max-height 0.25s ease;
@@ -335,23 +348,21 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
             </div>
         </div>
 
-        <!-- Carrossel: substitui cada linha "background:linear-gradient(...)" no CSS
-             por background:url("caminho-da-foto.jpg") center/cover quando tiveres fotos reais -->
         <div class="carrossel" id="carrossel">
             <div class="slide-carrossel ativo">
                 <div class="ilustracao-slide"><svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
   <rect x="55" y="95" width="210" height="130" rx="4" fill="rgba(255,255,255,0.95)"/>
-  <rect x="45" y="72" width="230" height="26" rx="6" fill="rgba(244,185,66,0.95)"/>
-  <rect x="150" y="30" width="20" height="46" rx="3" fill="rgba(244,185,66,0.95)"/>
-  <rect x="132" y="48" width="56" height="18" rx="3" fill="rgba(244,185,66,0.95)"/>
-  <rect x="140" y="165" width="40" height="60" fill="rgba(26,18,69,0.85)"/>
-  <circle cx="172" cy="195" r="2.5" fill="rgba(244,185,66,0.9)"/>
-  <rect x="72" y="112" width="46" height="42" rx="3" fill="rgba(26,18,69,0.12)"/>
-  <rect x="202" y="112" width="46" height="42" rx="3" fill="rgba(26,18,69,0.12)"/>
-  <rect x="88" y="126" width="14" height="4" fill="rgba(14,107,79,0.7)"/>
-  <rect x="93" y="120" width="4" height="14" fill="rgba(14,107,79,0.7)"/>
-  <rect x="218" y="126" width="14" height="4" fill="rgba(232,102,63,0.7)"/>
-  <rect x="223" y="120" width="4" height="14" fill="rgba(232,102,63,0.7)"/>
+  <rect x="45" y="72" width="230" height="26" rx="6" fill="rgba(20,184,166,0.95)"/>
+  <rect x="150" y="30" width="20" height="46" rx="3" fill="rgba(20,184,166,0.95)"/>
+  <rect x="132" y="48" width="56" height="18" rx="3" fill="rgba(20,184,166,0.95)"/>
+  <rect x="140" y="165" width="40" height="60" fill="rgba(17,94,89,0.85)"/>
+  <circle cx="172" cy="195" r="2.5" fill="rgba(20,184,166,0.9)"/>
+  <rect x="72" y="112" width="46" height="42" rx="3" fill="rgba(17,94,89,0.12)"/>
+  <rect x="202" y="112" width="46" height="42" rx="3" fill="rgba(17,94,89,0.12)"/>
+  <rect x="88" y="126" width="14" height="4" fill="rgba(13,148,136,0.7)"/>
+  <rect x="93" y="120" width="4" height="14" fill="rgba(13,148,136,0.7)"/>
+  <rect x="218" y="126" width="14" height="4" fill="rgba(20,184,166,0.7)"/>
+  <rect x="223" y="120" width="4" height="14" fill="rgba(20,184,166,0.7)"/>
   <rect x="30" y="225" width="260" height="6" rx="3" fill="rgba(255,255,255,0.25)"/>
 </svg></div>
                 <div class="legenda-slide">A nossa farmácia na Praia</div>
@@ -364,12 +375,12 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
   <path d="M70 150 q40 -34 80 0 v18 h-80 z" fill="rgba(255,255,255,0.92)"/>
   <circle cx="212" cy="88" r="26" fill="rgba(255,255,255,0.98)"/>
   <path d="M172 150 q40 -34 80 0 v18 h-80 z" fill="rgba(255,255,255,0.98)"/>
-  <rect x="196" y="105" width="32" height="24" rx="6" fill="rgba(14,107,79,0.9)"/>
+  <rect x="196" y="105" width="32" height="24" rx="6" fill="rgba(13,148,136,0.9)"/>
   <rect x="209" y="112" width="6" height="10" fill="white"/>
   <rect x="206" y="115" width="12" height="4" fill="white"/>
-  <path d="M150 96 q10 -14 20 0 q-10 12 -20 0z" fill="rgba(244,185,66,0.9)"/>
-  <circle cx="146" cy="80" r="3" fill="rgba(244,185,66,0.7)"/>
-  <circle cx="174" cy="76" r="2.2" fill="rgba(244,185,66,0.6)"/>
+  <path d="M150 96 q10 -14 20 0 q-10 12 -20 0z" fill="rgba(20,184,166,0.9)"/>
+  <circle cx="146" cy="80" r="3" fill="rgba(20,184,166,0.7)"/>
+  <circle cx="174" cy="76" r="2.2" fill="rgba(20,184,166,0.6)"/>
 </svg></div>
                 <div class="legenda-slide">Atendimento próximo e atento</div>
             </div>
@@ -379,22 +390,22 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
   <rect x="40" y="140" width="240" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
   <rect x="40" y="210" width="240" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
   <rect x="55" y="35" width="26" height="35" rx="4" fill="rgba(255,255,255,0.95)"/>
-  <rect x="88" y="28" width="22" height="42" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="88" y="28" width="22" height="42" rx="4" fill="rgba(20,184,166,0.9)"/>
   <rect x="117" y="40" width="30" height="30" rx="4" fill="rgba(255,255,255,0.85)"/>
-  <rect x="154" y="30" width="20" height="40" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="154" y="30" width="20" height="40" rx="4" fill="rgba(13,148,136,0.85)"/>
   <rect x="181" y="36" width="26" height="34" rx="4" fill="rgba(255,255,255,0.95)"/>
-  <rect x="214" y="26" width="22" height="44" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="214" y="26" width="22" height="44" rx="4" fill="rgba(20,184,166,0.9)"/>
   <rect x="55" y="105" width="30" height="35" rx="4" fill="rgba(255,255,255,0.9)"/>
-  <rect x="92" y="98" width="24" height="42" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="92" y="98" width="24" height="42" rx="4" fill="rgba(13,148,136,0.85)"/>
   <rect x="123" y="110" width="28" height="30" rx="4" fill="rgba(255,255,255,0.85)"/>
-  <rect x="158" y="100" width="22" height="40" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="158" y="100" width="22" height="40" rx="4" fill="rgba(20,184,166,0.9)"/>
   <rect x="187" y="108" width="30" height="32" rx="4" fill="rgba(255,255,255,0.95)"/>
-  <rect x="224" y="96" width="20" height="44" rx="4" fill="rgba(14,107,79,0.85)"/>
-  <rect x="55" y="175" width="24" height="35" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="224" y="96" width="20" height="44" rx="4" fill="rgba(13,148,136,0.85)"/>
+  <rect x="55" y="175" width="24" height="35" rx="4" fill="rgba(20,184,166,0.9)"/>
   <rect x="86" y="168" width="30" height="42" rx="4" fill="rgba(255,255,255,0.9)"/>
-  <rect x="123" y="180" width="22" height="30" rx="4" fill="rgba(14,107,79,0.85)"/>
+  <rect x="123" y="180" width="22" height="30" rx="4" fill="rgba(13,148,136,0.85)"/>
   <rect x="152" y="170" width="28" height="40" rx="4" fill="rgba(255,255,255,0.85)"/>
-  <rect x="187" y="178" width="24" height="32" rx="4" fill="rgba(244,185,66,0.9)"/>
+  <rect x="187" y="178" width="24" height="32" rx="4" fill="rgba(20,184,166,0.9)"/>
   <rect x="218" y="168" width="26" height="42" rx="4" fill="rgba(255,255,255,0.95)"/>
 </svg></div>
                 <div class="legenda-slide">Stock organizado, lote a lote</div>
@@ -582,7 +593,6 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
                 </ul>
             </div>
             <div class="painel-mapa">
-                <!-- Troca "Praia,Cabo+Verde" pela morada exata da farmácia quando a tiveres -->
                 <iframe
                     src="https://www.google.com/maps?q=Praia,Cabo+Verde&output=embed"
                     loading="lazy"
@@ -597,7 +607,7 @@ footer{background:var(--night-deep); color:rgba(255,255,255,0.55); padding:36px 
 <section class="cta-final">
     <h2>Ainda não tem conta?</h2>
     <p>Registe-se para acompanhar o seu histórico de compras a qualquer momento.</p>
-    <a href="registar.html" class="btn-primario" style="background:white; color:var(--green);">Criar conta gratuita</a>
+    <a href="registar.html" class="btn-primario" style="background:white; color:var(--teal);">Criar conta gratuita</a>
 </section>
 
 <footer>
