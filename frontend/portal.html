@@ -19,18 +19,19 @@
         #mapa { height: 300px; width: 100%; border-radius: 12px; z-index: 0; }
         #mapaEntrega { height: 220px; width: 100%; border-radius: 10px; z-index: 0; }
         .portal-topbar {
-            background: linear-gradient(135deg, var(--night) 0%, var(--night-deep) 100%);
+            background: #ffffff;
             padding: 16px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #fdfbf7;
+            border-bottom: 1px solid var(--line);
+            box-shadow: 0 2px 10px rgba(13, 148, 136, 0.05);
         }
-        .portal-topbar .marca { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+        .portal-topbar .marca { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--teal); font-size: 1.15rem; }
         .portal-wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px; }
         .portal-boas-vindas { margin-bottom: 24px; }
         .portal-boas-vindas h4 { margin-bottom: 4px; }
-        .badge-sem-historico { background: var(--green-dim); color: var(--green); }
+        .badge-sem-historico { background: var(--teal-dim); color: var(--teal); }
     </style>
 </head>
 
@@ -57,7 +58,7 @@
                     <p class="text-muted small mb-0">Ganha 1 ponto a cada 100 CVE gastos. Cada ponto vale 5 CVE de desconto na próxima compra — é só dizer à equipa quantos pontos queres usar.</p>
                 </div>
                 <div class="text-end">
-                    <div class="fw-bold" style="font-size:1.6rem; color:var(--green);" id="saldoPontos">0</div>
+                    <div class="fw-bold" style="font-size:1.6rem; color:var(--teal);" id="saldoPontos">0</div>
                     <div class="text-muted small">pontos disponíveis</div>
                 </div>
             </div>
@@ -140,7 +141,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
                         <span class="fw-bold">Total: <span id="totalCarrinho">0 CVE</span></span>
-                        <button class="btn btn-success" onclick="enviarPedido()">Pagar e Enviar Pedido</button>
+                        <button class="btn btn-primary" onclick="enviarPedido()">Pagar e Enviar Pedido</button>
                     </div>
                 </div>
             </div>

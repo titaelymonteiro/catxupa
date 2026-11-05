@@ -1,5 +1,5 @@
 fastapi
-uvicorn[standard]
+uvicorn[standard]>=0.35.0
 pyjwt
 python-multipart
 python-dotenv

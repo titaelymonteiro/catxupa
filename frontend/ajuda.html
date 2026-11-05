@@ -6,19 +6,29 @@
 <title>Precisa de ajuda? - Farmácia CV</title>
 <style>
 :root{
-    --night: #1a1245;
-    --night-deep: #100a2e;
-    --coral: #e8663f;
-    --gold: #f4b942;
-    --sand: #faf3e7;
-    --green: #0e6b4f;
-    --ink: #14181a;
-    --ink-soft: #5b6660;
-    --line: #e2e5de;
+    --night: #115e59;
+    --night-deep: #134e4a;
+    --coral: #0d9488;
+    --gold: #14b8a6;
+    --sand: #f0fdfa;
+    --blue: #0d9488;
+    --blue-dark: #0f766e;
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --mint: #14b8a6;
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --line: #d1f0ea;
     --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--sans); color:var(--ink); background:var(--sand);}
+body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:linear-gradient(160deg, #f0fdfa 0%, #e6f8f5 50%, #f7fdfc 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+}
 a{color:inherit;}
 .container{max-width:880px;margin:0 auto;padding:0 24px;}
 
@@ -42,11 +52,11 @@ a{color:inherit;}
     position:relative; z-index:1; margin-bottom:44px;
     font-size:14px;
 }
-.topo-nav a{text-decoration:none; color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.35); padding-bottom:2px;}
+.topo-nav a{text-decoration:none; color:rgba(255,255,255,0.85); border-bottom:1px solid rgba(255,255,255,0.35); padding-bottom:2px; transition:color 0.15s;}
 .topo-nav a:hover{color:white; border-color:white;}
 .marca{display:flex; align-items:center; gap:9px; font-weight:700;}
 .marca .selo{
-    width:30px;height:30px;border-radius:8px; background:rgba(255,255,255,0.12);
+    width:30px;height:30px;border-radius:8px; background:rgba(255,255,255,0.15);
     display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.3);
 }
 .marca .selo svg{width:16px;height:16px;}
@@ -54,7 +64,7 @@ a{color:inherit;}
 .topo-conteudo{position:relative; z-index:1;}
 .topo-eyebrow{font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:14px;}
 .topo h1{font-size:clamp(1.8rem,4vw,2.4rem); font-weight:700; letter-spacing:-0.01em; margin-bottom:12px;}
-.topo p{color:rgba(255,255,255,0.68); font-size:15.5px; max-width:520px; line-height:1.6;}
+.topo p{color:rgba(255,255,255,0.80); font-size:15.5px; max-width:520px; line-height:1.6;}
 
 .caixa-busca{
     position:relative; z-index:1;
@@ -65,8 +75,9 @@ a{color:inherit;}
     width:100%; padding:14px 16px;
     border-radius:10px; border:none;
     font-size:15px; font-family:var(--sans);
+    box-shadow:0 4px 16px rgba(0,0,0,0.15);
 }
-.caixa-busca input:focus{outline:2px solid var(--coral);}
+.caixa-busca input:focus{outline:2px solid var(--teal);}
 
 /* ── CARTOES DE TOPICO ───────────────────────────────────────────────── */
 .secao{padding:50px 0;}
@@ -74,11 +85,11 @@ a{color:inherit;}
 @media (max-width: 760px){.grid-topicos{grid-template-columns:1fr;}}
 .card-topico{
     background:white; border:1px solid var(--line); border-radius:14px; padding:22px;
-    box-shadow:0 10px 26px -14px rgba(26,18,69,0.18);
+    box-shadow:0 10px 26px -14px rgba(13,148,136,0.15);
     text-decoration:none; color:var(--ink); display:block;
     transition:transform 0.15s, box-shadow 0.15s;
 }
-.card-topico:hover{transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(26,18,69,0.24);}
+.card-topico:hover{transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(13,148,136,0.22);}
 .card-topico .icone{font-size:24px; margin-bottom:10px;}
 .card-topico h3{font-size:15.5px; font-weight:700; margin-bottom:6px;}
 .card-topico p{font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
@@ -87,7 +98,7 @@ a{color:inherit;}
 .grupo-faq{margin-bottom:38px;}
 .grupo-faq h2{
     font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--green); font-weight:700; margin-bottom:16px;
+    color:var(--teal); font-weight:700; margin-bottom:16px;
     display:flex; align-items:center; gap:8px;
 }
 .item-faq{border-bottom:1px solid var(--line);}
@@ -96,7 +107,7 @@ a{color:inherit;}
     padding:18px 0; display:flex; justify-content:space-between; align-items:center;
     font-size:15px; font-weight:700; color:var(--ink); font-family:var(--sans);
 }
-.pergunta-faq .sinal{font-size:19px; color:var(--coral); transition:transform 0.2s; flex-shrink:0; margin-left:16px;}
+.pergunta-faq .sinal{font-size:19px; color:var(--teal); transition:transform 0.2s; flex-shrink:0; margin-left:16px;}
 .item-faq.aberto .sinal{transform:rotate(45deg);}
 .resposta-faq{
     max-height:0; overflow:hidden; transition:max-height 0.25s ease;
@@ -111,6 +122,7 @@ a{color:inherit;}
 .caixa-contacto{
     background:white; border:1px solid var(--line); border-radius:16px;
     padding:32px; text-align:center; margin-top:20px;
+    box-shadow:0 6px 20px -8px rgba(13,148,136,0.10);
 }
 .caixa-contacto h3{font-size:18px; font-weight:700; margin-bottom:8px;}
 .caixa-contacto p{color:var(--ink-soft); font-size:14.5px; margin-bottom:20px;}
@@ -121,17 +133,18 @@ a{color:inherit;}
 .caixa-mapa{
     background:white; border:1px solid var(--line); border-radius:16px;
     padding:24px; margin-top:20px;
+    box-shadow:0 6px 20px -8px rgba(13,148,136,0.10);
 }
 .caixa-mapa h3{font-size:18px; font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
 .caixa-mapa .morada{color:var(--ink-soft); font-size:14.5px; margin-bottom:16px;}
 #mapa{height:320px; width:100%; border-radius:12px; border:1px solid var(--line); z-index:0;}
 .mapa-link{
-    display:inline-block; margin-top:14px; font-size:14px; color:var(--green);
-    font-weight:700; text-decoration:none; border-bottom:1px solid var(--green); padding-bottom:2px;
+    display:inline-block; margin-top:14px; font-size:14px; color:var(--teal);
+    font-weight:700; text-decoration:none; border-bottom:1px solid var(--teal); padding-bottom:2px;
 }
-.mapa-link:hover{color:var(--ink);}
+.mapa-link:hover{color:var(--teal-dark);}
 
-footer{background:var(--night-deep); color:rgba(255,255,255,0.5); text-align:center; padding:26px; font-size:13px; margin-top:40px;}
+footer{background:var(--night-deep); color:rgba(255,255,255,0.65); text-align:center; padding:26px; font-size:13px; margin-top:40px;}
 </style>
 
 <!-- Leaflet (mapas OpenStreetMap, sem chave de API) -->
