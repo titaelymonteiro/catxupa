@@ -1,40 +1,51 @@
 /* ══════════════════════════════════════════════════════════════════════
-   Farmácia CV — folha de estilos partilhada (dashboard, vendas, etc.)
-   Alinhada com a identidade visual do login: verde/dourado, Space Grotesk.
+   Farmácia CV — Folha de estilos partilhada (dashboard, vendas, etc.)
+   Identidade visual hospitalar e clínica: Verde-Água Cirúrgico (Teal), Menta e Branco Límpido.
    ══════════════════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-    --paper: #faf9f6;
+    --paper: #f0fdfa;
     --card: #ffffff;
-    --ink: #14181a;
-    --ink-soft: #5b6660;
-    --line: #e2e5de;
-    --green: #0e6b4f;
-    --green-dark: #0a5640;
-    --green-dim: rgba(14, 107, 79, 0.10);
-    --green-ring: rgba(14, 107, 79, 0.22);
-    --gold: #c9a45c;
-    --sidebar-bg: var(--night-deep);
-    --sidebar-bg-soft: var(--night);
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --line: #d1f0ea;
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-dim: rgba(13, 148, 136, 0.08);
+    --teal-ring: rgba(13, 148, 136, 0.22);
+    --mint: #14b8a6;
+    --gold: #0d9488;
+    --green: #0d9488;
+    --green-dark: #0f766e;
+    --green-dim: rgba(13, 148, 136, 0.08);
+    --green-ring: rgba(13, 148, 136, 0.22);
+    --sidebar-bg: #115e59;
+    --sidebar-bg-soft: #134e4a;
     --display: 'Space Grotesk', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
     --sans: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
-    /* paleta "por-do-sol" do login, usada agora no fundo geral */
-    --night: #1a1245;
-    --night-deep: #100a2e;
-    --coral: #e8663f;
+    /* Cores de apoio */
+    --night: #115e59;
+    --night-deep: #134e4a;
+    --coral: #0d9488;
+
+    /* Aliases de compatibilidade */
+    --blue: #0d9488;
+    --blue-dark: #0f766e;
+    --blue-dim: rgba(13, 148, 136, 0.08);
+    --blue-ring: rgba(13, 148, 136, 0.22);
+    --cyan: #14b8a6;
 }
 
 body {
-    background:
-        radial-gradient(circle at 88% 4%, var(--coral) 0%, rgba(232,102,63,0.55) 20%, rgba(244,185,66,0.22) 38%, transparent 58%),
-        linear-gradient(190deg, var(--night) 0%, var(--night-deep) 100%);
+    background: linear-gradient(160deg, #f0fdfa 0%, #e6f8f5 50%, #f7fdfc 100%);
     background-attachment: fixed;
     position: relative;
     font-family: var(--sans);
     color: var(--ink);
+    min-height: 100vh;
 }
 
 body::before {
@@ -43,10 +54,10 @@ body::before {
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background-image: radial-gradient(rgba(255,255,255,0.30) 1px, transparent 1px);
-    background-size: 46px 46px;
+    background-image: radial-gradient(rgba(13, 148, 136, 0.08) 1px, transparent 1px);
+    background-size: 38px 38px;
     background-position: 10px 10px;
-    opacity: 0.30;
+    opacity: 0.35;
 }
 
 .sidebar, .main-navbar, .main-content {
@@ -74,7 +85,8 @@ h1, h2, h3, h4, h5, h6,
     overflow-y: auto;
     z-index: 1000;
     transition: transform 0.2s ease;
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 2px 0 16px rgba(17, 94, 89, 0.20);
 }
 
 .sidebar-brand {
@@ -100,7 +112,7 @@ h1, h2, h3, h4, h5, h6,
     display: flex;
     align-items: center;
     gap: 10px;
-    color: rgba(255, 255, 255, 0.68);
+    color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
     padding: 10px 12px;
     border-radius: 10px;
@@ -110,14 +122,14 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .sidebar-nav a:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.12);
     color: white;
 }
 
 .sidebar-nav a.active {
-    background: var(--coral);
+    background: var(--teal);
     color: white;
-    box-shadow: 0 2px 8px -2px rgba(232, 102, 63, 0.55);
+    box-shadow: 0 4px 12px -2px rgba(13, 148, 136, 0.45);
 }
 
 .sidebar-nav .nav-icon {
@@ -126,7 +138,7 @@ h1, h2, h3, h4, h5, h6,
     text-align: center;
 }
 
-/* ── MAIN NAVBAR (top, beside sidebar) ──────────────────────────────── */
+/* ── MAIN NAVBAR (topo, ao lado da sidebar) ─────────────────────────── */
 .main-navbar {
     margin-left: 230px;
     padding: 14px 28px;
@@ -136,12 +148,14 @@ h1, h2, h3, h4, h5, h6,
     position: sticky;
     top: 0;
     z-index: 900;
-    background: linear-gradient(135deg, var(--night) 0%, var(--night-deep) 100%) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 10px rgba(13, 148, 136, 0.05);
 }
 
 .main-navbar .navbar-brand {
-    color: #fdfbf7 !important;
+    color: var(--teal) !important;
+    font-weight: 700;
 }
 
 .menu-toggle {
@@ -149,7 +163,7 @@ h1, h2, h3, h4, h5, h6,
     border: none;
     font-size: 1.3rem;
     cursor: pointer;
-    color: rgba(253, 251, 247, 0.75);
+    color: var(--teal);
     display: none;
 }
 
@@ -179,11 +193,11 @@ h1, h2, h3, h4, h5, h6,
 
 /* ── CARDS ───────────────────────────────────────────────────────────── */
 .card-box {
-    background: #fdfbf7;
-    padding: 20px;
+    background: #ffffff;
+    padding: 22px;
     border-radius: 14px;
     border: 1px solid var(--line);
-    box-shadow: 0 4px 16px -6px rgba(26, 18, 69, 0.10);
+    box-shadow: 0 6px 20px -8px rgba(13, 148, 136, 0.10), 0 2px 6px rgba(15, 23, 42, 0.02);
 }
 
 /* ── STAT CARDS ──────────────────────────────────────────────────────── */
@@ -191,7 +205,7 @@ h1, h2, h3, h4, h5, h6,
     border-radius: 14px;
     padding: 20px;
     color: white;
-    box-shadow: 0 10px 24px -12px rgba(20, 24, 26, 0.35);
+    box-shadow: 0 8px 20px -8px rgba(13, 148, 136, 0.25);
     position: relative;
     overflow: hidden;
 }
@@ -200,13 +214,13 @@ h1, h2, h3, h4, h5, h6,
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.14), transparent 55%);
+    background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.18), transparent 55%);
     pointer-events: none;
 }
 
 .stat-card .stat-label {
     font-size: 0.8rem;
-    opacity: 0.85;
+    opacity: 0.90;
     margin-bottom: 6px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -219,60 +233,67 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .blue {
-    background: linear-gradient(135deg, var(--night), var(--night-deep));
+    background: linear-gradient(135deg, #0d9488, #0f766e);
 }
 
 .green {
-    background: linear-gradient(135deg, var(--green), #073c2c);
+    background: linear-gradient(135deg, #14b8a6, #0d9488);
 }
 
 .orange {
-    background: linear-gradient(135deg, #d69a3f, #a06a1f);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 
 .red {
-    background: linear-gradient(135deg, var(--coral), #a1421f);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-/* ── BOTÕES (alinhados com a marca) ─────────────────────────────────── */
+/* ── BOTÕES ──────────────────────────────────────────────────────────── */
 .btn-primary {
-    background-color: var(--green);
-    border-color: var(--green);
+    background-color: var(--teal);
+    border-color: var(--teal);
+    color: white;
+    font-weight: 600;
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-    background-color: var(--green-dark);
-    border-color: var(--green-dark);
+    background-color: var(--teal-dark);
+    border-color: var(--teal-dark);
+    color: white;
+    box-shadow: 0 4px 12px -2px rgba(13, 148, 136, 0.35);
 }
 
 .btn-outline-primary {
-    color: var(--green);
-    border-color: var(--green);
+    color: var(--teal);
+    border-color: var(--teal);
 }
 
 .btn-outline-primary:hover {
-    background-color: var(--green);
-    border-color: var(--green);
+    background-color: var(--teal);
+    border-color: var(--teal);
+    color: white;
 }
 
 .btn-sair {
-    color: var(--coral);
-    border-color: var(--coral);
-    background: transparent;
+    color: #ef4444;
+    border-color: #fecaca;
+    background: #ffffff;
+    font-weight: 600;
+    transition: all 0.15s;
 }
 
 .btn-sair:hover {
-    background: var(--coral);
-    border-color: var(--coral);
+    background: #ef4444;
+    border-color: #ef4444;
     color: white;
 }
 
 .btn-check:checked + .btn-outline-primary,
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--green) !important;
-    box-shadow: 0 0 0 3px var(--green-ring) !important;
+    border-color: var(--teal) !important;
+    box-shadow: 0 0 0 3px var(--teal-ring) !important;
 }
 
 /* ── NAVBAR ──────────────────────────────────────────────────────────── */
@@ -280,7 +301,7 @@ h1, h2, h3, h4, h5, h6,
     padding: 12px 20px;
 }
 
-/* ── TABLE ───────────────────────────────────────────────────────────── */
+/* ── TABELAS ─────────────────────────────────────────────────────────── */
 .table td,
 .table th {
     vertical-align: middle;
@@ -296,10 +317,10 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .table-hover tbody tr:hover {
-    background-color: var(--green-dim);
+    background-color: var(--teal-dim);
 }
 
-/* ── ALERTS ──────────────────────────────────────────────────────────── */
+/* ── ALERTAS ─────────────────────────────────────────────────────────── */
 .alert {
     border-radius: 10px;
 }
@@ -321,13 +342,12 @@ h1, h2, h3, h4, h5, h6,
     0% {
         background-position: 200% 0;
     }
-
     100% {
         background-position: -200% 0;
     }
 }
 
-/* ── PAGINATION ──────────────────────────────────────────────────────── */
+/* ── PAGINAÇÃO ───────────────────────────────────────────────────────── */
 .pagination-bar {
     display: flex;
     justify-content: space-between;
@@ -351,9 +371,8 @@ h1, h2, h3, h4, h5, h6,
     min-width: 36px;
 }
 
-/* ── PRINT ───────────────────────────────────────────────────────────── */
+/* ── IMPRESSÃO ───────────────────────────────────────────────────────── */
 @media print {
-
     .sidebar,
     .main-navbar,
     .btn {
@@ -378,21 +397,24 @@ h1, h2, h3, h4, h5, h6,
 
 /* ── MODO ESCURO ─────────────────────────────────────────────────────── */
 [data-theme="dark"] {
-    --paper: #0f0a2e;
-    --card: #1a1245;
-    --ink: #f0ede6;
-    --ink-soft: #b3add9;
-    --line: rgba(255, 255, 255, 0.14);
+    --paper: #042f2e;
+    --card: #0f3d39;
+    --ink: #f1f5f9;
+    --ink-soft: #99f6e4;
+    --line: rgba(255, 255, 255, 0.12);
 }
 
 [data-theme="dark"] body {
-    background:
-        radial-gradient(circle at 88% 4%, var(--coral) 0%, rgba(232,102,63,0.30) 20%, rgba(244,185,66,0.12) 38%, transparent 58%),
-        linear-gradient(190deg, #100a2e 0%, #070417 100%);
+    background: linear-gradient(190deg, #042f2e 0%, #021e1d 100%);
 }
 
 [data-theme="dark"] body::before {
-    opacity: 0.15;
+    opacity: 0.12;
+}
+
+[data-theme="dark"] .main-navbar {
+    background: #0f3d39 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.10);
 }
 
 [data-theme="dark"] .table {
@@ -401,29 +423,29 @@ h1, h2, h3, h4, h5, h6,
 
 [data-theme="dark"] .table-light,
 [data-theme="dark"] .table thead.table-light th {
-    background-color: #241a5c;
+    background-color: #115e59;
     color: var(--ink);
 }
 
 [data-theme="dark"] .table-hover tbody tr:hover {
-    background-color: rgba(232, 102, 63, 0.10);
+    background-color: rgba(13, 148, 136, 0.15);
     color: var(--ink);
 }
 
 [data-theme="dark"] .form-control,
 [data-theme="dark"] .form-select {
-    background-color: #241a5c;
+    background-color: #115e59;
     color: var(--ink);
     border-color: var(--line);
 }
 
 [data-theme="dark"] .form-control::placeholder {
-    color: #8b85b8;
+    color: #99f6e4;
 }
 
 [data-theme="dark"] .form-control:focus,
 [data-theme="dark"] .form-select:focus {
-    background-color: #241a5c;
+    background-color: #115e59;
     color: var(--ink);
 }
 
@@ -460,10 +482,10 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .theme-toggle:hover {
-    background: var(--green-dim);
+    background: var(--teal-dim);
 }
 
-/* --- SINO DE NOTIFICAÇÕES ---------------------------------------------------------*/
+/* ── SINO DE NOTIFICAÇÕES ────────────────────────────────────────────── */
 .sino-wrap {
     position: relative;
     margin-right: 8px;
@@ -481,13 +503,14 @@ h1, h2, h3, h4, h5, h6,
     font-size: 16px;
     cursor: pointer;
     position: relative;
+    color: var(--ink-soft);
 }
 
 .sino-badge {
     position: absolute;
     top: -4px;
     right: -4px;
-    background: var(--coral);
+    background: #ef4444;
     color: white;
     font-size: 10px;
     font-weight: 700;
@@ -509,7 +532,7 @@ h1, h2, h3, h4, h5, h6,
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 12px;
-    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.25);
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -529,7 +552,7 @@ h1, h2, h3, h4, h5, h6,
 .sino-painel-topo button {
     background: none;
     border: none;
-    color: var(--coral);
+    color: var(--teal);
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
@@ -549,11 +572,11 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .sino-item:hover {
-    background: var(--green-dim);
+    background: var(--teal-dim);
 }
 
 .sino-item-nao-lida {
-    background: rgba(232, 102, 63, 0.06);
+    background: rgba(13, 148, 136, 0.06);
 }
 
 .sino-item-msg {
