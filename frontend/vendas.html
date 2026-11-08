@@ -433,7 +433,7 @@
             } else {
                 tbody.innerHTML = itensVenda.map((item, i) => `
             <tr>
-                <td class="fw-semibold">${item.medicamento_nome}</td>
+                <td>${item.medicamento_nome}</td>
                 <td>${item.preco_unitario.toLocaleString("pt-CV")} CVE</td>
                 <td>
                     <input type="number" class="form-control form-control-sm" style="width:70px"
@@ -654,7 +654,7 @@
                 return `
         <tr class="${anulada ? 'table-secondary text-muted' : ''}">
             <td class="small">#${v.id}</td>
-            <td class="fw-semibold">${v.cliente} ${anulada ? '<span class="badge bg-danger ms-1">ANULADA</span>' : ''}</td>
+            <td>${v.cliente} ${anulada ? '<span class="badge bg-danger ms-1">ANULADA</span>' : ''}</td>
             <td class="${anulada ? 'text-decoration-line-through' : 'text-success fw-bold'}">${parseFloat(v.total).toLocaleString("pt-CV")} CVE</td>
             <td>${v.criado_em ? v.criado_em.substring(0, 16).replace("T", " ") : "—"}</td>
             <td>${v.criado_por || "—"}</td>

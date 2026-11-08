@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
     @media print {
-        /* Esconder navegação, botões E o card dos filtros inteiro */
+        /* Esconder navegação, botões e filtros */
         .sidebar,
         .main-navbar,
         .btn,
@@ -31,7 +31,7 @@
         /* Conteúdo ocupa a página toda */
         .main-content {
             margin-left: 0 !important;
-            padding: 0 !important;
+            padding: 8px !important;
             width: 100% !important;
         }
 
@@ -41,18 +41,28 @@
             box-shadow: none !important;
             background: white !important;
             page-break-inside: avoid;
-            margin-bottom: 16px !important;
+            margin-bottom: 12px !important;
+            border-radius: 8px !important;
         }
 
         /* Texto escuro em tudo */
-        h5, h6, p, td, th, .text-muted, span, div {
+        h5, h6, p, td, th, label, .text-muted {
             color: #111 !important;
         }
 
-        /* Gráfico com tamanho fixo */
+        /* Esconder o canvas — Chart.js não renderiza em PDF */
         #chartTop {
-            max-width: 280px !important;
-            max-height: 280px !important;
+            display: none !important;
+        }
+
+        /* Mensagem no lugar do gráfico */
+        .card-box:has(canvas)::after {
+            content: "Gráfico disponível apenas no ecrã.";
+            display: block;
+            text-align: center;
+            color: #999 !important;
+            font-size: 12px;
+            padding: 16px 0;
         }
 
         /* Mostrar secções de admin */
@@ -60,18 +70,42 @@
             display: flex !important;
         }
 
-        /* Stat cards com fundo cinzento claro legível */
+        /* Stat cards lado a lado numa linha */
+        #areaMargem .row.g-3 {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
+            margin-bottom: 12px !important;
+        }
+
+        #areaMargem .row.g-3 .col-md-3 {
+            flex: 1 !important;
+            width: 25% !important;
+            max-width: 25% !important;
+            padding: 0 !important;
+        }
+
+        /* Stat cards com fundo cinzento legível */
         .stat-card {
             background: #f0f0f0 !important;
             box-shadow: none !important;
             border: 1px solid #ccc !important;
+            padding: 10px 12px !important;
+            border-radius: 8px !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
 
-        .stat-card .stat-label,
+        .stat-card .stat-label {
+            color: #555 !important;
+            font-size: 10px !important;
+        }
+
         .stat-card .stat-value {
             color: #111 !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
         }
 
         /* Tabelas sem scroll, sem corte */
@@ -109,10 +143,22 @@
         /* Linhas não partem a meio de página */
         tr { page-break-inside: avoid; }
 
-        /* Linha de scroll da tabela de receitas — esconder */
+        /* Esconder scrollbar */
         ::-webkit-scrollbar { display: none !important; }
+
+        /* Cabeçalho do relatório */
+        .main-content::before {
+            content: "Farmácia CV — Relatório de Vendas";
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: #111 !important;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ddd;
+        }
     }
-</style>
+    </style>
 </head>
 
 <body>
@@ -420,7 +466,7 @@
                 html += `
                     <tr>
                         <td class="small">${v.criado_em.substring(0, 10)}</td>
-                        <td class="fw-semibold">${v.cliente}</td>
+                        <td>${v.cliente}</td>
                         <td>${v.criado_por || "—"}</td>
                         <td class="text-end fw-bold text-success">${v.total.toLocaleString('pt-CV')} CVE</td>
                     </tr>
@@ -429,7 +475,6 @@
             document.getElementById("tabelaVendas").innerHTML = html || "<tr><td colspan='4' class='text-center py-4'>Sem vendas no período.</td></tr>";
             document.getElementById("somaVendas").innerText = soma.toLocaleString('pt-CV') + " CVE";
 
-            // Atualiza gráfico e utilizadores também com o mesmo período
             await carregarTopProdutos();
             await carregarVendasUsers();
         }
@@ -485,19 +530,29 @@
             document.getElementById("containerUsers").innerHTML = html || "<div class='text-center text-muted py-3'>Sem dados no período.</div>";
         }
 
+        function exportarExcel() {
+            const tabela = document.getElementById("tabelaVendas").parentElement;
+            const wb = XLSX.utils.table_to_book(tabela, { sheet: "Vendas" });
+            const inicio = document.getElementById("dataInicio").value;
+            const fim = document.getElementById("dataFim").value;
+            XLSX.writeFile(wb, `relatorio_vendas_${inicio}_a_${fim}.xlsx`);
+        }
+
         function exportarPDF() {
-    const areaMargem = document.getElementById("areaMargem");
-    const areaReceitas = document.getElementById("areaReceitas");
-    const eraMargem = areaMargem.style.display;
-    const eraReceitas = areaReceitas.style.display;
-    areaMargem.style.display = "flex";
-    areaReceitas.style.display = "flex";
-    window.print();
-    setTimeout(() => {
-        areaMargem.style.display = eraMargem;
-        areaReceitas.style.display = eraReceitas;
-    }, 1000);
-}
+            const areaMargem = document.getElementById("areaMargem");
+            const areaReceitas = document.getElementById("areaReceitas");
+            const eraMargem = areaMargem.style.display;
+            const eraReceitas = areaReceitas.style.display;
+            areaMargem.style.display = "flex";
+            areaReceitas.style.display = "flex";
+            window.print();
+            setTimeout(() => {
+                areaMargem.style.display = eraMargem;
+                areaReceitas.style.display = eraReceitas;
+            }, 1000);
+        }
+
+        if (token) init();
     </script>
 </body>
 
