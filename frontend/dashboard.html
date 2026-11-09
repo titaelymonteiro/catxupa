@@ -153,7 +153,7 @@
                     datasets: [{
                         label: "Resumo",
                         data: [vendas, medicamentos, stock, clientes],
-                        backgroundColor: ["#0f4c81", "#38bdf8", "#f59e0b", "#0a3156"],
+                        backgroundColor: ["#0d9488", "#14b8a6", "#f59e0b", "#ef4444"],
                         borderRadius: 8
                     }]
                 },
@@ -171,8 +171,8 @@
                     datasets: [{
                         label: "Vendas Mensais (CVE)",
                         data: vendasMensais,
-                        borderColor: "#0f4c81",
-                        backgroundColor: "rgba(15, 76, 129, 0.12)",
+                        borderColor: "#0d9488",
+                        backgroundColor: "rgba(13, 148, 136, 0.12)",
                         fill: true,
                         tension: 0.4,
                         pointRadius: 4
@@ -219,14 +219,11 @@
 
                 let html = "";
                 data.ultimos_medicamentos.forEach(m => {
-                    const badge = m.estoque < 10
-                        ? `<span class="badge bg-danger">${m.estoque}</span>`
-                        : `<span class="badge bg-success">${m.estoque}</span>`;
                     html += `<tr>
-                <td class="fw-semibold">${m.nome}</td>
+                <td>${m.nome}</td>
                 <td><span class="badge bg-secondary">${m.categoria || "—"}</span></td>
                 <td>${parseFloat(m.preco).toLocaleString("pt-CV")} CVE</td>
-                <td>${badge}</td>
+                <td>${m.estoque}</td>
                 <td>${m.validade || "—"}</td>
             </tr>`;
                 });
@@ -263,11 +260,11 @@
 
                 document.getElementById("listaAlertas").innerHTML =
                     secao("Expirados", "dark", a.expirados,
-                        m => `<li><strong>${m.nome}</strong> — validade ${m.validade}</li>`) +
+                        m => `<li>${m.nome} — validade ${m.validade}</li>`) +
                     secao("A expirar em breve", "danger", a.validade_proxima,
-                        m => `<li><strong>${m.nome}</strong> — validade ${m.validade}</li>`) +
+                        m => `<li>${m.nome} — validade ${m.validade}</li>`) +
                     secao("Stock baixo", "warning text-dark", a.stock_baixo,
-                        m => `<li><strong>${m.nome}</strong> — ${m.estoque} unidades</li>`);
+                        m => `<li>${m.nome} — ${m.estoque} unidades</li>`);
             } catch (err) { /* silencioso */ }
         }
 

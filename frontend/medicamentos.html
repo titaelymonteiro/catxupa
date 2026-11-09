@@ -258,8 +258,8 @@
 
             document.getElementById("tabela").innerHTML = paginaItens.map(m => {
                 const badge = m.estoque < 10
-                    ? `<span class="badge bg-danger">${m.estoque} ⚠️</span>`
-                    : `<span class="badge bg-success">${m.estoque}</span>`;
+                    ? `${m.estoque} ⚠️`
+                    : `${m.estoque}`;
 
                 let validadeTexto = m.validade || "—";
                 if (m.validade) {
@@ -282,7 +282,7 @@
 
                 return `<tr>
             <td class="text-muted small">#${m.id}</td>
-            <td class="fw-semibold">${m.nome} ${m.requer_receita ? '<span class="badge bg-dark" title="Exige receita médica">🔒 Receita</span>' : ''}</td>
+            <td>${m.nome} ${m.requer_receita ? '<span class="badge bg-dark" title="Exige receita médica">🔒 Receita</span>' : ''}</td>
             <td><span class="badge bg-secondary">${m.categoria || "—"}</span></td>
             <td>${parseFloat(m.preco).toLocaleString("pt-CV")} CVE</td>
             <td>${margemTexto}</td>
